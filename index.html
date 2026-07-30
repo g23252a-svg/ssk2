@@ -1,0 +1,2564 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시티즈 스카이라인 2 초정밀 공략집</title>
+<meta name="description" content="Cities: Skylines 2 — 도로·전력·상하수도·교육·경제까지, 교통 정체 없이 아름답게 성장하는 도시를 만드는 초정밀 한국어 공략집 (Economy 2.0 이후 패치 기준)">
+<meta property="og:title" content="시티즈 스카이라인 2 초정밀 공략집">
+<meta property="og:description" content="교통 정체 없는 아름다운 도시를 위한 상세 가이드 — 숫자와 근거로 설명합니다.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --bg:#f7f8fa; --surface:#ffffff; --surface2:#f0f2f5;
+  --text:#1a2233; --text2:#4b5568; --text3:#8a93a5;
+  --accent:#2563eb; --accent-soft:#dbeafe; --accent-text:#1d4ed8;
+  --teal:#0d9488; --teal-soft:#ccfbf1;
+  --amber:#b45309; --amber-soft:#fef3c7;
+  --red:#dc2626; --red-soft:#fee2e2;
+  --green:#15803d; --green-soft:#dcfce7;
+  --purple:#7c3aed; --purple-soft:#ede9fe;
+  --border:#e3e7ee; --border2:#d0d6e0;
+  --shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04);
+  --shadow-lg:0 10px 30px rgba(16,24,40,.10);
+  --radius:14px;
+  --sidebar-w:290px;
+  --svg-line:#8a93a5; --svg-fill:#f0f2f5;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1420; --surface:#171e2e; --surface2:#1f2839;
+    --text:#e6eaf2; --text2:#aeb7c7; --text3:#6f7a8e;
+    --accent:#5b8def; --accent-soft:#1c2a4a; --accent-text:#9cbcf7;
+    --teal:#2dd4bf; --teal-soft:#123a36;
+    --amber:#fbbf24; --amber-soft:#3a2e10;
+    --red:#f87171; --red-soft:#3d1a1a;
+    --green:#4ade80; --green-soft:#12331d;
+    --purple:#a78bfa; --purple-soft:#2a1f4d;
+    --border:#28324a; --border2:#354160;
+    --shadow:0 1px 3px rgba(0,0,0,.4);
+    --shadow-lg:0 10px 30px rgba(0,0,0,.5);
+    --svg-line:#6f7a8e; --svg-fill:#1f2839;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,Roboto,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  background:var(--bg); color:var(--text);
+  line-height:1.78; font-size:16px;
+  -webkit-font-smoothing:antialiased;
+  word-break:keep-all; overflow-wrap:break-word;
+}
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--teal));width:0%;z-index:100;transition:width .1s linear}
+header.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:90;
+  background:color-mix(in srgb,var(--surface) 86%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;padding:0 18px;height:58px;
+}
+.topbar .logo{font-weight:800;font-size:16.5px;letter-spacing:-.02em;display:flex;align-items:center;gap:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .logo .badge{background:linear-gradient(135deg,var(--accent),var(--teal));color:#fff;border-radius:7px;padding:2px 8px;font-size:11.5px;font-weight:700;flex-shrink:0}
+.topbar .spacer{flex:1}
+.topbar a.gh{color:var(--text2);text-decoration:none;font-size:13px;padding:6px 12px;border:1px solid var(--border);border-radius:8px;white-space:nowrap}
+.topbar a.gh:hover{background:var(--surface2);color:var(--text)}
+#menuBtn{display:none;background:none;border:1px solid var(--border);border-radius:8px;width:36px;height:36px;font-size:17px;color:var(--text);cursor:pointer;flex-shrink:0}
+.layout{display:flex;max-width:1460px;margin:0 auto;padding-top:58px}
+nav#sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  position:sticky;top:58px;height:calc(100vh - 58px);
+  overflow-y:auto;padding:20px 12px 60px 18px;
+  border-right:1px solid var(--border);
+  scrollbar-width:thin;
+}
+nav#sidebar::-webkit-scrollbar{width:8px}
+nav#sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+nav#sidebar .nav-group{font-size:11px;font-weight:700;letter-spacing:.09em;color:var(--text3);margin:20px 0 6px 10px}
+nav#sidebar .nav-group:first-child{margin-top:4px}
+nav#sidebar a{
+  display:flex;align-items:center;gap:9px;
+  padding:7px 10px;border-radius:8px;
+  color:var(--text2);text-decoration:none;font-size:14px;font-weight:500;
+}
+nav#sidebar a:hover{background:var(--surface2);color:var(--text)}
+nav#sidebar a.active{background:var(--accent-soft);color:var(--accent-text);font-weight:700}
+nav#sidebar a .ico{width:20px;text-align:center;flex-shrink:0;font-size:14px}
+main{flex:1;min-width:0;padding:36px 44px 120px}
+@media (max-width:1100px){main{padding:30px 22px 100px}}
+@media (max-width:880px){
+  #menuBtn{display:block}
+  nav#sidebar{position:fixed;left:calc(-1 * var(--sidebar-w) - 20px);top:58px;bottom:0;background:var(--surface);z-index:80;transition:left .25s ease;box-shadow:var(--shadow-lg);visibility:hidden}
+  nav#sidebar.open{left:0;visibility:visible}
+  #scrim{position:fixed;inset:58px 0 0 0;background:rgba(10,16,28,.45);z-index:79;opacity:0;pointer-events:none;transition:opacity .25s ease}
+  #scrim.show{opacity:1;pointer-events:auto}
+  main{padding:22px 15px 80px}
+  body{font-size:15.5px}
+}
+.hero{
+  border-radius:20px;padding:42px 38px;margin-bottom:32px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0f2b5b 0%,#134e6f 55%,#0d5c56 100%);
+  color:#eef4ff;box-shadow:var(--shadow-lg);
+}
+.hero h1{font-size:clamp(25px,4vw,38px);font-weight:900;letter-spacing:-.03em;line-height:1.28;margin-bottom:14px;position:relative;z-index:2}
+.hero p{font-size:15.5px;color:#c9d8f0;max-width:660px;position:relative;z-index:2}
+.hero .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;position:relative;z-index:2}
+.hero .chip{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 14px;font-size:12.5px;font-weight:600}
+.hero .skyline{position:absolute;right:-10px;bottom:0;opacity:.14;pointer-events:none;z-index:1}
+section.chapter{margin-bottom:60px;scroll-margin-top:80px}
+section.chapter > h2{
+  font-size:26px;font-weight:800;letter-spacing:-.025em;
+  padding-bottom:12px;margin-bottom:18px;border-bottom:2px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+}
+section.chapter > h2 .num{
+  background:linear-gradient(135deg,var(--accent),var(--teal));color:#fff;
+  border-radius:10px;min-width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;flex-shrink:0;
+}
+section.chapter h3{font-size:19.5px;font-weight:800;margin:32px 0 12px;letter-spacing:-.015em;scroll-margin-top:80px}
+section.chapter h3::before{content:"";display:inline-block;width:4px;height:17px;background:linear-gradient(180deg,var(--accent),var(--teal));border-radius:2px;margin-right:10px;vertical-align:-2px}
+section.chapter h4{font-size:16px;font-weight:700;margin:22px 0 8px;color:var(--text)}
+section.chapter p{margin:0 0 13px;color:var(--text2)}
+section.chapter strong{color:var(--text);font-weight:700}
+section.chapter ul,section.chapter ol{margin:0 0 15px 21px;color:var(--text2)}
+section.chapter li{margin-bottom:6px}
+section.chapter li::marker{color:var(--accent)}
+.lede{font-size:16.5px;color:var(--text2);background:var(--surface);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:22px}
+.tablewrap{overflow-x:auto;margin:15px 0 22px;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);background:var(--surface);-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:540px}
+thead th{
+  background:var(--surface2);color:var(--text);font-weight:700;text-align:left;
+  padding:11px 13px;border-bottom:2px solid var(--border2);white-space:nowrap;
+}
+tbody td{padding:10px 13px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top;line-height:1.6}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:color-mix(in srgb,var(--accent-soft) 32%,transparent)}
+td b,td strong,th b{color:var(--text)}
+td.num,th.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+caption{caption-side:bottom;padding:10px 13px;font-size:12.5px;color:var(--text3);text-align:left}
+.callout{border-radius:var(--radius);padding:15px 18px 15px 50px;margin:18px 0;position:relative;font-size:14.5px;border:1px solid}
+.callout::before{position:absolute;left:16px;top:13px;font-size:19px;line-height:1.3}
+.callout .ct{font-weight:800;margin-bottom:4px;font-size:14px}
+.callout p{margin-bottom:6px;font-size:14.5px}.callout p:last-child{margin-bottom:0}
+.callout ul,.callout ol{margin:6px 0 2px 19px;font-size:14.5px}
+.callout li{margin-bottom:4px}
+.callout.tip{background:var(--teal-soft);border-color:color-mix(in srgb,var(--teal) 32%,transparent)}
+.callout.tip::before{content:"💡"} .callout.tip .ct{color:var(--teal)}
+.callout.warn{background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 32%,transparent)}
+.callout.warn::before{content:"⚠️"} .callout.warn .ct{color:var(--amber)}
+.callout.danger{background:var(--red-soft);border-color:color-mix(in srgb,var(--red) 32%,transparent)}
+.callout.danger::before{content:"🚨"} .callout.danger .ct{color:var(--red)}
+.callout.info{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 32%,transparent)}
+.callout.info::before{content:"📌"} .callout.info .ct{color:var(--accent-text)}
+.callout.money{background:var(--green-soft);border-color:color-mix(in srgb,var(--green) 32%,transparent)}
+.callout.money::before{content:"💰"} .callout.money .ct{color:var(--green)}
+.steps{list-style:none;margin:16px 0 22px;counter-reset:step;padding:0}
+.steps>li{
+  counter-increment:step;position:relative;padding:13px 17px 13px 60px;margin:0 0 9px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
+  color:var(--text2);font-size:14.5px;list-style:none;
+}
+.steps>li::before{
+  content:counter(step);position:absolute;left:15px;top:13px;
+  width:31px;height:31px;border-radius:9px;
+  background:linear-gradient(135deg,var(--accent),var(--teal));color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14.5px;
+}
+.steps>li .st{font-weight:800;color:var(--text);display:block;margin-bottom:2px;font-size:15px}
+.steps>li ul{margin:6px 0 0 18px;font-size:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:11px;margin:16px 0 22px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px;box-shadow:var(--shadow)}
+.card .cv{font-size:21px;font-weight:800;color:var(--text);letter-spacing:-.02em;line-height:1.3}
+.card .cl{font-size:12px;color:var(--text3);font-weight:700;margin-top:3px;letter-spacing:.02em}
+.card .cd{font-size:13px;color:var(--text2);margin-top:8px;line-height:1.6}
+.tag{display:inline-block;border-radius:6px;padding:1px 8px;font-size:12.5px;font-weight:700;vertical-align:1px;margin:0 1px;white-space:nowrap}
+.tag.b{background:var(--accent-soft);color:var(--accent-text)}
+.tag.g{background:var(--green-soft);color:var(--green)}
+.tag.a{background:var(--amber-soft);color:var(--amber)}
+.tag.r{background:var(--red-soft);color:var(--red)}
+.tag.t{background:var(--teal-soft);color:var(--teal)}
+.tag.p{background:var(--purple-soft);color:var(--purple)}
+kbd{background:var(--surface2);border:1px solid var(--border2);border-bottom-width:2px;border-radius:6px;padding:1px 7px;font-size:12.5px;font-family:inherit;font-weight:600;color:var(--text)}
+code{background:var(--surface2);border-radius:5px;padding:1px 6px;font-size:13.5px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--accent-text)}
+.formula{background:var(--surface);border:1px dashed var(--border2);border-radius:10px;padding:14px 18px;margin:14px 0;font-size:15px;color:var(--text);text-align:center;font-weight:600;overflow-x:auto}
+figure.diagram{margin:20px 0 24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);overflow-x:auto}
+figure.diagram svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.diagram figcaption{text-align:center;font-size:12.5px;color:var(--text3);margin-top:12px;line-height:1.6}
+.svg-t{font-family:inherit;font-size:12px;font-weight:600}
+.svg-ts{font-family:inherit;font-size:10.5px}
+details.acc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin:12px 0;box-shadow:var(--shadow);overflow:hidden}
+details.acc summary{padding:13px 17px;font-weight:700;cursor:pointer;font-size:15px;list-style:none;display:flex;align-items:center;gap:9px}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary::before{content:"▶";font-size:10px;color:var(--accent);transition:transform .2s}
+details.acc[open] summary::before{transform:rotate(90deg)}
+details.acc summary:hover{background:var(--surface2)}
+details.acc .acc-body{padding:2px 17px 15px;border-top:1px solid var(--border)}
+details.acc .acc-body > *:first-child{margin-top:13px}
+.divider{height:1px;background:var(--border);margin:26px 0}
+a.inline{color:var(--accent-text);text-decoration:none;border-bottom:1px dashed var(--accent)}
+a.inline:hover{border-bottom-style:solid}
+.toc-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:18px 0 26px}
+.toc-mini a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px 15px;text-decoration:none;box-shadow:var(--shadow);transition:transform .15s,border-color .15s}
+.toc-mini a:hover{transform:translateY(-2px);border-color:var(--accent)}
+.toc-mini .tm-t{font-weight:800;color:var(--text);font-size:14.5px}
+.toc-mini .tm-d{font-size:12.5px;color:var(--text3);margin-top:3px;line-height:1.55}
+footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align:center;color:var(--text3);font-size:13px;line-height:1.8}
+::selection{background:var(--accent-soft);color:var(--text)}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<header class="topbar">
+  <button id="menuBtn" aria-label="목차 열기">☰</button>
+  <div class="logo">🏙️ CS2 초정밀 공략집 <span class="badge">v1.0</span></div>
+  <div class="spacer"></div>
+  <a class="gh" href="https://github.com/g23252a-svg/ssk2" target="_blank" rel="noopener">GitHub ↗</a>
+</header>
+<div id="scrim" hidden></div>
+<div class="layout">
+<nav id="sidebar">
+  <div class="nav-group">준비 &amp; 초반</div>
+  <a href="#intro"><span class="ico">🧭</span>0. 이 공략집의 5대 원칙</a>
+  <a href="#map"><span class="ico">🗺️</span>1. 맵 선택</a>
+  <a href="#progress-sys"><span class="ico">🎯</span>2. 마일스톤 &amp; 개발 트리</a>
+  <a href="#buildorder"><span class="ico">⏱️</span>3. 첫 3시간 빌드오더</a>
+  <div class="nav-group">교통 — 이 게임의 본체</div>
+  <a href="#roads"><span class="ico">🛣️</span>4. 도로 설계 &amp; 교통 공학</a>
+  <a href="#transit"><span class="ico">🚇</span>5. 대중교통 &amp; 화물 물류</a>
+  <div class="nav-group">필수 인프라</div>
+  <a href="#power"><span class="ico">⚡</span>6. 전력</a>
+  <a href="#water"><span class="ico">💧</span>7. 상수도·하수도</a>
+  <a href="#garbage"><span class="ico">🗑️</span>8. 쓰레기·의료·장묘</a>
+  <a href="#safety"><span class="ico">🚓</span>9. 치안·소방·우편·복지</a>
+  <div class="nav-group">성장 엔진</div>
+  <a href="#education"><span class="ico">🏫</span>10. 교육 &amp; 시민 생애주기</a>
+  <a href="#zoning"><span class="ico">🏘️</span>11. 구역·수요·지가·임대료</a>
+  <a href="#economy"><span class="ico">💰</span>12. 경제·세금·특화 산업</a>
+  <div class="nav-group">아름다운 도시</div>
+  <a href="#beauty"><span class="ico">🌳</span>13. 재해·계절·공원·미관</a>
+  <div class="nav-group">실전 레퍼런스</div>
+  <a href="#checklist"><span class="ico">✅</span>14. 인구 단계별 체크리스트</a>
+  <a href="#troubleshoot"><span class="ico">🔧</span>15. 증상별 트러블슈팅</a>
+</nav>
+<main>
+<div class="hero">
+  <h1>시티즈 스카이라인 2<br>초정밀 공략집</h1>
+  <p>교통 정체 없이, 아름답게 성장하는 도시를 만들기 위한 상세 가이드. 도로 위계부터 발전소 배치 방향, 학교 도입 타이밍, 매립지 위치까지 — 전부 숫자와 근거로 설명합니다.</p>
+  <div class="chips">
+    <span class="chip">🛣️ 도로·교통 공학</span>
+    <span class="chip">⚡ 전력·상하수도</span>
+    <span class="chip">🏫 교육·복지 타이밍</span>
+    <span class="chip">💰 Economy 2.0 대응</span>
+    <span class="chip">🌆 미관·시그니처</span>
+  </div>
+  <svg class="skyline" width="440" height="160" viewBox="0 0 440 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="10" y="80" width="34" height="80" fill="#fff"/>
+    <rect x="52" y="46" width="28" height="114" fill="#fff"/>
+    <rect x="88" y="98" width="40" height="62" fill="#fff"/>
+    <rect x="136" y="24" width="30" height="136" fill="#fff"/>
+    <rect x="174" y="66" width="26" height="94" fill="#fff"/>
+    <rect x="208" y="108" width="44" height="52" fill="#fff"/>
+    <rect x="260" y="40" width="32" height="120" fill="#fff"/>
+    <rect x="300" y="82" width="28" height="78" fill="#fff"/>
+    <rect x="336" y="60" width="36" height="100" fill="#fff"/>
+    <rect x="380" y="100" width="30" height="60" fill="#fff"/>
+    <rect x="418" y="72" width="22" height="88" fill="#fff"/>
+  </svg>
+</div>
+
+<!-- ══════════ 0. 원칙 ══════════ -->
+<section class="chapter" id="intro">
+<h2><span class="num">0</span>이 공략집의 5대 원칙</h2>
+
+<p class="lede">이 문서는 <strong>Economy 2.0(패치 1.1.5f1, 2024-06) 이후 ~ 2025–2026 현행 패치</strong> 기준으로 작성했습니다. 전작(CS1)에서 통하던 요령 상당수가 CS2에서는 반대로 작동하므로, 구버전 공략과 충돌하는 부분은 본문에서 명시적으로 짚습니다. 게임 내 수치는 패치마다 조정되므로 <code>≈</code> 표기는 근사치이며, 최종 기준은 항상 게임 내 건물 정보 패널입니다.</p>
+
+<div class="cards">
+  <div class="card">
+    <div class="cv">위계 &gt; 차선 수</div>
+    <div class="cl">원칙 1 · 교통</div>
+    <div class="cd">CS2 교통 문제의 80%는 차선이 좁아서가 아니라 <strong>도로 위계가 없어서</strong> 생깁니다. 6차선으로 넓히기 전에 교차로부터 진단하세요.</div>
+  </div>
+  <div class="card">
+    <div class="cv">유지비 &gt; 건설비</div>
+    <div class="cl">원칙 2 · 재정</div>
+    <div class="cd">Economy 2.0에서 정부 보조금이 <strong>삭제</strong>됐습니다. 도로를 까는 순간부터 매월 돈이 나갑니다. 파산은 건설비가 아니라 유지비로 옵니다.</div>
+  </div>
+  <div class="card">
+    <div class="cv">해금 ≠ 건설</div>
+    <div class="cl">원칙 3 · 타이밍</div>
+    <div class="cd">마일스톤에서 열렸다고 바로 짓지 마세요. <strong>시민이 민원을 낼 때</strong> 짓는 것이 정석입니다. 특히 화장장·대형 병원은 예산 블랙홀입니다.</div>
+  </div>
+  <div class="card">
+    <div class="cv">바람과 물의 방향</div>
+    <div class="cl">원칙 4 · 배치</div>
+    <div class="cd">대기오염은 <strong>바람을 타고 풍하로</strong>, 수질오염은 <strong>물을 타고 하류로</strong> 갑니다. 배치 전 인포뷰 3초 확인이 도시 수명을 결정합니다.</div>
+  </div>
+  <div class="card">
+    <div class="cv">교육 = 경제</div>
+    <div class="cl">원칙 5 · 성장</div>
+    <div class="cd">소득세는 <strong>최저소득 ₡1,400 초과분</strong>에만 걸립니다. 최고학력 시민 1명의 세수가 무학 시민의 10배 이상입니다.</div>
+  </div>
+</div>
+
+<h3>이 문서를 읽는 순서</h3>
+<p>처음 시작하는 분은 <strong>1 → 2 → 3장</strong>을 순서대로 읽고 게임을 켜세요. 이미 도시가 있는데 문제가 생겼다면 <strong>15장 증상별 트러블슈팅</strong>에서 증상을 찾아 해당 장으로 점프하는 것이 빠릅니다. 인구 구간마다 뭘 해야 할지 모르겠다면 <strong>14장 체크리스트</strong>가 요약표입니다.</p>
+
+<div class="toc-mini">
+  <a href="#buildorder"><div class="tm-t">⏱️ 지금 막 시작했어요</div><div class="tm-d">3장 빌드오더 — 0~15분에 뭘 짓는지 분 단위로</div></a>
+  <a href="#roads"><div class="tm-t">🚗 차가 막혀요</div><div class="tm-d">4장 도로 공학 — 위계·교차로 간격·주차</div></a>
+  <a href="#economy"><div class="tm-t">💸 돈이 계속 마이너스예요</div><div class="tm-d">12장 경제 — 특화 산업 20~25% 세율 전략</div></a>
+  <a href="#zoning"><div class="tm-t">🏚️ 임대료가 너무 높대요</div><div class="tm-d">11장 구역 — Economy 2.0 임대료 공식과 8단계 처방</div></a>
+</div>
+</section>
+
+<!-- ══════════ 1. 맵 선택 ══════════ -->
+<section class="chapter" id="map">
+<h2><span class="num">1</span>맵 선택 — 시작 자금은 어디나 같다</h2>
+
+<p class="lede">CS2는 <strong>모든 맵에서 시작 자금이 동일</strong>합니다. Economy 2.0 이후 기준 <strong>₡1,000,000 + 기본 해금 9타일</strong>(이 9타일은 타일 유지비 면제)로 시작합니다. 맵 선택으로 갈리는 것은 자금이 아니라 <strong>건설 가능 면적·외부 연결·자원·기후</strong> 네 가지입니다.</p>
+
+<h3>1-1. 기본 12개 맵 전수 비교</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>맵</th><th class="num">건설가능</th><th class="num">기온</th><th>반구</th><th class="num">비옥토</th><th class="num">산림</th><th class="num">광석</th><th class="num">석유</th><th>외부 연결</th></tr></thead>
+<tbody>
+<tr><td><b>Archipelago Haven</b></td><td class="num">16%</td><td class="num">8~30°C</td><td>북</td><td class="num">233 kt</td><td class="num">16 kt</td><td class="num">≈6.9 kt</td><td class="num">365 kt</td><td>도로·철도·선박·항공</td></tr>
+<tr><td><b>Barrier Island</b></td><td class="num">41%</td><td class="num">10~29°C</td><td>남</td><td class="num">146 kt</td><td class="num">≈8.9 kt</td><td class="num">12.6 kt</td><td class="num">306 kt</td><td>도로·철도·선박·항공</td></tr>
+<tr><td><b>Corral Riches</b></td><td class="num"><b>76%</b></td><td class="num">3~34°C</td><td>북</td><td class="num">143 kt</td><td class="num">45.1 kt</td><td class="num">48.1 kt</td><td class="num">124 kt</td><td>도로·철도·선박·항공</td></tr>
+<tr><td><b>Great Highlands</b></td><td class="num">41%</td><td class="num">-3~19°C</td><td>북</td><td class="num">141 kt</td><td class="num">16.1 kt</td><td class="num">≈8.1 kt</td><td class="num">141 kt</td><td>도로·철도·선박·항공</td></tr>
+<tr><td><b>Lakeland</b></td><td class="num">49%</td><td class="num">-15~26°C</td><td>북</td><td class="num"><b>403 kt</b></td><td class="num">13.3 kt</td><td class="num">≈4.7 kt</td><td class="num">191 kt</td><td>도로·철도·항공 <span class="tag r">선박 없음</span></td></tr>
+<tr><td><b>Mountain Village</b></td><td class="num">21%</td><td class="num">-12~27°C</td><td>북</td><td class="num">263 kt</td><td class="num">≈7.7 kt</td><td class="num">11 kt</td><td class="num">≈8.9 kt</td><td>도로·철도·항공</td></tr>
+<tr><td><b>River Delta</b></td><td class="num">42%</td><td class="num">-4~34°C</td><td>북</td><td class="num">270 kt</td><td class="num">12.9 kt</td><td class="num">≈4.3 kt</td><td class="num">≈88 kt</td><td>도로·철도·선박·항공</td></tr>
+<tr><td><b>Sunshine Peninsula</b></td><td class="num">60%</td><td class="num">11~27°C</td><td>남</td><td class="num">218 kt</td><td class="num"><b>56.1 kt</b></td><td class="num"><b>55.6 kt</b></td><td class="num">121 kt</td><td>도로·철도·선박·항공</td></tr>
+<tr><td><b>Sweeping Plains</b></td><td class="num">31%</td><td class="num">-4~23°C</td><td>남</td><td class="num">209 kt</td><td class="num">≈8 kt</td><td class="num">10.9 kt</td><td class="num">111 kt</td><td>도로·철도·선박·항공</td></tr>
+<tr><td><b>Twin Mountain</b></td><td class="num">39%</td><td class="num">-4~15°C</td><td>북</td><td class="num">129 kt</td><td class="num">16.1 kt</td><td class="num">≈7.2 kt</td><td class="num">209 kt</td><td>도로·선박·항공 <span class="tag r">철도 없음</span></td></tr>
+<tr><td><b>Waterway Pass</b></td><td class="num">53%</td><td class="num">-5~36°C</td><td>북</td><td class="num">236 kt</td><td class="num">12 kt</td><td class="num">10.2 kt</td><td class="num">≈12.1 kt</td><td>도로·철도·선박·항공</td></tr>
+<tr><td><b>Windy Fjords</b></td><td class="num">21%</td><td class="num">-6~18°C</td><td>남</td><td class="num">334 kt</td><td class="num">12.2 kt</td><td class="num">≈5.2 kt</td><td class="num">189 kt</td><td>도로·철도·선박·항공</td></tr>
+</tbody>
+<caption>모든 맵은 159타일 전체 해금 시 총면적이 같습니다. 실제 난이도는 건설 가능 면적 %가 결정합니다. 수치는 공식 위키 기준.</caption>
+</table>
+</div>
+
+<h3>1-2. 목적별 추천</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>목적</th><th>추천 맵</th><th>이유 / 주의점</th></tr></thead>
+<tbody>
+<tr><td><span class="tag g">첫 도시</span></td><td><b>Waterway Pass</b> (53%)</td><td>외부 연결 5종 전부 + 자원 균형 + 튜토리얼 맵. 초반부터 철도 수출입 가능. <b>단점</b>: 석유가 ≈12 kt로 극히 적음</td></tr>
+<tr><td><span class="tag g">첫 도시(대안)</span></td><td><b>Lakeland</b> (49%)</td><td>평탄한 호수 지형 + 비옥토 403 kt로 전 맵 1위 → 농업 특화로 초반 흑자 쉬움. <b>단점</b>: 선박 연결 없음, 겨울 -15°C(전력 수요 급증)</td></tr>
+<tr><td><span class="tag b">대도시 지향</span></td><td><b>Corral Riches</b> (76%)</td><td>건설 가능 면적 1위. 광석 48 kt로 중공업 도시 가능</td></tr>
+<tr><td><span class="tag b">대도시(균형)</span></td><td><b>Sunshine Peninsula</b> (60%)</td><td>산림·광석 모두 전 맵 최상위 + 남반구 온화 기후(11~27°C)로 난방 부담 없음</td></tr>
+<tr><td><span class="tag t">눈이 싫다면</span></td><td><b>Barrier Island</b> (41%)</td><td>남반구 10~29°C, 평지 위주. 제설차·난방 걱정 불필요</td></tr>
+<tr><td><span class="tag r">상급자용</span></td><td>Archipelago Haven(16%)<br>Windy Fjords·Mountain Village(21%)</td><td>교량·터널 비용 폭증 + 부지 부족. 미관 도시로는 최고지만 첫 도시로는 비추천</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout info">
+<div class="ct">무료 공식 맵 Tampere</div>
+<p>Paradox Mods에서 공식 배포되는 <strong>Tampere</strong>(≈66% 건설 가능, 거의 완전 평지)는 커뮤니티에서 도로 설계 연습용으로 자주 추천됩니다. 지형과 싸우지 않고 순수하게 도시 계획만 연습하고 싶다면 좋은 선택입니다. (PC 한정)</p>
+</div>
+
+<h3>1-3. 맵 선택 체크리스트 — 시작 버튼 누르기 전 4가지</h3>
+<ol class="steps">
+<li><span class="st">선박·철도 연결이 있는가?</span>화물 수출입 비용에 직결됩니다. 철도가 없는 Twin Mountain, 선박이 없는 Lakeland는 물류 전략이 통째로 달라집니다.</li>
+<li><span class="st">겨울 최저기온이 몇 도인가?</span>전력 소비는 <strong>18~22°C에서 100%</strong>가 최적이고, 극단 온도(≈-18°C 이하)에서 <strong>최대 ≈200%</strong>까지 오릅니다. 영하 맵은 여름 기준 발전량의 +50~100% 여유가 필요합니다.</li>
+<li><span class="st">강의 유량과 방향은?</span>수력발전 가능 여부와 하수 배출 방향이 여기서 결정됩니다. 시작 타일에 <strong>흐르는 강</strong>이 걸쳐 있으면 상하수 운영이 훨씬 쉽습니다(7장 참조).</li>
+<li><span class="st">시작 9타일에 비옥토가 걸쳐 있는가?</span>있으면 3장 빌드오더에서 곧바로 농업 특화 산업으로 초반 흑자를 만들 수 있습니다. 이것이 Economy 2.0 이후 가장 확실한 초반 흑자 루트입니다.</li>
+</ol>
+</section>
+
+<!-- ══════════ 2. 마일스톤 ══════════ -->
+<section class="chapter" id="progress-sys">
+<h2><span class="num">2</span>마일스톤 &amp; 개발 트리</h2>
+
+<p class="lede">마일스톤은 <strong>XP 누적</strong>으로 해금됩니다. XP 획득 경로는 두 가지입니다. <strong>능동</strong>: 도로·건물·서비스 건물을 짓거나 외부 연결을 구축하면 즉시 지급. <strong>수동</strong>: 인구·행복도에 비례해 게임 내 1.5시간마다(하루 16회) 지급. 즉 "짓는 만큼 + 사는 만큼" 오릅니다.</p>
+
+<h3>2-1. 마일스톤 20단계 전체표</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>#</th><th>마일스톤</th><th class="num">필요 XP(≈)</th><th class="num">자금 보상</th><th class="num">개발 포인트<br>(누적)</th><th class="num">확장 허가<br>(누적)</th><th class="num">대출 한도 +</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><b>Tiny Village</b></td><td class="num">750</td><td class="num">₡25,000</td><td class="num">+1 (1)</td><td class="num">+3 (12)</td><td class="num">₡100,000</td></tr>
+<tr><td>2</td><td><b>Small Village</b></td><td class="num">2,500</td><td class="num">₡50,000</td><td class="num">+2 (3)</td><td class="num">+4 (16)</td><td class="num">₡150,000</td></tr>
+<tr><td>3</td><td><b>Large Village</b></td><td class="num">4,800</td><td class="num">₡75,000</td><td class="num">+3 (6)</td><td class="num">+5 (21)</td><td class="num">₡200,000</td></tr>
+<tr><td>4</td><td><b>Grand Village</b></td><td class="num">8,300</td><td class="num">₡100,000</td><td class="num">+4 (10)</td><td class="num">+6 (27)</td><td class="num">₡250,000</td></tr>
+<tr><td>5</td><td><b>Tiny Town</b></td><td class="num">13,600</td><td class="num">₡125,000</td><td class="num">+5 (15)</td><td class="num">+7 (34)</td><td class="num">₡400,000</td></tr>
+<tr><td>6</td><td><b>Boom Town</b></td><td class="num">21,300</td><td class="num">₡150,000</td><td class="num">+6 (21)</td><td class="num">+8 (42)</td><td class="num">₡500,000</td></tr>
+<tr><td>7</td><td><b>Busy Town</b></td><td class="num">32,100</td><td class="num">₡175,000</td><td class="num">+7 (28)</td><td class="num">+9 (51)</td><td class="num">₡600,000</td></tr>
+<tr><td>8</td><td><b>Big Town</b></td><td class="num">46,700</td><td class="num">₡200,000</td><td class="num">+8 (36)</td><td class="num">+10 (61)</td><td class="num">₡700,000</td></tr>
+<tr><td>9</td><td><b>Great Town</b></td><td class="num">65,700</td><td class="num">₡225,000</td><td class="num">+9 (45)</td><td class="num">+12 (73)</td><td class="num">₡800,000</td></tr>
+<tr><td>10</td><td><b>Small City</b></td><td class="num">89,700</td><td class="num">₡250,000</td><td class="num">+10 (55)</td><td class="num">+15 (88)</td><td class="num">₡900,000</td></tr>
+<tr><td>11</td><td><b>Big City</b></td><td class="num">119,700</td><td class="num">₡275,000</td><td class="num">+11 (66)</td><td class="num">+18 (106)</td><td class="num">₡1,100,000</td></tr>
+<tr><td>12</td><td><b>Large City</b></td><td class="num">155,700</td><td class="num">₡300,000</td><td class="num">+12 (78)</td><td class="num">+21 (127)</td><td class="num">₡1,300,000</td></tr>
+<tr><td>13</td><td><b>Huge City</b></td><td class="num">198,700</td><td class="num">₡325,000</td><td class="num">+13 (91)</td><td class="num">+24 (151)</td><td class="num">₡1,500,000</td></tr>
+<tr><td>14</td><td><b>Grand City</b></td><td class="num">248,700</td><td class="num">₡350,000</td><td class="num">+14 (105)</td><td class="num">+28 (179)</td><td class="num">₡1,700,000</td></tr>
+<tr><td>15</td><td><b>Metropolis</b></td><td class="num">305,700</td><td class="num">₡375,000</td><td class="num">+15 (120)</td><td class="num">+32 (211)</td><td class="num">₡1,900,000</td></tr>
+<tr><td>16</td><td><b>Thriving Metropolis</b></td><td class="num">369,700</td><td class="num">₡400,000</td><td class="num">+17 (137)</td><td class="num">+36 (247)</td><td class="num">₡2,100,000</td></tr>
+<tr><td>17</td><td><b>Flourishing Metropolis</b></td><td class="num">439,700</td><td class="num">₡425,000</td><td class="num">+19 (156)</td><td class="num">+41 (288)</td><td class="num">₡2,300,000</td></tr>
+<tr><td>18</td><td><b>Expansive Metropolis</b></td><td class="num">514,700</td><td class="num">₡450,000</td><td class="num">+21 (177)</td><td class="num">+46 (334)</td><td class="num">₡2,600,000</td></tr>
+<tr><td>19</td><td><b>Massive Metropolis</b></td><td class="num">592,700</td><td class="num">₡475,000</td><td class="num">+25 (202)</td><td class="num">+51 (385)</td><td class="num">₡3,000,000</td></tr>
+<tr><td>20</td><td><b>Megalopolis</b></td><td class="num">≈675,000</td><td class="num">₡500,000</td><td class="num">+30 (232)</td><td class="num">+56 (441)</td><td class="num">₡4,000,000</td></tr>
+</tbody>
+<caption>XP 수치는 커뮤니티 위키 집계 기준 근사치(패치에 따라 변동). 확장 허가 누적치는 시작 9타일 포함. 자금 보상은 1.1.5f1에서 대폭 하향되었으므로 <b>보상만 믿고 버티는 전략은 불가능</b>합니다.</caption>
+</table>
+</div>
+
+<h3>2-2. 초반 구간 주요 해금 (M1~M10)</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>마일스톤</th><th>해금 내용</th></tr></thead>
+<tbody>
+<tr><td><b>M1</b> Tiny Village</td><td>의료(Healthcare), 쓰레기 관리, <b>4차선 도로</b>, 세금 패널, <b>대출(Loans)</b>, 중밀 연립(Row Housing)</td></tr>
+<tr><td><b>M2</b> Small Village</td><td><b>교육·연구</b>, 중밀 주거, 생산(Production) 패널</td></tr>
+<tr><td><b>M3</b> Large Village</td><td><b>소방(Fire &amp; Rescue)</b>, <b>경찰·행정</b>, 축산·채석 특화</td></tr>
+<tr><td><b>M4</b> Grand Village</td><td><b>대중교통(버스·택시 무료 해금)</b>, 공원·레크리에이션, 구역(District)·정책, 저임대 주택, <b>저밀 사무</b>, 곡물·임업 특화</td></tr>
+<tr><td><b>M5</b> Tiny Town</td><td><b>통신·우편(우체국)</b>, 혼합 주거, 채소·석탄 특화</td></tr>
+<tr><td><b>M6</b> Boom Town</td><td>섬유작물 특화</td></tr>
+<tr><td><b>M7</b> Busy Town</td><td>광석 특화</td></tr>
+<tr><td><b>M8</b> Big Town</td><td><b>고밀 주거</b>, 소각장 계열, 석유 특화</td></tr>
+<tr><td><b>M9</b> Great Town</td><td><b>고밀 상업</b></td></tr>
+<tr><td><b>M10</b> Small City</td><td><b>고밀 사무</b> — 도심 스카이라인의 시작</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>2-3. 개발 트리(Development Tree) — 232pt로 전부 살 수 있다</h3>
+<p>노드 비용은 <strong>티어1 = 1pt, 티어2 = 2pt, 티어3 = 4pt, 티어4 = 8pt</strong>입니다. 총 획득 가능 포인트는 <strong>232pt</strong>이고 전체 노드 구매에는 <strong>228pt</strong>가 필요합니다. 즉 장기적으로는 어차피 전부 해금되므로, <strong>"순서"가 곧 전략</strong>입니다. 초반에 안 사도 되는 것을 아는 것이 실력입니다.</p>
+
+<ol class="steps">
+<li><span class="st">🛣️ Advanced Road Services (1pt)</span>신호등·정지표지·횡단보도 등 교차로 제어 + 도로 정비소. <strong>커뮤니티 만장일치 최우선 픽</strong>. 이거 없으면 교차로를 손댈 수 없습니다.</li>
+<li><span class="st">🏥 의료: 병원(Hospital) 방면 1단계</span>진료소보다 커버리지·업그레이드 여력이 압도적입니다.</li>
+<li><span class="st">🗑️ 쓰레기: 재활용 센터 → 소각장 방면</span><strong>해금만 먼저, 건설은 흑자 후.</strong> 재활용 센터는 ₡880,000 / 월 ≈₡80,000이라 초반 건설은 자살행위입니다.</li>
+<li><span class="st">🏫 교육: 전문대학(College, 1pt) 선행 노드</span>고학력 → 오피스 수요 → 고세수 사이클의 시동입니다.</li>
+<li><span class="st">🤝 복지 사무소(Welfare Office, 1pt)</span>건설비 ₡110,000로 저렴한데 저소득층 웰빙을 지탱해 <strong>범죄를 근본적으로 억제</strong>합니다. 파출소 5개보다 효과적입니다.</li>
+<li><span class="st">⚡ 전기: 가스(2pt) 또는 지열(2pt) 또는 수력(2pt)</span>맵 지형에 따라 선택. 지하수 지대가 있으면 <strong>지열이 중반 최고 가성비</strong>, 좋은 협곡이 있으면 수력이 게임을 끝냅니다(6장).</li>
+<li><span class="st">🏛️ 시청(City Hall) → 중앙은행(Central Bank)</span>대출 이자율 각각 -1%, -2%. 대출을 쓸 계획이면 빠를수록 이득입니다.</li>
+<li><span class="st">🚋 교통: 기차(1pt) → 트램(2pt)</span>같은 도로 폭에서 버스보다 수송량 우위. 수출 도시라면 화물역 때문에 기차 우선순위가 올라갑니다.</li>
+</ol>
+
+<div class="callout danger">
+<div class="ct">M10 이전에 절대 사지 말 것</div>
+<p>우주센터 등 시그니처급 노드, 지하 주차장, 공항 방면, 대형 스포츠 공원 — 전부 <strong>유지비 폭탄</strong>이며 초반 기여가 없습니다. 개발 포인트는 유한하지 않지만(232pt 전량 해금 가능), <strong>돈은 유한합니다</strong>.</p>
+</div>
+
+<h3>2-4. 확장 허가와 타일 유지비 — 허가는 은행처럼 쌓아두세요</h3>
+<p>Economy 2.0 이후 타일 구매는 <strong>확장 허가 + 구매 대금 + 매월 타일 유지비</strong>의 3중 비용입니다. 특히 치명적인 것은 유지비 구조입니다.</p>
+<div class="callout warn">
+<div class="ct">타일 유지비는 소급 적용됩니다</div>
+<p><strong>타일 유지비 = 구매가의 5% → 25%</strong>로, 보유 타일이 늘수록 곡선형으로 상승하며 <strong>전체 보유 타일에 소급 적용</strong>됩니다. 즉 타일 하나를 더 사면 이미 가진 타일들의 유지비도 같이 올라갑니다. 시작 9타일은 면제입니다.</p>
+<p>결론: <strong>"허가가 남는다고 타일을 사면 안 됩니다."</strong> 타일 가격은 내용물(건설 가능 지면, 자원)에 비례하므로 물이 대부분인 타일이 가장 쌉니다.</p>
+</div>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th class="num">순위</th><th>대상 타일</th><th>이유</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td>현재 시가지와 붙은 <b>평탄한 저가 타일</b></td><td>즉시 구획 확장 가능, 도로 연장비 최소</td></tr>
+<tr><td class="num">2</td><td><b>고속도로/철도 외부 연결</b>이 지나는 타일</td><td>수출입·통근 유입 개선, 추가 인터체인지 확보</td></tr>
+<tr><td class="num">3</td><td><b>상류 수원·고풍속 지점</b> 포함 타일</td><td>취수장·풍력 최적지 확보</td></tr>
+<tr><td class="num">4</td><td><b>비옥지/산림/광석/석유</b> 타일</td><td>특화 산업 확장 시점(M4+)에만</td></tr>
+<tr><td class="num">5</td><td>경관·수변 타일</td><td>고밀도·관광 단계(M10+)의 사치</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- ══════════ 3. 빌드오더 ══════════ -->
+<section class="chapter" id="buildorder">
+<h2><span class="num">3</span>첫 3시간 빌드오더 — 분 단위 실행표</h2>
+
+<p class="lede">승부는 <strong>"첫 M1(750XP)까지 얼마나 싸게 도달하느냐"</strong>에서 갈립니다. 아래는 실시간 기준 4구간 빌드오더입니다. 시간은 목표치이며, 플레이 속도에 따라 달라집니다.</p>
+
+<div class="callout tip">
+<div class="ct">시작 전 습관: 건설 중에는 일시정지</div>
+<p>도로와 건물은 <strong>설치한 순간부터 유지비가 나갑니다.</strong> 인구가 들어오기 전에 인프라를 잔뜩 깔면 적자로 시작합니다. <kbd>Space</kbd>로 일시정지한 상태에서 골격을 다 그린 뒤 한 번에 개통하세요.</p>
+</div>
+
+<h3>3-1. <span class="tag b">0~15분</span> 진입로와 유틸리티 골격 <span style="font-size:14px;font-weight:500;color:var(--text3)">(지출 ≈₡150,000~250,000)</span></h3>
+<ol class="steps">
+<li><span class="st">고속도로 인터체인지에서 2차선 도로를 뽑는다</span>평지에 T자 또는 간단한 격자 골격을 만듭니다. <strong>처음부터 4차선/대로는 금지</strong> — 건설비·유지비 낭비이고 4차선은 애초에 M1에서야 해금됩니다. 자갈길(≈₡2,500/km)로 시작해 나중에 업그레이드하는 것도 유효합니다.</li>
+<li><span class="st">전력: 풍속 지도를 먼저 켠다</span>풍속이 높은 언덕/능선/해안에 <strong>풍력 터빈</strong>(₡25,000, 유지 ≈₡7,500/월, 최대 5MW) 1~2기. 터빈을 손에 들고 커서를 움직이면 <strong>그 지점의 예상 발전량이 실시간 표시</strong>됩니다 — 4.5MW 이상 뜨는 곳만 고르세요.<br>바람이 약한 맵이면 <strong>외부 전력 수입</strong>(변전소 ₡30,000 + 고압선)이 초기엔 더 쌉니다.</li>
+<li><span class="st">상수: 강 상류에 취수 펌프장</span><strong>취수장(Water Pumping Station)</strong> ₡25,000 / 유지 ≈₡10,000 / 용량 100,000 m³. 물가에만 설치 가능하며 용량 대비 비용이 가장 쌉니다.</li>
+<li><span class="st">하수: 반드시 취수장보다 하류에 배출구</span><strong>하수 배출구(Sewage Outlet)</strong> ₡25,000 / 유지 ≈₡20,000 / 100,000 m³. 물 흐름은 인포뷰의 <strong>화살표</strong>로 확인합니다(화살표가 길수록 유속이 강함). 가능하면 <strong>물이 맵 밖으로 빠져나가는 가장자리 직전</strong>에 두세요.</li>
+</ol>
+
+<div class="callout danger">
+<div class="ct">이 시점 최대의 함정: 석탄 화력</div>
+<p>대형 석탄 발전소는 <strong>₡1,000,000</strong>입니다. 시작 자금 전액입니다. 소형 석탄(₡100,000/20MW)도 MW당 ≈₡3,500으로 <strong>게임 내 최악의 효율</strong>에 지상·공기·소음 3중 오염입니다. 풍력 또는 전력 수입으로 M4까지 버티세요.</p>
+</div>
+
+<h3>3-2. <span class="tag b">15~40분</span> 첫 주민 유치 (M1 도달 목표)</h3>
+<ol class="steps">
+<li><span class="st">저밀도 주거를 소규모로 지정</span>골격 도로 안쪽에 2~3블록만. <strong>한 번에 왕창 지정하지 마세요</strong> — 수요 막대가 다시 차오를 때마다 추가하는 것이 원칙입니다. 동시에 대량 입주시키면 훗날 <strong>사망파(Death Wave)</strong>가 옵니다(10장).</li>
+<li><span class="st">상업 1블록 + 산업 1~2블록</span>주거 옆에 소규모 상업, 골격 도로 바깥(<strong>주거 기준 바람 하류</strong>)에 산업. 산업은 일자리와 세수의 핵심입니다.</li>
+<li><span class="st">M1(750XP) 도달 — 보통 15~30분</span>도로·건물 설치만으로도 능동 XP가 쌓입니다. 보상: ₡25,000, 개발 포인트 1, 확장 허가 3, <strong>대출 해금</strong>.</li>
+<li><span class="st">세금 패널에서 주거세 인하</span>기본 10% → <strong>≈2~5%</strong>로 낮춰 유입을 가속합니다(커뮤니티 전략은 1%까지 내리기도 함). 상업·산업은 10% 유지. 흑자가 안정되면 서서히 복원합니다.</li>
+</ol>
+
+<h3>3-3. <span class="tag b">40~90분</span> 서비스 최소 세트 (M2~M3)</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>순서</th><th>시설</th><th class="num">건설비</th><th class="num">월 유지비</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><b>소형 진료소</b>(Small Medical Clinic)</td><td class="num">₡30,000</td><td class="num">≈₡10,000</td><td>환자 25명. 일반 진료소(₡60,000/50명)는 인구 2,000+부터</td></tr>
+<tr><td>2</td><td><b>매립지</b>(Landfill)</td><td class="num">₡70,000</td><td class="num">≈₡30,000</td><td>인구 수백이면 <b>M6까지 미루는 것도 유효</b>한 절약. 트럭 15대</td></tr>
+<tr><td>3</td><td><b>초등학교</b> (M2 해금)</td><td class="num">₡40,000<span style="color:var(--text3)">(소형)</span></td><td class="num">≈₡5,000</td><td>소형 정원 400명. 인구 1,000 전후면 소형으로 충분</td></tr>
+<tr><td>4</td><td><b>소방서</b>(Fire House) (M3)</td><td class="num">₡120,000</td><td class="num">≈₡10,000</td><td>소방차 4대, 5×5칸. 화재 한 번이 초반 재정을 무너뜨립니다</td></tr>
+<tr><td>5</td><td><b>파출소</b>(Police Station) (M3)</td><td class="num">₡160,000</td><td class="num">≈₡19,000</td><td>순찰차 6대, 유치장 25명</td></tr>
+</tbody>
+<caption>소방을 경찰보다 먼저 짓는 이유: 화재는 건물을 물리적으로 태워 즉시 손실을 내지만, 초기 범죄는 느리게 누적됩니다.</caption>
+</table>
+</div>
+
+<div class="callout money">
+<div class="ct">이 구간의 핵심: 예산 슬라이더 50%</div>
+<p>각 서비스 예산은 <strong>50%~150%</strong> 범위로 조절되며, 효율은 <strong>비선형</strong>입니다. 50%로 내려도 효과는 절반 이하로 떨어지지 않는 반면 유지비는 크게 절감됩니다.</p>
+<p><strong>초반 표준 세팅</strong>: 모든 서비스를 50%로 시작 → 시민 불만(민원 아이콘)이 뜨는 서비스만 10%p씩 올리기. 전기·수도는 수요 게이지가 80%를 넘으면 증설하거나 예산을 올립니다.</p>
+</div>
+
+<h3>3-4. <span class="tag b">90~180분</span> 흑자 전환과 첫 확장 (M4~M6, 인구 ≈3,000~7,000)</h3>
+<ol class="steps">
+<li><span class="st">M4에서 버스 해금 → 노선 1개</span>버스 차고지(₡150,000, 유지 ≈₡23,250, 25대) + 주거↔일자리 왕복 노선. 교통·행복도·지가가 함께 오릅니다. 공원은 소형 1~2개만.</li>
+<li><span class="st">특화 산업으로 흑자 만들기 ★</span>비옥지가 있으면 <strong>농장을 ≈10개 규모로 깔고, 그 품목 세율을 20~25%로 올립니다.</strong> Economy 2.0 이후 소도시 흑자의 최속 루트로 파라독스 포럼에서 검증된 방법입니다. 곡물/채소/축산이 쌓이면 유제품 공장 등 가공 단계가 열립니다.</li>
+<li><span class="st">저밀도 주거를 시차를 두고 확장</span>M4 전후까지 인구 3,000 확보가 목표. 11×7 격자 단위 확장이 커뮤니티 정석입니다. <strong>한꺼번에 늘리지 말고 나눠서</strong> — 연령 분산이 훗날 사망파를 막습니다.</li>
+<li><span class="st">M5~M6에서 첫 타일 확장 + 중밀 도입</span>2-4절의 우선순위표를 따르세요. 중밀 연립(Row Housing)은 M1부터 가능하므로 이미 섞어 쓰고 있어야 합니다.</li>
+<li><span class="st">손익 +₡10,000/월 이상 안정 → 세율 복원</span>주거세를 기본 10~13% 근처로 서서히 되돌립니다.</li>
+</ol>
+
+<h3>3-5. 초반 파산 방지 4대 수칙</h3>
+<div class="cards">
+  <div class="card">
+    <div class="cv">대출은 수익 시설에만</div>
+    <div class="cl">수칙 1</div>
+    <div class="cd">M1 해금. <strong>이자율은 대출 규모에 비례해 상승</strong>하므로 한도까지 당기지 말고 적자 3~4개월 버틸 만큼만(초반 ≈₡50,000~100,000). 적자 보전용 돌려막기는 파산 가속 버튼입니다.</div>
+  </div>
+  <div class="card">
+    <div class="cv">전 서비스 50% 출발</div>
+    <div class="cl">수칙 2</div>
+    <div class="cd">커버리지가 남아도는 초반에 100%는 순손실입니다. 민원이 뜨는 항목만 올리세요.</div>
+  </div>
+  <div class="card">
+    <div class="cv">서비스 요금 ≈110%</div>
+    <div class="cl">수칙 3</div>
+    <div class="cd">전기·수도 요금을 소폭 올리면 시민 불만 없이 소폭 흑자화가 가능합니다. 과하면 행복도가 떨어집니다.</div>
+  </div>
+  <div class="card">
+    <div class="cv">타일 구매 절제</div>
+    <div class="cl">수칙 4</div>
+    <div class="cd">타일 유지비는 <strong>보유 전체에 소급 적용</strong>됩니다. 목적 없는 타일 하나가 도시 전체 고정비를 올립니다.</div>
+  </div>
+</div>
+
+<div class="callout warn">
+<div class="ct">Economy 2.0에서 사라진 것들</div>
+<ul>
+<li><strong>정부 보조금 삭제</strong> — 구버전의 자동 적자 보전이 없습니다. 화면 우하단 월 수지가 곧 생존선입니다.</li>
+<li><strong>마일스톤 자금 보상 대폭 하향</strong> — 보상을 기다리며 버티는 플레이는 불가능합니다.</li>
+<li><strong>서비스 직원 임금이 시 재정에서 직접 지급</strong> — 건물 유지비 외에 인건비가 추가로 나갑니다.</li>
+</ul>
+</div>
+</section>
+
+<!-- ══════════ 4. 도로 ══════════ -->
+<section class="chapter" id="roads">
+<h2><span class="num">4</span>도로 설계 &amp; 교통 공학</h2>
+
+<p class="lede">CS2 교통 문제의 <strong>80%는 위계(hierarchy) 부재</strong>에서 나옵니다. 6차선으로 넓히는 것은 대부분 해결책이 아니라 문제의 이동입니다. 이 장은 이 공략집에서 가장 중요한 장입니다.</p>
+
+<h3>4-1. 도로 종류별 스펙</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>도로</th><th class="num">건설비/km(≈)</th><th class="num">월 유지비/km(≈)</th><th class="num">제한속도</th><th class="num">차선</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td><b>자갈길</b>(Gravel Road)</td><td class="num">₡2,500</td><td class="num">₡412</td><td class="num">30 km/h</td><td class="num">2</td><td>최저가. 조건 악화가 빠름</td></tr>
+<tr><td><b>골목</b>(Alley)</td><td class="num">₡3,000</td><td class="num">₡337</td><td class="num">30 km/h</td><td class="num">2</td><td><b>유지비 최저</b></td></tr>
+<tr><td><b>2차선 도로</b></td><td class="num">₡4,000</td><td class="num">₡487</td><td class="num">40 km/h</td><td class="num">2</td><td>기본 주거 블록용</td></tr>
+<tr><td><b>4차선 도로</b></td><td class="num">₡5,500</td><td class="num">₡712</td><td class="num">50 km/h</td><td class="num">4</td><td>콜렉터/소형 간선. <span class="tag b">M1 해금</span></td></tr>
+<tr><td><b>6차선 도로</b></td><td class="num">₡7,000</td><td class="num">₡938</td><td class="num">50–60 km/h</td><td class="num">6</td><td>대형 간선. 중앙분리형은 60 km/h</td></tr>
+<tr><td><b>고속도로</b></td><td class="num">₡2,000</td><td class="num">(패치 변동)</td><td class="num">80–120 km/h</td><td class="num">방향당 1–3</td><td>존닝 불가. <b>소음·대기오염 3배</b></td></tr>
+</tbody>
+<caption>소형 도로에는 <b>상하수도관과 저압 전력(≈40MW)이 내장</b>되어 있습니다. CS1처럼 파이프·전선을 별도로 깔 필요가 없습니다(고속도로는 예외 — 전선 없음).</caption>
+</table>
+</div>
+
+<div class="callout info">
+<div class="ct">고가·터널 비용의 함정</div>
+<p>고가 도로는 <strong>높이 1단계마다 km당 ≈₡4,500–9,500 추가</strong>, 터널은 <strong>지상 대비 약 8배</strong>입니다(2차선 기준 ≈₡33,500/km vs ₡4,000/km). 언덕을 지날 때는 터널보다 <strong>절토(cut)/성토(fill) 도구가 훨씬 쌉니다</strong>.</p>
+</div>
+
+<h3>4-2. 도로 위계 4단계 — 한 단계씩만 연결하라</h3>
+
+<figure class="diagram">
+<svg viewBox="0 0 720 344" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="도로 위계 4단계 다이어그램">
+  <defs>
+    <marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="var(--red)"/></marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="344" fill="var(--svg-fill)" rx="10"/>
+  <!-- 고속도로 -->
+  <text x="24" y="24" class="svg-t" fill="var(--purple)">① 고속도로 Highway — 교차로 없음, 진출입은 램프만</text>
+  <rect x="20" y="34" width="600" height="16" fill="var(--purple)" rx="3"/>
+  <!-- 램프 -->
+  <path d="M180 50 Q210 70 240 100" stroke="var(--purple)" stroke-width="7" fill="none" opacity=".5"/>
+  <path d="M470 50 Q440 70 410 100" stroke="var(--purple)" stroke-width="7" fill="none" opacity=".5"/>
+  <!-- 간선 -->
+  <text x="24" y="92" class="svg-t" fill="var(--accent)">② 간선 Arterial — 6차선, 지구 간 이동, 신호 교차로 간격 150~200m</text>
+  <rect x="20" y="100" width="600" height="13" fill="var(--accent)" rx="3"/>
+  <!-- 콜렉터 -->
+  <text x="24" y="158" class="svg-t" fill="var(--teal)">③ 콜렉터 Collector — 4차선, 동네 교통을 모아 간선으로</text>
+  <rect x="200" y="113" width="9" height="53" fill="var(--teal)"/>
+  <rect x="410" y="113" width="9" height="53" fill="var(--teal)"/>
+  <rect x="90" y="166" width="500" height="9" fill="var(--teal)" rx="2"/>
+  <!-- 국지 -->
+  <g stroke="var(--svg-line)" stroke-width="5">
+    <line x1="130" y1="175" x2="130" y2="256"/><line x1="180" y1="175" x2="180" y2="256"/>
+    <line x1="230" y1="175" x2="230" y2="256"/><line x1="280" y1="175" x2="280" y2="256"/>
+    <line x1="330" y1="175" x2="330" y2="256"/><line x1="380" y1="175" x2="380" y2="256"/>
+    <line x1="430" y1="175" x2="430" y2="256"/><line x1="480" y1="175" x2="480" y2="256"/>
+    <line x1="530" y1="175" x2="530" y2="256"/>
+    <line x1="110" y1="256" x2="555" y2="256"/>
+  </g>
+  <text x="24" y="286" class="svg-t" fill="var(--svg-line)">④ 국지도로 Local — 2차선·골목, 건물 접도 전용</text>
+  <!-- 금지 표시 -->
+  <path d="M600 250 L600 122" stroke="var(--red)" stroke-width="4" stroke-dasharray="7 5" marker-end="url(#ar)"/>
+  <text x="696" y="196" class="svg-t" fill="var(--red)" text-anchor="end">✕ 국지도로를</text>
+  <text x="696" y="214" class="svg-t" fill="var(--red)" text-anchor="end">간선·램프에 직결</text>
+  <text x="696" y="232" class="svg-t" fill="var(--red)" text-anchor="end">= 병목 확정</text>
+</svg>
+<figcaption>위계는 <b>한 단계씩만</b> 연결합니다. 2차선 주거 도로를 고속도로 램프나 6차선 간선에 직접 붙이는 순간 그 교차로가 도시의 병목이 됩니다.</figcaption>
+</figure>
+
+<p>배치 규칙:</p>
+<ul>
+<li><strong>간선은 큰 블록(대략 20×20셀급)의 외곽</strong>을 두르고, 내부를 콜렉터·국지도로로 채웁니다.</li>
+<li>CS2의 경로탐색은 "가장 빠른 경로"를 잘 찾습니다. <strong>고속도로·간선의 제한속도 우위를 유지하면 AI가 알아서 우회</strong>합니다. 반대로 국지도로가 지름길이 되면 통과 교통(rat-running)이 생깁니다 — 이때는 일방통행이나 보행자 도로로 끊습니다.</li>
+</ul>
+
+<h3>4-3. CS2 차선 선택 AI — CS1과 무엇이 다른가</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>요소</th><th>내용</th></tr></thead>
+<tbody>
+<tr><td><b>경로 비용 4요소</b></td><td>시간(Time)·편안함(Comfort)·비용(Money)·행동성향(Behavior)</td></tr>
+<tr><td><b>연령별 가중치</b></td><td><span class="tag t">청소년</span> 돈 우선(연료비·주차요금) / <span class="tag b">성인</span> 시간 우선 / <span class="tag a">노인</span> 편안함 우선(회전 적고 매끄러운 경로)</td></tr>
+<tr><td><b>화물차</b></td><td>거리 = 운송비이므로 가까운 공급처를 선호</td></tr>
+<tr><td><b>차선 사용</b></td><td>신호 대기열이 한 차선에 쌓이면 뒤차가 빈 차선으로 분산. <b>CS1식 "차선 수학"은 필수가 아님</b> — 다만 교차로 직전에서 회전 방향별 차선을 분리해 주면 처리량이 오릅니다</td></tr>
+<tr><td><b>동적 차선 변경</b></td><td>느린 차 추월, 사고·정차 차량 회피, 긴급차량 길 터주기가 실시간 발생</td></tr>
+<tr><td><b>알려진 약점</b></td><td>고속도로에서 전 차선을 고르게 쓰다가 <b>출구 직전 급차선변경으로 끼어드는</b> 습성(커뮤니티 다수 보고) → 출구 전 충분한 감속·분류 구간 확보로 완화</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>4-4. 교차로 간격 — 게임 셀 1칸 = 8m</h3>
+<div class="callout tip">
+<div class="ct">실전 기준 수치</div>
+<ul>
+<li><strong>간선 위 신호 교차로는 최소 ≈150–200m(약 20셀 이상) 간격</strong></li>
+<li><strong>고속도로 램프 합류점과 첫 신호 교차로 사이</strong>에는 대기열이 전부 들어갈 길이를 확보. 램프 바로 앞 신호는 고속도로 본선까지 정체를 역류시키는 1순위 원인입니다.</li>
+<li>짧은 구간에 교차로가 몰릴 수밖에 없다면: 일부를 <strong>우회전 전용(right-in/right-out)</strong>으로 격하하거나 <strong>중앙분리 도로로 좌회전 자체를 봉쇄</strong>합니다.</li>
+</ul>
+</div>
+
+<h3>4-5. 회전교차로 vs 신호등 판단표</h3>
+<p>CS2는 <strong>기존 교차로 위에 클릭 한 번으로 회전교차로를 설치</strong>하는 내장 도구를 제공합니다(4개 크기, ≈₡200~₡1,500, 중앙부 장식 선택 가능).</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>상황</th><th>추천</th><th>근거</th></tr></thead>
+<tbody>
+<tr><td>좌회전 수요가 많고 4방향 교통량이 비슷</td><td><span class="tag g">회전교차로</span></td><td>신호 대기 없이 좌회전 처리</td></tr>
+<tr><td>중간 교통량의 콜렉터 × 콜렉터</td><td><span class="tag g">회전교차로(소형)</span></td><td>가장 전형적인 적용처</td></tr>
+<tr><td>한 방향만 압도적으로 붐비는 비대칭 교차로</td><td><span class="tag a">신호등</span></td><td>회전교차로는 우선권 구조상 <b>부도로가 영원히 못 들어옴</b></td></tr>
+<tr><td>포화 상태의 간선 × 간선</td><td><span class="tag a">신호등</span> 또는 입체화</td><td>포화 시에는 신호가 처리량이 더 높음</td></tr>
+<tr><td>고속도로 램프 종점</td><td><span class="tag g">회전교차로(중형)</span></td><td>신호 역류 방지에 자주 유효</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout warn">
+<div class="ct">회전교차로는 만능이 아닙니다</div>
+<p>최악의 신호 교차로를 소형 회전교차로로 바꾸면 처리량이 수십 % 오르는 사례가 많지만, <strong>진입로 수와 교통 균형을 먼저 확인</strong>해야 합니다. 또 회전교차로끼리 너무 가깝게 직결하면 서로 잠급니다 — 사이에 거리나 신호 교차로를 두세요.</p>
+</div>
+
+<h3>4-6. 인터체인지 설계</h3>
+<p>CS2에는 프리셋 회전교차로는 있지만 <strong>인터체인지는 직접 그려야 합니다</strong>(고가·터널 자유 조합 가능).</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>형식</th><th>특징</th><th>추천도</th></tr></thead>
+<tbody>
+<tr><td><b>다이아몬드</b>(Diamond)</td><td>가장 싸고 좁음. 교차 도로가 2차선(신호 없음)일 때 소~중 교통량에 충분. 교차 도로를 6차선으로 올리면 신호가 생겨 금방 역류</td><td><span class="tag g">초반 표준</span></td></tr>
+<tr><td><b>SPUI</b>(Single Point Urban IC)</td><td>다이아몬드에서 쉽게 개조 가능. 신호 1개소로 통합되어 처리량 우위. 부지 소요는 비슷</td><td><span class="tag g">중반 최적</span></td></tr>
+<tr><td><b>파클로</b>(Partial Cloverleaf)</td><td>좌회전 수요가 큰 쪽에만 루프 배치. <b>도시 진입 IC의 실전 최적해</b>로 꼽힘</td><td><span class="tag b">추천</span></td></tr>
+<tr><td><b>클로버리프</b>(Full Cloverleaf)</td><td>신호 없음이 장점이나 <b>위빙(교차 합류) 구간</b>이 CS2의 막판 차선변경 AI와 상성 나쁨. 집산로를 따로 붙이면 개선</td><td><span class="tag a">주의</span></td></tr>
+<tr><td><b>시스템 IC</b>(고속도로×고속도로)</td><td>스택/터빈처럼 <b>루프 없는 직결 램프</b>가 이상적</td><td><span class="tag p">후반</span></td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>공통 원칙 4가지</strong></p>
+<ol>
+<li>출구 램프는 <strong>분기 지점 훨씬 앞(≈10셀+)에서 감속 차선을 분리</strong>해 본선 급브레이크를 방지합니다.</li>
+<li>램프는 <strong>1차선 고속도로 도로</strong>로 만들면 신호가 생기지 않습니다.</li>
+<li>램프 종점은 회전교차로나 충분히 긴 대기 차선으로 받습니다.</li>
+<li>합류는 항상 <strong>추가 차선으로</strong> 받고, 본선에서 한참 뒤에 합류시킵니다. IC 간 간격도 교차로 간격 원칙과 동일합니다.</li>
+</ol>
+
+<h3>4-7. 주차 — CS2 경로탐색의 1급 변수</h3>
+<p>CS2에서 시민은 <strong>목적지 건물 부지 내 주차를 최우선</strong>으로 시도하고, 없으면 노변 주차 → 주차장 → 대중교통 순으로 대안을 찾습니다. 즉 <strong>주차 부족은 곧 "빈자리를 찾아 도는 순환 교통"</strong>이 되어 정체를 만듭니다.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>시설</th><th class="num">크기(셀)</th><th class="num">수용</th><th class="num">건설비</th></tr></thead>
+<tbody>
+<tr><td>초소형 주차장(Tiny)</td><td class="num">3×2</td><td class="num">10면</td><td class="num">₡3,700</td></tr>
+<tr><td>소형(Modest)</td><td class="num">5×3</td><td class="num">23면</td><td class="num">₡9,000</td></tr>
+<tr><td>중형(Medium)</td><td class="num">7×5</td><td class="num">60면</td><td class="num">₡15,000</td></tr>
+<tr><td>대형(Large)</td><td class="num">10×8</td><td class="num">135면</td><td class="num">₡35,000</td></tr>
+<tr><td>초대형(Very Large)</td><td class="num">18×10</td><td class="num">321면</td><td class="num">₡80,000</td></tr>
+<tr><td>소형 주차 빌딩</td><td class="num">3×6</td><td class="num">42면</td><td class="num">₡40,000</td></tr>
+<tr><td>지상 주차 빌딩</td><td class="num">12×?</td><td class="num">160면</td><td class="num">₡150,000</td></tr>
+<tr><td><b>다층 주차 빌딩</b></td><td class="num">8×6</td><td class="num">200→300면<span style="color:var(--text3)">(증축)</span></td><td class="num">₡200,000</td></tr>
+<tr><td>지하 주차장</td><td class="num">6×10</td><td class="num">200면</td><td class="num">₡200,000</td></tr>
+<tr><td>자동화 주차 빌딩</td><td class="num">—</td><td class="num">(패치 변동)</td><td class="num">₡630,000</td></tr>
+</tbody>
+<caption>기본 주차요금 ≈₡10/회. 커뮤니티 위키 실측 기준이며 패치에 따라 변동될 수 있습니다.</caption>
+</table>
+</div>
+<div class="callout tip">
+<div class="ct">주차 배치 원칙</div>
+<ul>
+<li><strong>고밀도 건물은 자체 주차면이 매우 적습니다</strong>(아파트 2~3면 수준). 고밀 상업·업무지구 근처에 주차 건물은 사실상 필수입니다.</li>
+<li>주차 건물 출입구는 <strong>간선이 아니라 콜렉터 쪽</strong>에 두어 간선 좌회전 진입을 막습니다.</li>
+<li>상업 중심에서 <strong>도보 2~3블록 안</strong>에 배치합니다. 지하 주차장은 지가 비싼 중심부에 유효.</li>
+<li>반대로 <strong>주차요금을 올리면 대중교통 이용이 늘어납니다</strong> — 지구(District) 정책으로 설정 가능하며, 요금 인하보다 강력한 대중교통 유도 수단인 경우가 많습니다.</li>
+</ul>
+</div>
+
+<h3>4-8. 무료에 가까운 교통 대책 3종</h3>
+<div class="cards">
+  <div class="card">
+    <div class="cv">🚶 보행자 전용 도로</div>
+    <div class="cl">가성비 1위</div>
+    <div class="cd">일반 차량 통행 불가, <strong>서비스·배송 트럭만 진입 허용</strong>이라 상점 물류가 끊기지 않습니다. 주거지↔상업/정류장을 보행자 길로 직결하면 <strong>단거리 차량 통행이 통째로 사라집니다.</strong> 트램+보행자 거리 조합은 상업 지구에 특히 강력.</div>
+  </div>
+  <div class="card">
+    <div class="cv">↔️ 일방통행 커플릿</div>
+    <div class="cl">좁은 구시가에</div>
+    <div class="cd">2차선 폭에 실질 용량 2배. 좁은 격자를 <strong>일방 순환쌍</strong>으로 재편하면 신호 상충이 줄어 처리량이 크게 오릅니다. <strong>주의</strong>: 서비스 차량 회차 거리가 길어지므로 <strong>작은 루프 단위</strong>로 설계하세요. 1.2.0f1에서 1칸 폭 일방통행 3종과 비대칭 도로 5종이 추가됐습니다.</div>
+  </div>
+  <div class="card">
+    <div class="cv">🚲 자전거 인프라</div>
+    <div class="cl">1.4.2f1 무료 패치</div>
+    <div class="cd">2025-11-19 자전거 패치로 청소년~노인이 자전거·전동킥보드를 이용합니다. 업그레이드 도구로 기존 도로에 <strong>자전거 차선</strong> 추가, 독립 자전거 도로·거치대 지원. "도심 자전거 이니셔티브" 지구 정책으로 이용률 상승. <strong>단거리 차량 통행을 흡수하는 사실상 무료 교통 완화 수단</strong>입니다.</div>
+  </div>
+</div>
+
+<h3>4-9. 교차로 편집 &amp; 도로 유지관리</h3>
+<h4>바닐라에서 가능한 교차로 제어 (모드 불필요)</h4>
+<ul>
+<li>도로 도구로 교차로를 선택해 <strong>신호등 설치/제거, 정지 표지판 지정, 횡단보도 설치/제거</strong> 조정</li>
+<li>유턴은 교차로에서 기본 가능하며, 중앙분리 대형 도로에는 유턴 차선이 생성됩니다. 긴급차량은 불법 유턴까지 허용됩니다.</li>
+<li><strong>실전 세팅</strong>: ① 간선×국지 T자는 신호 대신 부도로에 정지 표지판 ② 횡단보도 제거로 우회전 지연 축소(단, 보행자가 우회할 대체 횡단로 확보 후) ③ 차선 단위 회전 지정이 더 필요하면 무료 모드 "Traffic"(Paradox Mods)이 사실상 표준</li>
+<li><strong>신호를 없애는 것이 항상 이득은 아닙니다</strong> — 보행자 횡단이 많은 곳은 신호가 차량·보행 상충을 정리해 줍니다.</li>
+</ul>
+<h4>도로 정비창(Road Maintenance Depot)</h4>
+<p>도로는 통행량·날씨로 마모되고, 상태 악화는 <strong>주행속도 저하 + 사고 확률 증가</strong>로 이어집니다. 사고는 차선을 막아 정체를 만듭니다.</p>
+<ul>
+<li>정비 트럭 최대 <strong>10대</strong>, 확장 시설로 <strong>15대</strong>까지. 예산 슬라이더로 가동률 조절. 겨울에는 <strong>제설차</strong>가 배치됩니다.</li>
+<li>사고 처리 절차: 경찰이 현장 확보 → 정비 차량이 잔해 제거 → 통행 재개. <strong>정비창이 없으면 잔해가 오래 남아 정체가 길어집니다.</strong></li>
+<li><strong>도입 타이밍</strong>: 인구 수천 명대, 첫 정체·사고 리포트가 뜨기 시작할 때(대략 M4~M6 구간). 1개소면 중소도시 전역 커버 가능합니다.</li>
+</ul>
+
+<h3>4-10. 흔한 실수와 해결법</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>실수</th><th>증상</th><th>해결</th></tr></thead>
+<tbody>
+<tr><td>위계 무시(2차선을 고속도로에 직결)</td><td>램프 주변 만성 정체</td><td>사이에 콜렉터/간선 삽입, 접속부 축소</td></tr>
+<tr><td>램프 직후 신호 교차로</td><td>본선까지 역류</td><td>첫 교차로를 뒤로 밀거나 회전교차로화</td></tr>
+<tr><td>모든 교차로에 회전교차로</td><td>비대칭 교차로에서 부도로 기아 상태</td><td>교통 불균형 지점은 신호로 환원</td></tr>
+<tr><td><b>6차선 만능주의</b></td><td>교차로 신호주기 증가로 오히려 악화</td><td>도로 확장 전에 교차로·경로를 먼저 진단</td></tr>
+<tr><td>주차 공급 무시</td><td>고밀도 지구 주변 배회 차량</td><td>주차 빌딩 + 주차요금 정책 + 대중교통</td></tr>
+<tr><td>진단 없이 인프라 증설</td><td>돈만 쓰고 정체 그대로</td><td><b>Traffic Routes 정보뷰</b>(1.2.0f1 복귀)로 병목 1개 지점부터 특정</td></tr>
+<tr><td>격자 전체를 좁은 간격 신호로 도배</td><td>연쇄 잠김(gridlock)</td><td>교차로 수 자체를 줄이고 보행자 길로 대체</td></tr>
+<tr><td>유지비 무시하고 개통</td><td>초반 파산</td><td>건설 중 일시정지, 자갈길로 시작 후 업그레이드</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout money">
+<div class="ct">정체가 생겼을 때의 진단 순서 (외우세요)</div>
+<ol>
+<li><strong>Traffic Routes 정보뷰</strong>를 켜고 <strong>가장 빨간 지점 1곳</strong>을 특정합니다. 여러 곳을 동시에 고치려 하지 마세요.</li>
+<li>그 지점이 <strong>교차로</strong>인지 <strong>구간</strong>인지 봅니다. 대부분 교차로입니다.</li>
+<li>교차로라면: 위계 위반 → 신호/회전교차로 선택 오류 → 횡단보도 → 좌회전 상충 순으로 점검.</li>
+<li>구간이라면: 목적지 주차 부족 → 대체 경로 부재 → 그제서야 차선 증설.</li>
+<li>마지막으로 <strong>보행자 길·자전거 차선·대중교통</strong>으로 수요 자체를 덜어냅니다.</li>
+</ol>
+</div>
+</section>
+<!-- ══════════ 5. 대중교통 ══════════ -->
+<section class="chapter" id="transit">
+<h2><span class="num">5</span>대중교통 &amp; 화물 물류</h2>
+
+<p class="lede">대중교통은 <strong>수익 시설이 아니라 도로 정체 완화 + 지가·매력도 상승 장치</strong>로 회계 처리하세요. 유지비의 30~50%를 요금으로 회수하면 잘한 것입니다. 대신 도로 확장으로는 절대 얻을 수 없는 수송 밀도를 제공합니다.</p>
+
+<h3>5-1. 해금 체계 — 지하철까지 총 7DP</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>수단</th><th class="num">개발 포인트</th><th>선행 조건</th></tr></thead>
+<tbody>
+<tr><td><b>버스·택시</b></td><td class="num">0</td><td><span class="tag g">M4 Grand Village에서 무료 해금</span></td></tr>
+<tr><td>기차(Train)</td><td class="num">1 DP</td><td>1티어</td></tr>
+<tr><td>트램(Tram)</td><td class="num">2 DP</td><td>기차 선행 필요</td></tr>
+<tr><td>선박/수상(Water)</td><td class="num">2 DP</td><td>2티어</td></tr>
+<tr><td><b>지하철(Subway)</b></td><td class="num">4 DP</td><td>기차→트램 선행 → <b>누적 7DP 필요</b></td></tr>
+<tr><td>공항(Airport)</td><td class="num">4 DP</td><td>3티어</td></tr>
+<tr><td>국제공항</td><td class="num">8 DP</td><td>4티어</td></tr>
+</tbody>
+</table>
+</div>
+<p>초반 DP는 전기·수도·교육과 경쟁하므로, 교통 트리는 <strong>보통 인구 1만 이후부터 본격 투자</strong>합니다.</p>
+
+<h3>5-2. 시설 건설비·유지비 총람</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>시설</th><th class="num">건설비</th><th class="num">월 유지비(≈)</th><th class="num">차량</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td><b>버스 차고지</b></td><td class="num">₡150,000</td><td class="num">₡23,250</td><td class="num">25대</td><td>차고 증설·전기버스 업그레이드</td></tr>
+<tr><td>트램 차고지</td><td class="num">₡100,000</td><td class="num">₡8,600~23,000</td><td class="num">10대</td><td>+5대 증설 ≈₡42,000</td></tr>
+<tr><td><b>지하철 차량기지</b></td><td class="num">₡200,000</td><td class="num">₡18,000~48,000</td><td class="num">10대</td><td>추가 선로 ₡75,000으로 +5대</td></tr>
+<tr><td>철도 차량기지</td><td class="num">₡150,000</td><td class="num">₡11,250~30,000</td><td class="num">10대</td><td>추가 레일 ₡50,000으로 +5대</td></tr>
+<tr><td>여객 기차역</td><td class="num">₡75,000~125,000</td><td class="num">₡23,000</td><td class="num">—</td><td>추가 승강장 ₡35,000</td></tr>
+<tr><td>지하철역 (지상소형/지상/지하)</td><td class="num">≈₡50,000 / 100,000 / 200,000</td><td class="num">₡10,000</td><td class="num">—</td><td>지하역이 가장 비싸지만 부지 불필요</td></tr>
+<tr><td>버스 정류장</td><td class="num">수백₡</td><td class="num">미미</td><td class="num">—</td><td>도로 위 클릭 설치</td></tr>
+<tr><td>버스 터미널 (소형/시티/일반)</td><td class="num">₡100,000 / 150,000 / 200,000</td><td class="num">₡10,500 / 15,750 / 21,000</td><td class="num">—</td><td>환승 허브용</td></tr>
+<tr><td>여객항</td><td class="num">₡420,000</td><td class="num">₡22,500~60,000</td><td class="num">부두 1</td><td>부두 증설 ₡100,000</td></tr>
+<tr><td><b>화물항</b></td><td class="num">₡490,000</td><td class="num">₡25,000~67,000</td><td class="num">—</td><td>저장 15,500톤</td></tr>
+<tr><td><b>화물 기차역</b></td><td class="num">₡150,000</td><td class="num">₡11,250</td><td class="num">—</td><td>저장 ≈15.5킬로톤</td></tr>
+<tr><td>공항</td><td class="num">₡750,000</td><td class="num">₡37,500~100,000</td><td class="num">게이트 5</td><td>도시 매력도 +5%, 오피스 효율 +3%</td></tr>
+<tr><td>국제공항</td><td class="num">₡4,000,000</td><td class="num">₡150,000</td><td class="num">게이트 18</td><td>매력도 +10%, 대학 진학 관심 +10%, 소프트웨어 수요 +10%</td></tr>
+</tbody>
+<caption>Economy 2.0 이후 유지비가 대폭 인상되었습니다. 출시 초기 가이드의 수치와 다를 수 있습니다.</caption>
+</table>
+</div>
+
+<h4>선로·항로 건설비 (km당, ≈)</h4>
+<div class="tablewrap">
+<table>
+<thead><tr><th>인프라</th><th class="num">건설비/km</th><th class="num">월 유지비/km</th></tr></thead>
+<tbody>
+<tr><td>기차·지하철 <b>복선</b></td><td class="num">₡2,500</td><td class="num">₡250</td></tr>
+<tr><td>기차·지하철 단선</td><td class="num">₡1,250</td><td class="num">₡125</td></tr>
+<tr><td>트램 복선(도로 업그레이드)</td><td class="num">₡1,250</td><td class="num">소액</td></tr>
+<tr><td>협수로 / 중간 / 광폭 항로</td><td class="num">₡5,000 / 10,000 / 20,000</td><td class="num">₡500 / 1,000 / 1,000</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>5-3. 차량 정원 — 지하철이 압도적</h3>
+<div class="cards">
+  <div class="card"><div class="cv">≈1,080명</div><div class="cl">지하철 1편성</div><div class="cd">커뮤니티 실측. 차량기지 1곳(업글 후 15편성) 이론상 총 <strong>≈16,200명</strong></div></div>
+  <div class="card"><div class="cv">≈840명</div><div class="cl">여객열차 1편성</div><div class="cd">차량기지 1곳 ≈12,600명</div></div>
+  <div class="card"><div class="cv">≈30~40명</div><div class="cl">버스 1대</div><div class="cd">공식 미공개, 커뮤니티 추정</div></div>
+  <div class="card"><div class="cv">≈100명</div><div class="cl">페리 1척</div><div class="cd">Bridges &amp; Ports 추가</div></div>
+</div>
+
+<h3>5-4. 노선 설계 — 계층 구조가 핵심</h3>
+
+<figure class="diagram">
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="대중교통 계층 구조 다이어그램">
+  <rect x="0" y="0" width="720" height="300" fill="var(--svg-fill)" rx="10"/>
+  <!-- 지하철 척추 -->
+  <line x1="60" y1="150" x2="660" y2="150" stroke="var(--purple)" stroke-width="11"/>
+  <text x="60" y="134" class="svg-t" fill="var(--purple)">지하철 = 척추 (지구↔지구, 정체 무풍지대)</text>
+  <!-- 역 -->
+  <g fill="var(--surface)" stroke="var(--purple)" stroke-width="3">
+    <circle cx="160" cy="150" r="11"/><circle cx="360" cy="150" r="11"/><circle cx="560" cy="150" r="11"/>
+  </g>
+  <!-- 트램 간선 -->
+  <path d="M160 150 L160 70 L360 70" stroke="var(--teal)" stroke-width="7" fill="none"/>
+  <path d="M560 150 L560 70 L400 70" stroke="var(--teal)" stroke-width="7" fill="none"/>
+  <text x="300" y="58" class="svg-t" fill="var(--teal)">트램 = 간선 (고밀 회랑)</text>
+  <!-- 버스 피더 -->
+  <g stroke="var(--accent)" stroke-width="4" fill="none" stroke-dasharray="6 4">
+    <path d="M160 161 L100 210 L160 250 L230 210 L160 161"/>
+    <path d="M360 161 L300 210 L360 250 L420 210 L360 161"/>
+    <path d="M560 161 L500 210 L560 250 L620 210 L560 161"/>
+  </g>
+  <text x="250" y="282" class="svg-t" fill="var(--accent)">버스 = 모세혈관 (주거지에서 승객을 모아 역까지)</text>
+  <!-- 외부연결 -->
+  <path d="M20 150 L60 150" stroke="var(--amber)" stroke-width="11"/>
+  <path d="M660 150 L700 150" stroke="var(--amber)" stroke-width="11"/>
+  <text x="14" y="180" class="svg-ts" fill="var(--amber)">기차·선박·항공</text>
+  <text x="612" y="180" class="svg-ts" fill="var(--amber)">= 광역·외부연결</text>
+</svg>
+<figcaption><b>버스 없는 지하철은 반쪽짜리입니다.</b> 역까지 걸어갈 수 없는 시민은 그냥 차를 몹니다.</figcaption>
+</figure>
+
+<h4>순환선 vs 방사선</h4>
+<ul>
+<li><strong>순환선(Loop)</strong>: 버스·트램에 적합. 모든 정류장을 지나 차고지로 돌아오는 폐곡선을 만들면 배차가 균등해집니다. 도심 외곽을 도는 지하철 순환선은 도심 통과 수요를 분산시킵니다.</li>
+<li><strong>방사선(Radial)</strong>: 지하철의 기본형. 도심 허브에서 각 주거 지구로 뻗습니다. <strong>방사선 2~3개 + 외곽 순환선 1개</strong>가 10만 도시의 표준 조합입니다.</li>
+<li><strong>일자 왕복 노선은 복선(Double Track) 필수.</strong> 단선으로 만들면 교행 대기로 배차가 붕괴합니다.</li>
+</ul>
+
+<h4>환승 설계 5원칙</h4>
+<ol class="steps">
+<li><span class="st">환승 지점은 도보 1~2블록 이내로 겹치기</span>지하철역 바로 위에 버스 정류장 2개(양방향)를 놓는 것이 기본기입니다.</li>
+<li><span class="st">한 정류장에 버스 노선 3~4개 이상 금지</span>버스가 줄지어 대기하며 도로를 막습니다(패치 후에도 여전한 문제).</li>
+<li><span class="st">노선은 짧고 직선적으로</span>한 노선이 도시 전체를 휘감으면 배차 간격이 벌어져 이용률이 급락합니다. <strong>정류장 12~20개 내외</strong>가 관리하기 좋습니다.</li>
+<li><span class="st">정류장 간격은 밀도에 맞춰</span>고밀도 지역은 촘촘히(2~3블록), 저밀도는 넓게(4~6블록). <strong>커버리지보다 표정속도가 더 중요</strong>합니다.</li>
+<li><span class="st">환승 1회 이내로 목적지 도달</span>환승 2회를 넘으면 시민은 차를 몹니다.</li>
+</ol>
+
+<h4>차량 수 조절</h4>
+<p>노선 패널에서 <strong>노선별 차량 수를 직접 지정</strong>할 수 있습니다. 이용률(만차율)이 <strong>80% 이상이면 증차, 15% 미만이면 감차</strong>. 운행 시간대(주간/야간/24시간)도 노선별로 설정 가능합니다. 도시 성장에 따라 분기마다 점검하는 습관을 들이세요.</p>
+
+<h3>5-5. 도입 타이밍 — 인구 기준</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th class="num">인구</th><th>도입 항목</th></tr></thead>
+<tbody>
+<tr><td class="num">≈1,000~5,000<br><span style="color:var(--text3)">(M4 직후)</span></td><td>버스 1~3개 노선. <b>주거지↔산업/상업지 통근축 우선</b></td></tr>
+<tr><td class="num">≈5,000~15,000</td><td>버스망 완성 + <b>화물 기차역 1곳(산업지구 옆)</b>. 외부 연결 여객 기차역 1곳</td></tr>
+<tr><td class="num">≈15,000~50,000</td><td>트램 도입(고밀도 회랑), 화물항·여객항(수변 도시)</td></tr>
+<tr><td class="num">≈50,000~100,000</td><td><b>지하철 1~2호선</b>(도심 척추), 공항(유지비 감당 가능 시)</td></tr>
+<tr><td class="num">≈100,000+</td><td>지하철 다노선망, 국제공항, 전용 화물 철도망 분리</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout danger">
+<div class="ct">재정 경고</div>
+<p>지하철 차량기지 하나가 월 <strong>≈₡48,000</strong>까지 나올 수 있습니다. <strong>월 흑자 폭이 유지비의 2배 이상일 때</strong> 도입하세요. 적자 도시에서 지하철 먼저 깔다 파산하는 것이 가장 흔한 패턴입니다.</p>
+</div>
+
+<h3>5-6. 화물 물류 — 이 게임에서 자주 오해받는 시스템</h3>
+<div class="callout info">
+<div class="ct">작동 원리 (Economy 2.0 이후)</div>
+<p>회사(사업체)는 <strong>자체 배송 트럭</strong>으로 자원을 주문·출하합니다. 화물 터미널의 역할은 두 가지입니다: ① 외부 연결로의 수출입 경유지, ② <strong>노선 없이도 저장고를 유통센터처럼</strong> 활용.</p>
+<p><strong>화물역 이용률이 0이라면 버그가 아니라</strong> "회사 입장에서 트럭 직송이 더 싸다"는 뜻일 가능성이 큽니다. 터미널이 산업지구에서 멀면 아예 쓰지 않습니다.</p>
+</div>
+<div class="tablewrap">
+<table>
+<thead><tr><th>시설</th><th>배치 규칙</th></tr></thead>
+<tbody>
+<tr><td><b>화물 기차역</b><br>₡150,000 / 저장 ≈15.5kt</td><td><b>산업 지구 한복판 또는 바로 옆.</b> 트럭이 몰리므로 산업 전용 도로로 간선과 분리. 여객 철도와 선로 공유를 피하고 가급적 화물 전용선 구축</td></tr>
+<tr><td><b>화물항</b><br>₡490,000 / 저장 15,500t</td><td>산업지구와 인접한 수변. <b>철도 연결 업그레이드(₡80,000)</b>로 "배→기차→내륙" 연계. 추가 크레인 ₡120,000 · 추가 창고 ₡100,000(+15,500t)</td></tr>
+<tr><td><b>화물공항</b><br>공항의 화물 터미널 업그레이드 ₡500,000</td><td>소량·고속. 가장 비싸고 용량은 작습니다. <b>사무·첨단산업 도시에서만 유효</b></td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>효과</strong>: 외부 연결 고속도로의 <strong>트럭 통행량을 흡수</strong>해 진입로 정체를 크게 줄입니다. 수출입 경로가 다양해질수록 회사의 물류비가 내려가 산업 수익성·세수에 간접 기여합니다.</p>
+<p><strong>우선순위</strong>: 화물 기차역(인구 ≈8천~1.5만) → 화물항(수변 도시, ≈3만) → 화물공항(≈8만+)</p>
+
+<h3>5-7. 요금 설정과 이용률 높이기</h3>
+<div class="callout money">
+<div class="ct">요금 0(무료) 정책의 위력</div>
+<p>요금은 <strong>노선별</strong>로 설정합니다(교통 개요 → 노선 상세 → 요금 슬라이더). 커뮤니티 실측에서 <strong>무료 버스 노선이 이용률 40~50%까지 상승</strong>한 사례가 보고됐습니다. 초반 이용률 확보에 가장 확실한 레버입니다.</p>
+<p>반대로 요금을 최대로 올리면 수입 몇 푼에 이용률과 도로 정체를 맞바꾸는 꼴이 됩니다. <strong>고요금이 정당화되는 것은 관광객이 많이 타는 공항·여객선 노선뿐</strong>입니다.</p>
+</div>
+<ol class="steps">
+<li><span class="st">주차를 불편하게 만들기</span>지구 정책으로 노상 주차 요금을 올리거나 노상 주차칸을 제거하면 자가용 효용이 급락합니다. <strong>요금 인하보다 강력한 경우가 많습니다.</strong></li>
+<li><span class="st">도보 접근성 확보</span>정류장 도보권에 고밀도 주거·상업이 있어야 합니다. 보행자 전용 도로로 접근 동선을 단축하세요.</li>
+<li><span class="st">직선·단순 노선</span>우회가 많은 노선은 시간 효용에서 자가용에 집니다.</li>
+<li><span class="st">배차 밀도 관리</span>만차로 정류장을 그냥 지나치면 대기 인원이 폭증합니다. 이용률 통계를 보고 증차하세요.</li>
+<li><span class="st">통근축 정조준</span>교통 정보 뷰에서 통근 흐름을 확인하고, 최다 유동 구간에 상위 수단(트램→지하철)을 얹습니다.</li>
+<li><span class="st">외부 연결로 관광객 유치</span>기차역·항구·공항은 관광객 유입 창구입니다. <strong>관광객은 차가 없어 대중교통 이용률을 끌어올립니다.</strong></li>
+</ol>
+
+<h3>5-8. 흔한 실수</h3>
+<ul>
+<li><strong>차고지 미연결</strong> — 차고지가 노선 선로/도로망과 안 이어져 차량이 배차되지 않음. 지하철 차량기지는 반드시 본선과 선로로 연결.</li>
+<li><strong>단선으로 왕복 노선 개설</strong> — 교행 대기로 열차가 몰려다닙니다.</li>
+<li><strong>한 정류장에 노선 과밀</strong> — 버스 행렬이 차로를 점거해 오히려 정체 유발.</li>
+<li><strong>거대 일주 노선 1개</strong> — 배차 간격 붕괴. 짧은 노선 여러 개 + 환승이 정답.</li>
+<li><strong>화물역을 산업지구에서 먼 곳에 배치</strong> — 회사가 트럭 직송을 택해 터미널이 놀게 됩니다.</li>
+<li><strong>여객·화물 선로 공유</strong> — 화물열차가 여객 배차를 막습니다. 예산이 되면 전용선 분리.</li>
+<li><strong>버스 생략하고 지하철 직행</strong> — 피더 없는 지하철은 반쪽짜리입니다.</li>
+</ul>
+</section>
+
+<!-- ══════════ 6. 전력 ══════════ -->
+<section class="chapter" id="power">
+<h2><span class="num">6</span>전력 인프라</h2>
+
+<p class="lede">CS2에서는 <strong>거의 모든 도로에 저압 전선이 내장</strong>되어 있습니다(고속도로 제외). 발전소가 도로망에 접해 있으면 그 도로망에 연결된 모든 건물에 자동 송전됩니다. CS1처럼 전선을 촘촘히 깔 필요가 없습니다.</p>
+
+<h3>6-1. 시스템 구조</h3>
+<ul>
+<li><strong>고압선(High-voltage Power Line)</strong>은 ① 멀리 떨어진 발전소(풍력 단지, 수력댐)를 도시로 잇거나 ② 맵 가장자리 <strong>외부 연결</strong>과 접속해 전력을 수입/수출할 때만 필요합니다.</li>
+<li><strong>변전소(Transformer Station)</strong>가 고압↔저압을 변환합니다. 자체 발전량은 없고 <strong>총 변환 용량에 상한</strong>이 있어 대량 수출입 시 여러 개가 필요합니다.</li>
+<li>전기 정보 뷰에서 <strong>파란색 = 고압, 노란색·주황색 = 저압</strong> 흐름이 표시됩니다. 총 발전량이 충분해도 <strong>특정 저압 구간에 과부하(병목)</strong>가 걸리면 그 구역만 정전됩니다.</li>
+<li>병목 해결책: 병렬 저압 케이블 추가, 병목 지점 근처에 변전소+고압선 신설, 발전소에서 나가는 도로 추가.</li>
+</ul>
+
+<h3>6-2. 발전소 전체 스펙 비교</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>발전소</th><th>해금</th><th class="num">건설비</th><th class="num">월 유지비(≈)</th><th class="num">출력</th><th class="num">오염<br>(지상/공기/소음)</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td><b>풍력 터빈</b></td><td>시작</td><td class="num">₡25,000</td><td class="num">₡7,500~15,000</td><td class="num">최대 5 MW</td><td class="num">0 / 0 / 20,000</td><td>무인 운영, 3×3칸, 입지 의존</td></tr>
+<tr><td>┗ 로터 업그레이드</td><td>—</td><td class="num">+₡15,000~40,000</td><td class="num">₡10,000~23,000</td><td class="num">≈7.5~8.5 MW</td><td class="num">동일</td><td><span class="tag g">본전 뽑히는 업글</span></td></tr>
+<tr><td><b>소형 석탄</b></td><td>시작</td><td class="num">₡100,000</td><td class="num">₡70,000~71,300</td><td class="num">20 MW</td><td class="num">30,000 / 30,000 / 30,000</td><td><span class="tag r">MW당 ≈₡3,500 — 전 발전소 중 최악</span></td></tr>
+<tr><td><b>가스 발전소</b></td><td>2 DP</td><td class="num">₡650,000</td><td class="num">₡510,000~625,000</td><td class="num">250 MW</td><td class="num">10,000 / 10,000 / 10,000</td><td>연료(석유/가스) 수입 필요, 오염 적음</td></tr>
+<tr><td><b>석탄 발전소</b></td><td>4 DP</td><td class="num">₡1,000,000</td><td class="num">₡594,000~600,000</td><td class="num">300 MW</td><td class="num">100,000 ×3</td><td>석탄 ≈150톤/월 소비</td></tr>
+<tr><td>┗ 추가 터빈</td><td>—</td><td class="num">총 ≈₡1,750,000</td><td class="num">₡764,200~820,000</td><td class="num">400 MW</td><td class="num">공기오염 ≈50,000 감소 가능</td><td></td></tr>
+<tr><td><b>지열 발전소</b></td><td>2 DP</td><td class="num">₡750,000</td><td class="num">₡296,700~300,000</td><td class="num">150 MW</td><td class="num">15,000 ×3</td><td><b>지하수 지대 위에만 건설 가능</b></td></tr>
+<tr><td>┗ 터빈+바이너리 사이클</td><td>—</td><td class="num">총 ≈₡1,375,000</td><td class="num">₡489,100~575,000</td><td class="num">300 MW</td><td class="num">동일</td><td><span class="tag g">MW당 ≈₡1,630 — 중반 최고 가성비</span></td></tr>
+<tr><td><b>태양광</b></td><td>4 DP</td><td class="num">₡1,500,000</td><td class="num">₡220,000~300,000</td><td class="num">정격 100 / <b>실효 ≈50 MW</b></td><td class="num">0 / 0 / 36,000</td><td>야간 발전 0. 내장 배터리 50MWh·15MW</td></tr>
+<tr><td>┗ 태양 추적+배터리</td><td>—</td><td class="num">총 ≈₡2,100,000</td><td class="num">₡290,000~450,000</td><td class="num">정격 150 / 실효 ≈75 MW</td><td class="num">동일</td><td>배터리 출력 50MW</td></tr>
+<tr><td><b>원자력</b></td><td>8 DP</td><td class="num">₡5,000,000</td><td class="num">₡1,000,000~1,220,000<br>+물값 ₡120,000~300,000</td><td class="num">750 MW</td><td class="num">0 / 0 / 150,000</td><td>물 ≈400,000 m³/월, <b>고학력 노동자 75명</b></td></tr>
+<tr><td><b>수력(댐)</b></td><td>2 DP</td><td class="num">≈₡1,575,000+</td><td class="num">₡87,500~100,000</td><td class="num">수십~1,500+ MW</td><td class="num">0 / 0 / 50,000</td><td><span class="tag g">MW당 ₡58~370 — 압도적 1위</span> 단 입지 제약·홍수 위험</td></tr>
+<tr><td>비상 배터리 스테이션</td><td>1 DP</td><td class="num">≈₡1,000,000</td><td class="num">₡50,000~115,700</td><td class="num">저장 500MWh / 방전 200MW</td><td class="num">소음 미미</td><td>발전 없음, 정전 완충용</td></tr>
+<tr><td>변전소</td><td>초반</td><td class="num">≈₡30,000</td><td class="num">저렴</td><td class="num">변환 용량 상한</td><td class="num">소음 소량</td><td>수입/수출 허브</td></tr>
+</tbody>
+<caption>Economy 2.0 이후 커뮤니티 실측(Steam 가이드 1.2 기준)의 교차 검증값. 두 소스가 갈리는 항목은 범위로 표기했습니다.</caption>
+</table>
+</div>
+
+<div class="callout money">
+<div class="ct">MW당 유지비 서열 (외우면 선택이 쉬워집니다)</div>
+<p>수력(₡58~370) <strong>≪</strong> 원자력(≈1,600) ≤ 지열 업글(≈1,630) &lt; 석탄 대형(≈1,900~2,000) ≈ 지열 기본 &lt; 가스(≈2,000~2,500) &lt; 풍력(≈2,700~3,000) &lt; 태양광(배터리 포함 시 최고가) &lt; <strong>소형 석탄(≈3,500)</strong></p>
+</div>
+
+<div class="callout info">
+<div class="ct">전력 거래 단가</div>
+<p><strong>수출 ≈₡2,500/MW·월</strong> / <strong>수입 ≈₡9,000/MW·월</strong> (Economy 2.0에서 ≈₡5,000 → ≈₡9,000으로 인상, 패치에 따라 변동). 즉 <strong>수입은 초반 임시방편으로만</strong> 쓰고, 후반의 잉여 전력 수출은 인구 성장과 무관한 <strong>안정적 부수입</strong>이 됩니다.</p>
+</div>
+
+<h3>6-3. 배치 규칙 — 어디에, 어느 방향으로</h3>
+
+<figure class="diagram">
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="바람 방향에 따른 오염 시설 배치 다이어그램">
+  <defs>
+    <marker id="wind" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--teal)"/></marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="300" fill="var(--svg-fill)" rx="10"/>
+  <!-- 바람 화살표 -->
+  <g stroke="var(--teal)" stroke-width="3" marker-end="url(#wind)" opacity=".75">
+    <line x1="30" y1="50" x2="120" y2="50"/><line x1="30" y1="150" x2="120" y2="150"/><line x1="30" y1="250" x2="120" y2="250"/>
+  </g>
+  <text x="30" y="34" class="svg-t" fill="var(--teal)">바람 방향 →</text>
+  <!-- 풍상측 O -->
+  <rect x="150" y="90" width="150" height="120" fill="var(--green-soft)" stroke="var(--green)" stroke-width="2" rx="8"/>
+  <text x="225" y="126" class="svg-t" fill="var(--green)" text-anchor="middle">풍상측 (upwind)</text>
+  <text x="225" y="152" class="svg-t" fill="var(--green)" text-anchor="middle" style="font-size:15px;font-weight:800">🏘️ 주거 · 상업</text>
+  <text x="225" y="178" class="svg-ts" fill="var(--green)" text-anchor="middle">깨끗한 공기 · 높은 지가</text>
+  <!-- 중간 완충 -->
+  <rect x="320" y="110" width="90" height="80" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2" rx="8"/>
+  <text x="365" y="145" class="svg-t" fill="var(--accent-text)" text-anchor="middle">완충</text>
+  <text x="365" y="168" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">사무·공원</text>
+  <!-- 풍하측 X -->
+  <rect x="430" y="70" width="170" height="160" fill="var(--red-soft)" stroke="var(--red)" stroke-width="2" rx="8"/>
+  <text x="515" y="104" class="svg-t" fill="var(--red)" text-anchor="middle">풍하측 (downwind)</text>
+  <text x="515" y="132" class="svg-t" fill="var(--red)" text-anchor="middle" style="font-size:14px;font-weight:800">🏭 산업 · 발전소</text>
+  <text x="515" y="156" class="svg-t" fill="var(--red)" text-anchor="middle" style="font-size:14px;font-weight:800">🔥 소각장 · 매립지</text>
+  <text x="515" y="184" class="svg-ts" fill="var(--red)" text-anchor="middle">오염이 맵 밖으로 빠져나감</text>
+  <text x="515" y="204" class="svg-ts" fill="var(--red)" text-anchor="middle">지하수 취수원과도 격리</text>
+  <!-- 오염 확산 -->
+  <g fill="var(--red)" opacity=".2">
+    <circle cx="620" cy="110" r="16"/><circle cx="650" cy="140" r="20"/><circle cx="680" cy="170" r="24"/>
+  </g>
+  <text x="632" y="252" class="svg-ts" fill="var(--red)">→ 맵 밖</text>
+</svg>
+<figcaption>대기오염은 <b>바람을 타고 풍하측으로</b> 흘러갑니다. 배치 전 바람 지도 확인은 3초면 됩니다. 반대로 두면 굴뚝 연기가 주거지를 관통해 행복도·지가가 만성적으로 하락합니다.</figcaption>
+</figure>
+
+<h4>풍력 터빈: 바람 지도 읽기</h4>
+<ol class="steps">
+<li><span class="st">전기 또는 대기오염 정보 뷰를 켠다</span><strong>바람 방향·세기 화살표</strong>가 보입니다. 화살표가 길수록 풍속이 강합니다.</li>
+<li><span class="st">터빈을 들고 커서를 움직인다</span>그 지점의 <strong>예상 발전량(kW)이 실시간 표시</strong>됩니다. 5MW(최대)가 뜨는 곳이 최적, <strong>최소 4.5MW 이상</strong>인 곳만 고르세요. 언덕 꼭대기·능선·해안이 대체로 유리합니다.</li>
+<li><span class="st">주거지에서 몇 블록 떨어뜨린다</span>소음 오염 20,000이 있습니다. 도로 하나만 이어주면 송전은 자동입니다.</li>
+</ol>
+
+<h4>지열: 지하수 지대 전용</h4>
+<p>지도 정보 뷰의 <strong>지하수(Groundwater) 표시 지역 위에만</strong> 건설 가능합니다. 같은 지하수 지대를 식수 펌프와 공유하면 수량 경쟁이 생길 수 있으니 <strong>별도 지대를 쓰는 편이 안전</strong>합니다. 오염이 낮아 도시 근교 배치가 가능합니다.</p>
+
+<h4>수력댐: 유속 × 낙차</h4>
+<div class="callout warn">
+<div class="ct">댐이 "버그"라는 오해의 진실</div>
+<p>발전량 = <strong>강의 유량(유속) × 상·하류 수위차(낙차)</strong>입니다. 유량이 약한 개울에 지으면 0 MW짜리 장식물이 됩니다. 배치 도중 커서에 예상 발전량이 표시되므로, 강을 따라 움직이며 <strong>가장 높은 값이 나오는 협곡 구간</strong>을 찾으세요. 양안이 높은 절벽인 좁은 골짜기가 이상적입니다.</p>
+<p><strong>홍수 주의</strong>: 담수 시 상류 수위가 크게 오르며 저수지가 <strong>8~9개월(게임 내)</strong>에 걸쳐 차오릅니다. 상류 저지대에 이미 시가지가 있으면 잠깁니다. 지형 도구로 양안을 미리 돋우고, 하류 방류 수로도 넓게 파두세요.</p>
+<p>유지비가 규모와 거의 무관(≈₡87,500~100,000)하므로 <strong>지을 거면 최대한 크게</strong> 짓는 것이 정답입니다.</p>
+</div>
+
+<h4>태양광·원자력·배터리</h4>
+<ul>
+<li><strong>태양광</strong>: 오염이 없어 시내 인접 배치 가능하나 부지가 36×70칸으로 거대합니다. 지가가 싼 외곽 평지에.</li>
+<li><strong>원자력</strong>: 소음(150,000)만 있으므로 주거지에서 약간만 띄우면 됩니다. 단 <strong>물 소비가 월 ≈40만 m³</strong>라 상수도 용량을 미리 증설해야 하고, <strong>고학력 노동자 75명</strong>이 필요하므로 대학이 갖춰진 후에 지으세요.</li>
+<li><strong>비상 배터리</strong>: 어디에나 설치 가능. 소비 전력의 순간 피크 완충 + <strong>태양광 야간 공백 메우기</strong>가 용도입니다.</li>
+</ul>
+
+<h3>6-4. 인구 규모별 전력 전략</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>단계</th><th>전략</th></tr></thead>
+<tbody>
+<tr><td><b>초반</b><br>0~2,000<br>(M1~M4)</td><td>① 첫 선택지에서 <b>풍력 터빈 선택</b>(소형 석탄은 MW당 비용 최악 + 3중 오염). 바람 좋은 언덕에 2~4기(10~20MW)면 충분.<br>② 바람이 약하면 <b>전력 수입</b>(변전소 1개 + 외부 고압선). 단 ≈₡9,000/MW로 비싸니 소비 20~30MW 넘기 전에 자체 발전 전환.<br>③ 비상 배터리(1DP)는 후순위, 발전소 노드부터.</td></tr>
+<tr><td><b>중반</b><br>2,000~20,000<br>(M5~M12)</td><td>① <b>지하수 지대가 있으면 지열(2DP)이 정답</b> — ₡750,000에 150MW, 풀업글 300MW·MW당 ≈1,630. 저오염 + 연료 수입 불필요. "추가 터빈 + 바이너리 사이클"은 몇 안 되는 <b>본전 뽑히는 업그레이드</b>.<br>② 지하수가 없으면 <b>가스(2DP, 250MW)</b> — 화석연료 중 오염 최소.<br>③ <b>좋은 협곡+강이 있으면 수력(2DP)을 최우선</b> — 한 번 지으면 유지비 ₡10만 이하로 수백 MW.<br>④ 대형 석탄(4DP)은 비추천 — 같은 DP로 태양광, 같은 돈으로 지열 업글이 낫습니다.</td></tr>
+<tr><td><b>후반</b><br>20,000+<br>(M12~M20)</td><td>① <b>원자력(8DP)으로 전환</b> — 750MW 단일 건물로 대도시 전력 전담. 투자 회수 ≈8~15개월. 물 40만 m³/월과 고학력 75명을 먼저 확보.<br>② <b>잉여 전력은 자동 수출</b>되어 MW당 ≈₡2,500/월 수입. 원자력+수력 조합으로 수백 MW를 남기면 유지비 상당분이 회수됩니다.<br>③ 태양광은 "무오염 보조 전원"으로만 — 실효 출력이 정격의 절반이라 <b>반드시 배터리와 세트</b>.<br>④ 총 소비 500MW 초과 시 저압망 병목이 잦아집니다. <b>변전소 분산 배치 + 고압 백본</b>을 구축하세요.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>6-5. 흔한 실수</h3>
+<details class="acc"><summary>발전량이 충분한데 수입이 계속 잡힌다</summary><div class="acc-body">
+<p>원인은 둘 중 하나입니다: ① 배터리가 충전 중이거나 ② <strong>저압망 병목</strong>으로 일부 구역이 외부에서 당겨 쓰는 상황. 전기 정보 뷰에서 <strong>병목(주황) 구간과 변전소 흐름</strong>을 확인하세요. 수입을 원천 차단하려면 외부 연결 고압선을 끊으면 되지만, 그러면 비상시 백업도 사라집니다.</p>
+</div></details>
+<details class="acc"><summary>태양광 단독 운영 → 밤마다 정전</summary><div class="acc-body">
+<p>정격 100MW를 믿고 소비 90MW를 걸면 매일 밤 정전됩니다. <strong>실효치는 절반으로 계산</strong>하고 배터리를 붙이세요. 흐린 날에는 추가로 ≈-25%입니다. 한랭 맵의 겨울은 <strong>수요 최대 + 일조 최소</strong>라 태양광 단독 의존은 금물입니다.</p>
+</div></details>
+<details class="acc"><summary>업그레이드를 남발했더니 유지비만 늘었다</summary><div class="acc-body">
+<p>MW당 비용을 실제로 개선하는 업그레이드는 사실상 <strong>풍력 로터, 지열 터빈+바이너리, 태양광 태양 추적, 석탄 추가 터빈</strong> 정도입니다(1.2 기준 분석). 나머지는 돈 먹는 하마인 경우가 많습니다. 참고로 석탄의 "자원 소비 감소" 업그레이드는 1.2 시점에 미작동 보고가 있었습니다(패치에 따라 변동).</p>
+</div></details>
+<details class="acc"><summary>고속도로만 연결된 외곽 시설이 정전된다</summary><div class="acc-body">
+<p><strong>고속도로에는 저압 전선이 없습니다.</strong> 일반 도로로 연결하거나 고압선+변전소로 별도 연결해야 합니다.</p>
+</div></details>
+<details class="acc"><summary>한랭 맵에서 첫 겨울에 대정전</summary><div class="acc-body">
+<p>전력 소비는 <strong>18~22°C에서 100%</strong>가 최적이고, <strong>극단 온도(≈-18°C 이하)에서 최대 ≈200%</strong>까지 오릅니다. Lakeland(-15°C)·Mountain Village(-12°C) 같은 맵은 겨울마다 수요가 사실상 2배가 됩니다. 여름 기준 발전량의 <strong>+50~100% 여유분</strong> 또는 외부 수입 경로를 미리 확보하세요.</p>
+</div></details>
+</section>
+<!-- ══════════ 7. 상하수도 ══════════ -->
+<section class="chapter" id="water">
+<h2><span class="num">7</span>상수도·하수도</h2>
+
+<p class="lede">도시는 소비한 물과 <strong>거의 같은 양의 하수를 배출</strong>합니다. 상수 용량을 늘리면 하수 처리 용량도 같이 늘려야 합니다. 그리고 이 장의 배치 실수 하나가 도시 전체를 병들게 만듭니다.</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="강 흐름과 취수·배수 배치 다이어그램">
+  <defs>
+    <marker id="flow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#3b82f6"/></marker>
+  </defs>
+  <rect x="0" y="0" width="720" height="300" fill="var(--svg-fill)" rx="10"/>
+  <!-- 강 -->
+  <path d="M20 150 Q180 110 360 150 T700 150" stroke="#3b82f6" stroke-width="34" fill="none" opacity=".28" stroke-linecap="round"/>
+  <path d="M20 150 Q180 110 360 150 T700 150" stroke="#3b82f6" stroke-width="2" fill="none" opacity=".6" stroke-dasharray="10 8" marker-end="url(#flow)"/>
+  <text x="24" y="122" class="svg-t" fill="#3b82f6">상류 (upstream)</text>
+  <text x="600" y="122" class="svg-t" fill="#3b82f6">하류 → 맵 밖</text>
+  <!-- 취수장 -->
+  <rect x="90" y="176" width="112" height="46" fill="var(--green-soft)" stroke="var(--green)" stroke-width="2" rx="7"/>
+  <text x="146" y="196" class="svg-t" fill="var(--green)" text-anchor="middle">💧 취수장</text>
+  <text x="146" y="214" class="svg-ts" fill="var(--green)" text-anchor="middle">₡25,000 / 100,000m³</text>
+  <line x1="146" y1="176" x2="146" y2="152" stroke="var(--green)" stroke-width="3"/>
+  <!-- 도시 -->
+  <rect x="260" y="188" width="180" height="52" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2" rx="7"/>
+  <text x="350" y="212" class="svg-t" fill="var(--accent-text)" text-anchor="middle">🏙️ 도시 (도로에 배관 내장)</text>
+  <text x="350" y="230" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">별도 파이프 매설 불필요</text>
+  <!-- 배출구 -->
+  <rect x="520" y="176" width="130" height="46" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="2" rx="7"/>
+  <text x="585" y="196" class="svg-t" fill="var(--amber)" text-anchor="middle">🚰 하수 배출구</text>
+  <text x="585" y="214" class="svg-ts" fill="var(--amber)" text-anchor="middle">₡25,000 / 100,000m³</text>
+  <line x1="585" y1="176" x2="585" y2="152" stroke="var(--amber)" stroke-width="3"/>
+  <!-- 오염 확산 -->
+  <g fill="var(--amber)" opacity=".22"><circle cx="620" cy="150" r="14"/><circle cx="655" cy="150" r="18"/><circle cx="692" cy="150" r="22"/></g>
+  <!-- 거리 표시 -->
+  <path d="M146 258 L585 258" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="365" y="278" class="svg-t" fill="var(--red)" text-anchor="middle">최대한 멀리 — 가까우면 펌프 흡입력이 흐름을 역전시킵니다</text>
+</svg>
+<figcaption>강 맵의 정석 배치: <b>취수장은 도시 기준 최상류</b>, <b>배출구는 최하류·물이 맵 밖으로 빠져나가는 가장자리 직전</b>. 이러면 오염이 생기자마자 쓸려 나가 사실상 무공해 운영이 됩니다.</figcaption>
+</figure>
+
+<h3>7-1. 취수 시설 비교</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>시설</th><th class="num">건설비</th><th class="num">월 유지비(≈)</th><th class="num">용량(m³/월)</th><th>특징</th></tr></thead>
+<tbody>
+<tr><td><b>취수장</b>(Water Pumping Station)</td><td class="num">₡25,000</td><td class="num">₡10,000</td><td class="num">100,000</td><td><span class="tag g">용량 단가 최저</span> 물가에만 설치. 수질 오염에 노출</td></tr>
+<tr><td>지하수 펌프장</td><td class="num">₡40,000</td><td class="num">₡20,000</td><td class="num">75,000</td><td>지하수 매장지 위에만. 지면 오염에 취약, 과잉 취수 시 고갈</td></tr>
+<tr><td>급수탑(Water Tower)</td><td class="num">₡60,000</td><td class="num">₡30,000</td><td class="num">30,000</td><td><span class="tag r">용량 대비 유지비 최악</span> 아무 곳에나 설치 가능</td></tr>
+<tr><td><b>고급 취수장</b></td><td class="num">₡240,000</td><td class="num">₡95,000</td><td class="num">1,000,000</td><td>기본의 10배 출력. 대도시용(개발 트리 해금)</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>업그레이드 — 항상 신축보다 쌉니다</h4>
+<div class="tablewrap">
+<table>
+<thead><tr><th>업그레이드</th><th>대상</th><th class="num">추가 건설비</th><th class="num">추가 유지비(≈)</th><th>효과</th></tr></thead>
+<tbody>
+<tr><td>추가 펌프(Extra Pump)</td><td>취수장</td><td class="num">₡12,500</td><td class="num">₡7,000</td><td>용량 +50,000</td></tr>
+<tr><td>추가 펌프</td><td>지하수 펌프장</td><td class="num">₡20,000</td><td class="num">₡7,000</td><td>용량 +37,500</td></tr>
+<tr><td>고급 여과 시스템</td><td>지하수 펌프장</td><td class="num">₡22,000</td><td class="num">₡11,000</td><td>취수되는 물의 오염물질 저감(오염 매장지 비상용)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout tip">
+<div class="ct">판단 기준 3줄 요약</div>
+<ul>
+<li>물가가 가까우면 <strong>무조건 취수장</strong>. m³당 비용이 가장 쌉니다.</li>
+<li>지하수 펌프장은 <strong>수변이 먼 내륙</strong>용. 보충 속도보다 많이 뽑으면 <strong>일시 고갈</strong>되어 급수가 끊깁니다(펌프를 끄거나 예산을 낮추면 서서히 회복).</li>
+<li>급수탑은 30,000 용량에 월 ≈₡30,000. 같은 유지비로 <strong>취수장 3개(300,000)</strong>를 돌릴 수 있습니다. 비상용 외에는 짓지 마세요.</li>
+</ul>
+</div>
+
+<h3>7-2. 하수 시설 비교</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>시설</th><th class="num">건설비</th><th class="num">월 유지비(≈)</th><th class="num">처리 용량</th><th>특징</th></tr></thead>
+<tbody>
+<tr><td><b>하수 배출구</b></td><td class="num">₡25,000</td><td class="num">₡20,000</td><td class="num">100,000</td><td><b>100% 오염된 물을 그대로 방류.</b> 물가에만 설치</td></tr>
+<tr><td><b>하수 처리장</b></td><td class="num">₡400,000</td><td class="num">₡120,000</td><td class="num">400,000</td><td>정화 후 방류. 걸러낸 오염물은 <b>고형 폐기물(쓰레기)</b>로 전환</td></tr>
+</tbody>
+</table>
+</div>
+<div class="tablewrap">
+<table>
+<thead><tr><th>업그레이드</th><th>대상</th><th class="num">추가 건설비</th><th class="num">추가 유지비(≈)</th><th>효과</th></tr></thead>
+<tbody>
+<tr><td>화학 정화</td><td>하수 배출구</td><td class="num">₡12,000</td><td class="num">₡4,000</td><td>방류수 오염도 저감</td></tr>
+<tr><td>고급 여과 시스템</td><td>하수 처리장</td><td class="num">₡50,000</td><td class="num">₡20,000</td><td>정화율 추가 상승</td></tr>
+<tr><td>추가 처리 유닛</td><td>하수 처리장</td><td class="num">₡100,000</td><td class="num">₡40,000</td><td>처리 용량 +100,000</td></tr>
+</tbody>
+</table>
+</div>
+<p>용량 단가만 보면 <strong>배출구(₡25k/100k)가 처리장(₡400k/400k)보다 4배 쌉니다.</strong> "하류로 흘려보낼 수 있는 강"이 있는 맵에서는 <strong>배출구 + 올바른 배치</strong>가 가성비 최강이고, 호수·만(灣)처럼 물이 고이는 지형이나 내륙 도시에서는 처리장이 사실상 필수입니다.</p>
+
+<h3>7-3. 오염 메커니즘과 지도 읽는 법</h3>
+<ol class="steps">
+<li><span class="st">인포뷰 → 물(Water &amp; Sewage) 탭</span><strong>파란 반점/얼룩</strong>이 <strong>지하수 매장지</strong>입니다. 진할수록 수량이 풍부하며, 지하수 펌프장은 반드시 이 영역 <strong>위에 직접</strong> 올려야 합니다.</li>
+<li><span class="st">지표수 흐름 오버레이로 방향·세기 확인</span>하수 배치 전 필수. 화살표가 길수록 유속이 강합니다.</li>
+<li><span class="st">오염 인포뷰와 겹쳐 보기</span><strong>갈색 지면 오염 지역과 파란 매장지가 겹치는지</strong> 확인하세요. 겹치면 그 매장지는 서서히 오염수를 뿜는 우물이 됩니다.</li>
+<li><span class="st">우측 패널 게이지 점검</span><strong>물 가용량</strong>으로 생산 대비 소비를, <strong>무역</strong>으로 수입/수출량을 확인합니다.</li>
+</ol>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>항목</th><th>메커니즘</th></tr></thead>
+<tbody>
+<tr><td><b>확산</b></td><td>지표수 오염은 <b>물 흐름을 타고 하류로</b> 퍼집니다. 흐름이 강할수록 빨리 쓸려 내려가고, <b>고인 물(호수·만)에서는 축적</b>되어 오래 남습니다</td></tr>
+<tr><td><b>소멸</b></td><td>강물 오염은 오염원 제거 시 흐름에 씻겨 서서히 사라집니다. <b>고인 물은 회복이 매우 느립니다</b></td></tr>
+<tr><td><b>지하수 오염</b></td><td>지면 오염이 매장지에 닿으면 매장지가 서서히 오염되고, 그 위 펌프장은 <b>더러운 물을 상수도망에 공급</b>합니다</td></tr>
+<tr><td><b>결과</b></td><td>오염수 급수 → 시민 건강 하락 → <b>질병 → 병원 부담 → 생산성·세수 하락</b>. 지도에서 특정 동네만 집단으로 아프다면 십중팔구 물이 원인입니다</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout danger">
+<div class="ct">가장 놓치기 쉬운 함정: 펌프 역류</div>
+<p>취수장 펌프의 흡입력이 강해서 <strong>취수장과 배출구가 가까우면 국지적으로 물 흐름이 역전</strong>될 수 있습니다. "배출구가 하류니까 안전하다"고 안심하지 말고 <strong>충분한 거리</strong>를 벌리세요.</p>
+</div>
+
+<h3>7-4. 배치 규칙 6가지</h3>
+<ol>
+<li><strong>강 맵</strong>: 흐름 확인 → 취수장은 최상류, 배출구는 최하류(가능하면 물이 맵 밖으로 나가는 가장자리 직전).</li>
+<li>취수장과 배출구는 <strong>같은 물줄기에서 최대한 멀리</strong>.</li>
+<li>취수장·배출구에서 가장 가까운 도로까지 파이프(또는 도로)로 연결하면 끝. <strong>나머지는 도로 내장 배관이 처리합니다.</strong></li>
+<li><strong>호수/고인 물 맵</strong>: 배출구를 쓰면 호수 전체가 서서히 썩습니다. 하수 처리장을 쓰거나, 취수는 지하수로 돌리고 배출만 호수로 하는 식으로 <strong>상·하수 수원을 분리</strong>하세요.</li>
+<li><strong>지하수 펌프장</strong>: 파란 매장지 위 + <strong>오염 산업 구역·매립지에서 멀리</strong>. 산업 구역을 먼저 정한 뒤 반대편 매장지를 쓰는 것이 순서입니다.</li>
+<li>하수 처리장도 방류수에 잔여 오염이 있습니다(정화율 100% 아님). <strong>취수구 상류에는 두지 마세요.</strong></li>
+</ol>
+
+<h3>7-5. 인구 규모별 필요 용량</h3>
+<div class="formula">필요 상수 용량 = 인구 × ≈4~5 m³/월 × <b>1.3</b> (성장 버퍼 30%)</div>
+<p>실측 근거: 인구 150,000 도시가 무업그레이드 취수장 6개(총 600,000 m³/월)로 운영 → <strong>취수장 1개(100,000) ≈ 인구 20,000~25,000명</strong> 커버. 하수는 <strong>상수와 1:1</strong>로 맞춥니다.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th class="num">인구</th><th class="num">필요 상수(버퍼 포함)</th><th>취수 시설</th><th>하수 처리</th></tr></thead>
+<tbody>
+<tr><td class="num">~5,000</td><td class="num">≈30,000</td><td>취수장 1개(예산 슬라이더로 감액)</td><td>배출구 1개</td></tr>
+<tr><td class="num">20,000</td><td class="num">≈100,000~130,000</td><td>취수장 1개 + 추가 펌프</td><td>배출구 1~2개</td></tr>
+<tr><td class="num">50,000</td><td class="num">≈250,000~330,000</td><td>취수장 2~3개</td><td>배출구 3개 또는 처리장 1개</td></tr>
+<tr><td class="num">100,000</td><td class="num">≈500,000~650,000</td><td>취수장 5~6개 또는 고급 취수장</td><td>처리장 1개+추가 유닛 1~2</td></tr>
+<tr><td class="num">250,000+</td><td class="num">≈1,000,000+</td><td>고급 취수장 1개+예비</td><td>처리장 2~3개(+추가 유닛)</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>7-6. 도입 순서와 흔한 실수</h3>
+<ol class="steps">
+<li><span class="st">개막</span>강 상류 취수장 1개 + 최하류 배출구 1개(합계 ₡50,000). <strong>예산 슬라이더를 60~70%로 낮춰 시작</strong>합니다.</li>
+<li><span class="st">인구 ~10,000</span>소비가 60~70%에 닿으면 <strong>추가 펌프(₡12,500) 업그레이드부터</strong>. 신축보다 쌉니다.</li>
+<li><span class="st">인구 20,000~50,000</span>취수장 2~3개 체제. 배출구 증설 시에도 항상 기존보다 하류 또는 같은 지점에.</li>
+<li><span class="st">개발 포인트 여유 시</span>하수 처리장 해금. <strong>고인 물 맵이면 우선순위 최상</strong>, 하류 방류가 되는 강 맵이면 후순위로 미뤄도 됩니다.</li>
+<li><span class="st">인구 100,000+</span>처리장으로 배출구를 단계적 대체, 취수는 고급 취수장으로 통합. 잉여 상수는 외부 연결로 수출.</li>
+</ol>
+
+<details class="acc"><summary>🚨 흔한 실수 10가지 (펼쳐보기)</summary><div class="acc-body">
+<ol>
+<li><strong>배출구를 취수장 상류에 배치</strong> — 최악의 실수. 온 도시가 오염수를 마시고 병원이 터집니다.</li>
+<li><strong>취수-배수 역전(펌프 역류)</strong> — 하류라도 너무 가까우면 흡입력이 흐름을 뒤집습니다.</li>
+<li><strong>고인 호수에 배출구 방류</strong> — 흐름이 없어 오염이 축적되고 회복이 극도로 느립니다.</li>
+<li><strong>지면 오염 위/옆의 지하수 펌프</strong> — 오염 산업·매립지 근처 매장지는 서서히 오염됩니다. 이미 오염됐다면 고급 여과(₡22,000)로 급한 불을 끄고 오염원을 이전하세요.</li>
+<li><strong>지하수 과잉 취수</strong> — 보충 속도 초과로 매장지가 마르면 갑자기 단수됩니다. 보조 수원으로만 쓰세요.</li>
+<li><strong>급수탑 남발</strong> — 비상용 이외 금지.</li>
+<li><strong>초반 과잉 투자</strong> — 처리장(₡400,000)은 초반 재정을 파탄냅니다. 강 하류 방류로 버티다 중반에 전환.</li>
+<li><strong>하수 용량 계산 누락</strong> — 상수만 늘리면 "하수 역류" 아이콘이 뜹니다. <strong>상수 = 하수 1:1 원칙.</strong></li>
+<li><strong>불필요한 파이프 매설</strong> — 도로에 배관이 내장돼 있습니다. CS1 습관을 버리세요.</li>
+<li><strong>처리장 쓰레기 무시</strong> — 처리장이 뽑아낸 고형 폐기물이 수거되지 않으면 효율이 떨어집니다. 쓰레기 처리망과 함께 운영하세요.</li>
+</ol>
+</div></details>
+</section>
+
+<!-- ══════════ 8. 쓰레기·의료·장묘 ══════════ -->
+<section class="chapter" id="garbage">
+<h2><span class="num">8</span>쓰레기 · 의료 · 장묘</h2>
+
+<p class="lede">이 세 서비스의 공통점은 <strong>전부 도로 차량으로 작동한다</strong>는 것입니다. 즉 <strong>교통 정체 = 수거 실패 = 서비스 붕괴</strong>입니다. 시설이 충분한데 문제가 생긴다면 시설이 아니라 도로를 의심하세요.</p>
+
+<h3>8-1. 쓰레기 — 매립지는 처리 시설이 아니라 "저장고"</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>시설</th><th>해금</th><th class="num">수거 트럭</th><th class="num">저장 용량</th><th class="num">처리 속도</th><th class="num">월 유지비(≈)</th><th class="num">톤당 처리비</th></tr></thead>
+<tbody>
+<tr><td><b>매립지</b>(Landfill)</td><td>M1</td><td class="num">15대</td><td class="num">≈8,000t</td><td class="num">≈0.5~0.6t/월</td><td class="num">₡30,000</td><td class="num"><span class="tag r">≈₡50,000/t</span></td></tr>
+<tr><td><b>소각장</b>(Incineration)</td><td>≈M8 + DP</td><td class="num">27대</td><td class="num">기본+확장당 250t</td><td class="num">≈41t/월</td><td class="num">₡210,000</td><td class="num"><span class="tag g">≈₡5,100/t</span></td></tr>
+<tr><td>재활용 센터</td><td>개발 트리</td><td class="num">15대</td><td class="num">≈1,500t</td><td class="num">≈11t/월</td><td class="num">₡160,000<br><span style="color:var(--text3)">(건설 ₡880,000)</span></td><td class="num">≈₡14,500/t</td></tr>
+<tr><td><b>산업 폐기물 처리장</b><br><span style="color:var(--text3)">맵당 1개 한정</span></td><td>개발 트리 후반</td><td class="num">≈50대</td><td class="num">대형</td><td class="num">≈55t/월</td><td class="num">₡450,000</td><td class="num">≈₡8,200/t</td></tr>
+</tbody>
+<caption>핵심 결론: <b>순수 처리 단가는 소각장이 압도적</b>입니다. 매립지는 처리 시설이 아니라 버퍼로 이해하세요.</caption>
+</table>
+</div>
+
+<div class="callout warn">
+<div class="ct">쓰레기는 3계열 — 산업 폐기물은 특별합니다</div>
+<p>게임 UI에는 합산 표기되지만 사실상 <strong>재활용 가능 쓰레기 / 일반(소각용) 쓰레기 / 산업 폐기물</strong> 3계열입니다. <strong>산업 폐기물은 소각장·재활용 센터가 "보관"만 할 뿐 처리하지 못합니다.</strong> 공업 도시에서 "시설은 남는데 쓰레기가 쌓이는" 현상의 원인이 이것입니다. 전용 시설(맵당 1개)을 산업 클러스터 인근에 확보하세요. 부가 효과로 <strong>도시 전체 산업 지반 오염 -15%</strong>도 제공합니다.</p>
+</div>
+
+<h4>매립지 운용 3원칙</h4>
+<ol class="steps">
+<li><span class="st">70~80%에서 "비우기(Start Emptying)"를 건다</span>가득 차면 <strong>그 매립지의 트럭 15대가 수거를 완전히 중단</strong>합니다. 도시 전체 수거력이 갑자기 줄어드는 함정입니다.</li>
+<li><span class="st">비우기는 한가할 때 미리</span>비우는 동안 <strong>소수의 덤프트럭만 운행되어 매우 느립니다.</strong> 이송 우선순위는 소각장·재활용 센터 → 다른 매립지 → 외부 연결(수출) 순입니다.</li>
+<li><span class="st">확장은 최대 4개까지</span>쓰레기 트럭 차고(트럭 +10대), 유해 폐기물 수거소(처리 속도 +≈1.1t/월, 월 ≈₡30,000)를 건물 둘레에 <strong>최대 4개</strong> 부착 가능합니다.</li>
+</ol>
+
+<div class="callout danger">
+<div class="ct">소각장의 함정: 전력 수요에 따라 가동률이 결정됩니다</div>
+<p>소각장은 쓰레기를 태워 전기를 생산합니다(최대 ≈12MW). 문제는 <strong>도시 전력이 남아돌면 소각장이 저출력으로 돌고, 쓰레기 처리량도 같이 떨어진다</strong>는 점입니다.</p>
+<p><strong>해결책</strong>: <strong>외부 연결 송전선에 물려 잉여 전력을 수출</strong>하면 항상 풀가동합니다. "소각장 지었는데 쓰레기가 쌓인다"는 문의 대부분이 이 원인입니다.</p>
+</div>
+
+<h4>배치 규칙</h4>
+<ul>
+<li><strong>매립지</strong>: 지반 오염 + 소음. 주거지에서 떨어진 <strong>공업지역 가장자리</strong>, 간선도로 접근이 좋은 곳. 오염된 지반은 지하수 오염 → 질병으로 직결되므로 <strong>취수 지역과 반드시 격리</strong>.</li>
+<li><strong>소각장</strong>: 대기 오염이 큽니다. <strong>주거지 기준 풍하측</strong> + 공업지대. 전력망 연결이 필수이므로 발전소·변전 인프라 근처가 이상적.</li>
+</ul>
+
+<h4>도입 타이밍</h4>
+<div class="tablewrap">
+<table>
+<thead><tr><th>시점</th><th>조치</th></tr></thead>
+<tbody>
+<tr><td>M1~M3</td><td>매립지 1개 + 필요 시 트럭 차고. 초반 발생량은 적으므로 <b>M6까지 미루는 절약 전략도 유효</b></td></tr>
+<tr><td>인구 ≈7,000~15,000<br>(Big Town 전후)</td><td><b>소각장 1호기 + 외부 송전 연결.</b> 매립지는 "비우기" 시작</td></tr>
+<tr><td>소각장 가동 후</td><td>매립지는 1개만 버퍼로 남기고(비운 상태) 나머지 철거</td></tr>
+<tr><td>중반(DP 여유)</td><td>재활용 센터 1개 — 금속·플라스틱·종이·섬유를 추출해 소액 현금 흐름 발생</td></tr>
+<tr><td>공업 특화/인구 5만+</td><td><b>산업 폐기물 처리장 1개</b> — 소각장 옆에 클러스터로</td></tr>
+<tr><td>이후</td><td>소각장 1개당 인구 <b>3~5만</b> 커버 기준으로 증설</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>8-2. 의료 — 복지가 아니라 경제 인프라</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>항목</th><th>진료소(Medical Clinic)</th><th>종합병원(Hospital)</th></tr></thead>
+<tbody>
+<tr><td>해금</td><td>M1 (기본 제공)</td><td>개발 트리 "의료 및 장묘" 노드</td></tr>
+<tr><td class="num">건설비</td><td class="num">₡30,000<span style="color:var(--text3)">(소형)</span> / ₡60,000<span style="color:var(--text3)">(일반)</span></td><td class="num">≈₡1,880,000</td></tr>
+<tr><td class="num">월 유지비</td><td class="num">≈₡10,000~60,000</td><td class="num">≈₡450,000</td></tr>
+<tr><td class="num">구급차</td><td class="num">5대</td><td class="num">30대</td></tr>
+<tr><td class="num">환자 수용</td><td class="num">≈25~100명</td><td class="num">500명</td></tr>
+<tr><td>서비스 범위</td><td>근거리</td><td>매우 넓음 (표기 ≈7,500 / 용량 ≈50,000)</td></tr>
+<tr><td class="num">일자리</td><td class="num">소수</td><td class="num">≈60명</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout info">
+<div class="ct">병원을 지어도 진료소를 철거하지 마세요</div>
+<p>구급차 파견 로직상 <strong>가까운 진료소의 구급차가 우선 출동</strong>하고, 진료소 구급차가 모두 소진되면 병원이 출동합니다. 진료소를 철거하면 <strong>응답 시간(거리·교통)이 늘어 회복 실패·사망이 증가</strong>합니다.</p>
+<p>실측 기준: 진료소만으로는 도시 평균 건강 ≈50~60%에서 정체, <strong>병원 1개 추가 시 ≈68%까지 상승</strong>합니다.</p>
+</div>
+
+<p><strong>도입 시점</strong>: 진료소는 첫 주거지역과 동시에 1개, 이후 <strong>주거 클러스터마다 1개</strong>. 병원은 <strong>인구 ≈10,000 전후</strong>에 도심 간선도로변에 1개가 정석입니다.</p>
+
+<h4>상급 시설 (개발 트리)</h4>
+<div class="tablewrap">
+<table>
+<thead><tr><th>시설</th><th class="num">DP</th><th>효과(도시 전체)</th></tr></thead>
+<tbody>
+<tr><td>질병 통제 센터</td><td class="num">8</td><td>오염으로 인한 건강 피해 -25%, 질병 감염 위험 -25% <span class="tag a">공업 도시 우선</span></td></tr>
+<tr><td>보건 연구소</td><td class="num">8</td><td>질병 감염 위험 -10%, 공원 엔터테인먼트 +10%</td></tr>
+<tr><td>의과대학</td><td class="num">2</td><td>회복 실패 -25%, 병원 효율 +10%, 부속 진료소 업그레이드 시 주변 건강 +5%</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>질병 메커니즘 — 아픈 시민은 출근하지 못합니다</h4>
+<ul>
+<li>시민 개개인이 <strong>건강(Health) 수치</strong>를 가집니다. 결정 요인: 식료품 소비 충족도, 의료 접근성, <strong>각종 오염(대기·지반·소음)</strong>, <strong>수거 안 된 쓰레기</strong>, 과거 병력.</li>
+<li><strong>최대 리스크는 오염된 식수</strong>입니다(7장 참조). 특정 동네만 집단 발병하면 물부터 의심하세요.</li>
+<li>아픈 시민은 출근하지 못해 <strong>기업 효율이 하락</strong>합니다(공식 위키 명시). 의료는 복지가 아니라 경제 인프라입니다.</li>
+<li>의료 시설이 없으면 시민이 <strong>외부 연결로 원정 치료</strong>를 가고, 서비스 수입 비용이 발생합니다(≈₡25/시민).</li>
+</ul>
+
+<h3>8-3. 장묘 — 묘지와 화장장의 역할 분담</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>항목</th><th>묘지(Cemetery)</th><th>화장장(Crematorium)</th></tr></thead>
+<tbody>
+<tr><td>해금</td><td>M1 (기본 제공)</td><td>개발 트리 1DP (실질 해금은 중반)</td></tr>
+<tr><td class="num">건설비</td><td class="num">≈₡114,000</td><td class="num">≈₡240,000</td></tr>
+<tr><td class="num">월 유지비</td><td class="num">≈₡55,000</td><td class="num">≈₡45,000</td></tr>
+<tr><td class="num">영구차</td><td class="num"><b>15대</b></td><td class="num">10대</td></tr>
+<tr><td>수용/처리</td><td><b>5,000구 저장</b> — 가득 차면 기능 정지</td><td><b>저장 한계 없음</b> — 연속 소각 처리</td></tr>
+<tr><td>확장</td><td>사원(₡25,000/월 ₡11,000), 납골당(수용 +1,000, ₡75,000/월 ₡18,000), 영묘</td><td>추가 소각로(₡51,000/월 ₡25,000), 영구차 차고(+5대, ₡30,000/월 ₡10,000)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout tip">
+<div class="ct">최적해는 혼합 운용</div>
+<p><strong>묘지 = 수거력(영구차 15대) + 유한 저장</strong>, <strong>화장장 = 무한 처리 + 수거력 부족</strong>이라는 트레이드오프입니다.</p>
+<p>정석: M1에서 묘지 1개(소형) → 화장장 해금 즉시 1개 건설 → 이후 묘지는 <strong>"비우기"로 화장장에 시신을 넘기며 버퍼 + 영구차 증원 역할</strong>로 유지. 수용률 80%에서 비우기를 거는 습관을 들이세요.</p>
+</div>
+
+<div class="callout danger">
+<div class="ct">사망파(Death Wave) 대비</div>
+<p>도시가 초반에 급성장했다면 <strong>입주 세대의 연령이 비슷해 20~30년 후 일제히 사망</strong>합니다. 예방책은 <strong>주거 지역을 여러 마일스톤에 걸쳐 나눠 확장</strong>하는 것이고, 이미 늦었다면 화장장 <strong>추가 소각로 + 영구차 차고를 선제적으로</strong> 확장하세요.</p>
+<p>시신이 방치되면 해당 건물 거주자의 <strong>웰빙/행복도가 급락</strong>하고, 장기 방치 시 주민 이탈·건물 방치로 악화됩니다. "시설은 충분한데 시신이 쌓인다"면 <strong>정체 구간·막다른 골목·도로 미연결</strong>부터 의심하세요.</p>
+</div>
+
+<h3>8-4. 이 장의 흔한 실수 모음</h3>
+<details class="acc"><summary>🚨 10가지 실수 (펼쳐보기)</summary><div class="acc-body">
+<ol>
+<li><strong>소각장 짓고 전력 자급 상태로 방치</strong> → 저출력 가동으로 처리량 급감. 외부 송전선으로 잉여 전력 수출 필수.</li>
+<li><strong>매립지 만땅 방치</strong> → 트럭 15대가 수거 전면 중단. 70~80%에서 비우기.</li>
+<li><strong>비우기를 바쁠 때 실행</strong> → 이송 트럭이 적어 게임 시간 몇 년이 걸립니다.</li>
+<li><strong>매립지/소각장을 취수원 상류·주거지 풍상측에 배치</strong> → 지하수 오염발 집단 질병 + 지가 하락.</li>
+<li><strong>공업 도시에서 산업 폐기물 처리장 미건설</strong> → 다른 시설 저장고가 처리 불가능한 폐기물로 가득 찹니다.</li>
+<li><strong>병원 지은 뒤 진료소 철거</strong> → 구급차 응답 거리 증가로 사망 증가.</li>
+<li><strong>하수 처리를 취수 펌프 상류에 배치</strong> → 최다 빈도의 대규모 질병 원인. 의료 증설로는 해결 불가.</li>
+<li><strong>화장장 해금 후에도 묘지만 증설</strong> → 유지비 대비 처리량이 나쁘고 결국 포화.</li>
+<li><strong>급성장 도시에서 사망파 무대비</strong> → 동일 연령대 대량 입주 후 일제 사망.</li>
+<li><strong>수치 맹신</strong> → 이 표의 ₡ 값은 계속 리밸런싱 중입니다. 게임 내 건물 정보 패널이 최종 기준입니다.</li>
+</ol>
+</div></details>
+</section>
+
+<!-- ══════════ 9. 치안·소방·우편·복지 ══════════ -->
+<section class="chapter" id="safety">
+<h2><span class="num">9</span>치안 · 소방 · 우편 · 복지</h2>
+
+<div class="callout warn">
+<div class="ct">2024년까지의 공략은 이 장에서 틀립니다</div>
+<p><strong>1.2.5f1(2025-03) 패치</strong>에서 범죄 확률이 제대로 누적되지 않던 버그가 수정됐습니다. 그 전까지는 경찰 정보 뷰가 항상 초록색이고 순찰차가 놀았기 때문에 "경찰은 거의 필요 없다"는 공략이 통용됐습니다. <strong>패치 이후에는 경찰력 증강과 구역 지정 순찰이 실제로 필요합니다.</strong></p>
+</div>
+
+<h3>9-1. 해금 타임라인</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>서비스</th><th>해금 시점</th></tr></thead>
+<tbody>
+<tr><td><b>소방</b>(Fire &amp; Rescue)</td><td><b>M3 Large Village</b> — 소방서 즉시 무료 개방</td></tr>
+<tr><td><b>경찰·행정</b></td><td><b>M3 Large Village</b> — 파출소 즉시 개방</td></tr>
+<tr><td><b>통신·우편</b></td><td><b>M5 Tiny Town</b> — 우체국 개방</td></tr>
+<tr><td><b>복지 사무소</b></td><td>M3 이후 <b>개발 포인트 1</b> (경찰·행정 트리)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="tablewrap">
+<table>
+<thead><tr><th>개발 포인트로 여는 상위 시설</th><th class="num">DP</th></tr></thead>
+<tbody>
+<tr><td>산불 감시탑(Firewatch Tower)</td><td class="num">1</td></tr>
+<tr><td>복지 사무소(Welfare Office)</td><td class="num">1</td></tr>
+<tr><td>소방 본부(Fire Station)</td><td class="num">≈1~2</td></tr>
+<tr><td>소방 헬기 기지 / 경찰 본부 / 우편 분류 시설</td><td class="num">2</td></tr>
+<tr><td>교도소(Prison) / 시청(City Hall)</td><td class="num">4</td></tr>
+<tr><td>조기 재난 경보 시스템 / 중앙정보국(CIB)</td><td class="num">8</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>9-2. 치안 — 파출소 vs 본부</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>항목</th><th>파출소</th><th>경찰 본부</th><th>교도소</th><th>중앙정보국(CIB)</th></tr></thead>
+<tbody>
+<tr><td class="num">건설비</td><td class="num">₡160,000</td><td class="num">₡2,100,000</td><td class="num">₡650,000</td><td class="num">₡3,200,000</td></tr>
+<tr><td class="num">월 유지비</td><td class="num">₡19,000</td><td class="num">₡155,000</td><td class="num">₡100,000</td><td class="num">₡160,000</td></tr>
+<tr><td class="num">부지</td><td class="num">12×7</td><td class="num">18×20</td><td class="num">26×24</td><td class="num">34×34</td></tr>
+<tr><td class="num">순찰차</td><td class="num">6대</td><td class="num">20대</td><td class="num">호송차 10대</td><td class="num">25대</td></tr>
+<tr><td class="num">유치장/수감</td><td class="num">25명</td><td class="num">100명</td><td class="num"><b>500명</b></td><td class="num">—</td></tr>
+<tr><td>범위/효과</td><td>5,000</td><td>10,000</td><td>반경 800m 범죄율 -5%</td><td><b>도시 전체 범죄율 -8%</b>, 즉응률 +8</td></tr>
+</tbody>
+</table>
+</div>
+<h4>주요 업그레이드</h4>
+<div class="tablewrap">
+<table>
+<thead><tr><th>업그레이드</th><th class="num">비용 / 월 유지비</th><th>효과</th></tr></thead>
+<tbody>
+<tr><td>파출소 차고 증축</td><td class="num">₡18,000 / ₡9,000</td><td>순찰차 +6대 <span class="tag g">신축 ₡160,000보다 압도적으로 쌈</span></td></tr>
+<tr><td>본부 차고 증축</td><td class="num">₡60,000 / ₡15,000</td><td>순찰차 +10대</td></tr>
+<tr><td>본부 추가 유치장</td><td class="num">₡75,000 / ₡30,000</td><td>유치장 +50명</td></tr>
+<tr><td><b>시청 법원</b>(City Hall Court)</td><td class="num">₡320,000 / ₡20,000</td><td><b>도시 전체 범죄 대응 시간 -50%</b> <span class="tag g">가성비 최상</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout info">
+<div class="ct">범죄 메커니즘 — 근본 원인은 경찰 부족이 아닙니다</div>
+<ol>
+<li>모든 건물은 <strong>범죄 확률</strong>을 누적하고, 범죄자는 건물들의 범죄 확률을 비교해 표적을 고릅니다.</li>
+<li>시민이 범죄자가 될 확률은 <strong>웰빙이 낮을수록, 실업·저학력·노숙 상태일수록</strong> 급상승합니다. 즉 <strong>범죄율의 근본 원인은 실업률·행복도</strong>입니다.</li>
+<li>경찰서의 존재 자체가 주변 범죄 누적을 감소시키고, <strong>순찰차가 지나는 도로 연변의 범죄 확률을 추가로 낮춥니다</strong>(경찰 정보 뷰에서 도로가 초록색).</li>
+<li>검거된 범죄자는 유치장에 수감되고, 일부가 <strong>교도소</strong>로 호송됩니다. 교도소가 없으면 외부 연결로 보내져 비용이 발생합니다. 교도소는 <strong>생산 시설</strong>로도 기능합니다.</li>
+</ol>
+</div>
+
+<h4>범죄율 낮추기 체크리스트</h4>
+<ul>
+<li>실업률을 <strong>5% 이하</strong>로: 일자리-교육 매칭이 최우선.</li>
+<li><strong>복지 사무소</strong>로 저행복 가구 웰빙 보전 (9-5절).</li>
+<li>파출소는 <strong>간선도로변 중앙 배치</strong> — 순찰차가 많은 도로를 커버하도록 교차로 접근성 좋은 곳에.</li>
+<li>인구 5만~10만부터 유치장 가득 참 경고가 뜨면 <strong>교도소 1곳(정원 500)</strong>으로 장기 해결.</li>
+<li><strong>구역(District)을 그려 파출소를 특정 구역에 할당</strong>하면 순찰이 분산되지 않습니다 — 1.2.5f1 이후 사실상 필수 테크닉.</li>
+<li>대도시(≈10만+)에서는 <strong>CIB(-8%)와 시청 법원(대응 시간 -50%)</strong>이 유지비 대비 효율 최상.</li>
+</ul>
+
+<h3>9-3. 소방</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>항목</th><th>소방서(Fire House)</th><th>소방 본부(Fire Station)</th><th>산불 감시탑</th><th>소방 헬기 기지</th></tr></thead>
+<tbody>
+<tr><td class="num">건설비</td><td class="num">₡120,000</td><td class="num">₡2,150,000</td><td class="num">₡46,000</td><td class="num">₡1,224,000</td></tr>
+<tr><td class="num">월 유지비</td><td class="num">₡10,000</td><td class="num">₡117,500</td><td class="num">₡12,500</td><td class="num">₡72,500</td></tr>
+<tr><td class="num">부지</td><td class="num">5×5</td><td class="num">14×18</td><td class="num">2×2</td><td class="num">11×16</td></tr>
+<tr><td class="num">차량</td><td class="num">소방차 4대</td><td class="num">소방차 10대</td><td class="num">—</td><td class="num">헬기 5대</td></tr>
+<tr><td>범위</td><td>≈5,000 (용량 25,000)</td><td>≈10,000 (용량 100,000)</td><td>반경 1km<br>산불 대응시간 -80%<br>산불 위험 -10%</td><td>도시 전역(비행)</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>주요 업그레이드</strong>: 소방서 차고 증축(₡10,000/월 ₡5,500, 소방차 +4대) · 본부 <strong>훈련 시설</strong>(₡250,000/월 ₡38,500, <strong>진압 효율 차량 ≈2배</strong>) · 본부 재난 대응반(₡240,000/월 ₡37,500, 붕괴 건물 생존자 구조)</p>
+
+<div class="callout danger">
+<div class="ct">숲 도시라면 헬기 기지는 선택이 아닙니다</div>
+<p>일반 소방차는 <strong>도로에 닿은 지점까지만</strong> 진입할 수 있어 숲 한가운데 불은 끄지 못합니다. 산불은 기온이 높고 건조한 여름에 발생 확률이 크게 오르며, 여름 건조기 산불 한 번이면 헬기 기지 건설비(₡1.22M)보다 큰 손해가 납니다.</p>
+<p>또한 <strong>소방서는 "불 끄는 시설"이자 "불 안 나게 하는 시설"</strong>입니다 — 주변에 있으면 그 일대의 화재 위험 자체가 낮아집니다.</p>
+</div>
+
+<h4>배치 원칙</h4>
+<ul>
+<li><strong>소방서(소형)</strong>는 서비스 용량 25,000 기준으로 <strong>주거 밀집지마다 1곳</strong>, 간선도로 교차점 근처. 5×5칸이라 블록 모서리에 끼워 넣기 좋습니다.</li>
+<li><strong>본부(대형)</strong>는 도심 1곳으로 광역을 커버하고 외곽은 소형으로 보완하는 <strong>허브-스포크 구조</strong>가 유지비 효율 최고.</li>
+<li>숲 인접 도시는 숲 가장자리를 따라 감시탑을 <strong>1km 간격</strong>으로.</li>
+<li>산업 구역(특히 목재·석유·화학)은 화재 위험이 높아 <strong>산업 단지 입구 쪽에 전담 배치</strong>.</li>
+<li><strong>소방차가 정체에 갇히면 불이 옆 건물로 번집니다.</strong> 커버리지 원 안이라도 출동 경로가 막히면 무의미합니다.</li>
+</ul>
+
+<h3>9-4. 우편</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>항목</th><th>우체국</th><th>우편 분류 시설</th></tr></thead>
+<tbody>
+<tr><td class="num">건설비</td><td class="num">₡250,000</td><td class="num">₡650,000</td></tr>
+<tr><td class="num">월 유지비</td><td class="num">₡22,500</td><td class="num">₡40,000</td></tr>
+<tr><td class="num">부지</td><td class="num">10×8</td><td class="num">28×28</td></tr>
+<tr><td class="num">차량</td><td class="num">우편 밴 20대</td><td class="num">우편 트럭 5대</td></tr>
+<tr><td class="num">보관량</td><td class="num">100,000</td><td class="num">500,000</td></tr>
+<tr><td>범위</td><td>2,000 <span class="tag a">짧음</span></td><td>도시 전역 (분류 속도 월 50,000)</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>메커니즘</strong>: 우편함 → 밴이 수거 → 우체국 보관 → <strong>분류 시설이 있으면</strong> 지역/장거리로 분류 → 지역은 재배달, 장거리는 외부 연결로 수출. <strong>분류 시설이 없으면 전량 외부 연결로 보내</strong> 수입 비용이 들고 배달도 느려집니다. 우편을 못 받으면 웰빙이 감소합니다("Uncollected Mail" 경고).</p>
+<div class="callout tip">
+<div class="ct">분류 시설이 "논다"고 철거하지 마세요</div>
+<p>분류 시설은 <strong>약 25,000 단위 배치(batch)로 작동</strong>합니다. 우체국에서 그만큼 모이기 전에는 놀고 있는 것처럼 보이는데 정상입니다. 건설 즉시 <strong>자동 분류 업그레이드(₡45,000/월 ₡5,000, 속도 +25,000)</strong>부터 다세요 — 분류 속도가 병목의 90%입니다.</p>
+<p><strong>타이밍</strong>: 인구 ≈2만 전까지는 우체국 1~2곳으로 충분. 분류 시설은 <strong>우체국이 3곳 이상</strong> 될 때 도입하면 수지가 맞습니다.</p>
+</div>
+
+<h3>9-5. 복지 사무소 — 1DP짜리 최고 가성비</h3>
+<div class="cards">
+  <div class="card"><div class="cv">₡110,000</div><div class="cl">건설비</div><div class="cd">파출소(₡160,000)보다 쌉니다</div></div>
+  <div class="card"><div class="cv">₡22,500</div><div class="cl">월 유지비</div><div class="cd">업그레이드 없음</div></div>
+  <div class="card"><div class="cv">4,000 / 20,000</div><div class="cl">범위 / 용량</div><div class="cd">부지 15×16칸</div></div>
+  <div class="card"><div class="cv">1 DP</div><div class="cl">해금 비용</div><div class="cd">M3 이후 경찰·행정 트리</div></div>
+</div>
+<p><strong>효과</strong>: 행복도가 절반 이하로 떨어진 시민의 웰빙을 끌어올립니다. 범위 내 모든 주거에 적용되며 <strong>차량 출동이 없어 교통 상황과 무관하게 작동</strong>합니다.</p>
+<p>Economy 2.0 이후 정부 보조금이 사라지고 임대료·실업 압박이 세지면서 저소득층 웰빙이 잘 무너집니다. 복지 사무소는 <strong>범죄 예방(간접 -범죄율) + 수요 안정 장치</strong>로 사실상 필수가 됐습니다.</p>
+<div class="callout warn">
+<div class="ct">배치: 부촌에 지으면 효과가 없습니다</div>
+<p>행복도 50% 이하 시민에게만 의미가 있으므로 <strong>임대료가 저렴한 저밀 주거·구도심·산업 인접 주거 한가운데</strong>에 배치하세요.</p>
+</div>
+
+<h3>9-6. 도입 순서 요약</h3>
+<ol class="steps">
+<li><span class="st">M3 달성 직후</span>소방서 1곳(₡120k) → 파출소 1곳(₡160k). <strong>이 순서인 이유</strong>: 화재는 건물을 물리적으로 태워 즉시 손실을 내지만 초기 범죄는 느리게 누적됩니다.</li>
+<li><span class="st">DP 1 → 복지 사무소</span>저소득 주거가 형성되는 시점(인구 ≈3,000~5,000).</li>
+<li><span class="st">M5 → 우체국 1곳</span>우편 불만이 웰빙을 갉아먹기 전에.</li>
+<li><span class="st">인구 ≈2만</span>파출소·소방서를 지구별로 증설 + <strong>차고 증축 업그레이드</strong>(신축보다 항상 저렴).</li>
+<li><span class="st">인구 ≈3만~5만</span>소방 본부 / 경찰 본부 중 예산 되는 쪽부터. <strong>숲 인접이면 이 단계에서 감시탑+헬기 기지 우선.</strong></li>
+<li><span class="st">우체국 3곳째부터</span>분류 시설 + 자동 분류 업그레이드.</li>
+<li><span class="st">인구 ≈5만~10만</span>교도소(유치장 포화 해소), 시청 법원 업그레이드.</li>
+<li><span class="st">인구 10만+</span>CIB로 도시 전체 -8% 마무리.</li>
+</ol>
+
+<div class="callout money">
+<div class="ct">초반 예산 절약 팁</div>
+<p>초반에는 치안·소방 예산 슬라이더를 <strong>≈80~90%</strong>로 낮춰도 체감 차이가 작아 적자 방어에 유효합니다. 도시가 커지면 100%로 복원하세요.</p>
+</div>
+</section>
+<!-- ══════════ 10. 교육 ══════════ -->
+<section class="chapter" id="education">
+<h2><span class="num">10</span>교육 &amp; 시민 생애주기</h2>
+
+<p class="lede">CS2에는 <strong>CS1식 "커버리지 반경"이 없습니다.</strong> 교육은 도시 전역 서비스이고, 학생이 실제로 <strong>통학 경로를 찾아 다닙니다</strong>. 따라서 계산 기준은 반경이 아니라 <strong>정원 vs 해당 연령 인구</strong>이고, "정원은 남는데 등록률이 낮다"면 십중팔구 접근성 문제입니다.</p>
+
+<h3>10-1. 교육 5단계와 임금</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>교육 수준</th><th>달성 경로</th><th>대상 연령</th><th class="num">월급</th><th class="num">과세 대상 소득</th></tr></thead>
+<tbody>
+<tr><td>무학(Uneducated)</td><td>기본 상태</td><td>—</td><td class="num">₡1,500</td><td class="num">₡100</td></tr>
+<tr><td>저학력(Poorly Educated)</td><td>초등학교 졸업</td><td>아이</td><td class="num">₡1,800</td><td class="num">₡400</td></tr>
+<tr><td>보통(Educated)</td><td>고등학교 졸업</td><td>청소년</td><td class="num">₡2,100</td><td class="num">₡700</td></tr>
+<tr><td>고학력(Well Educated)</td><td>전문대학 졸업</td><td>청소년/성인</td><td class="num">₡2,400</td><td class="num">₡1,000</td></tr>
+<tr><td><b>최고학력(Highly Educated)</b></td><td>종합대학 졸업</td><td>성인</td><td class="num">₡2,700</td><td class="num"><b>₡1,300</b></td></tr>
+</tbody>
+<caption>소득세는 <b>최저소득 ₡1,400/월 초과분</b>에만 걸립니다. 즉 <b>최고학력 시민 1명의 세수가 무학 시민의 13배</b>입니다. 임금은 1.3.3f1 기준.</caption>
+</table>
+</div>
+<ul>
+<li>초·고교는 사실상 의무교육: <strong>아이는 자리만 있으면 무조건 초등학교에 등록</strong>하고, 청소년은 높은 확률로 고교에 진학합니다.</li>
+<li>전문대학·종합대학은 <strong>선택제</strong>입니다. 시민이 "지금 취업 시 소득 vs 졸업 후 상위 직급 소득"을 비교해 스스로 결정합니다. <strong>학비가 높으면 진학 의욕이 떨어지므로 요금 슬라이더가 실질적인 진학률 조절 수단</strong>입니다.</li>
+<li>학비 기본값: 초등 <strong>₡50</strong> → 고등 <strong>₡100</strong> → 전문대학 <strong>₡200</strong> → 종합대학 <strong>₡200</strong> (월).</li>
+<li>Economy 2.0부터 <strong>성인도 고교 미졸업 시 재지원 가능</strong>(회당 1% 확률, 최대 3회)하며, 성인의 전문대학 늦깎이 입학도 가능합니다.</li>
+</ul>
+
+<h3>10-2. 교육 시설 전체 스펙</h3>
+<p>교육·연구 서비스는 <strong>M2 Small Village</strong>에서 개방됩니다. 초등·고교는 즉시 사용 가능, 고등교육은 개발 포인트로 별도 해금합니다.</p>
+
+<h4>초등학교 — 아이 → 저학력</h4>
+<div class="tablewrap">
+<table>
+<thead><tr><th>건물</th><th class="num">크기</th><th class="num">건설비</th><th class="num">월 유지비</th><th class="num">정원</th><th class="num">직원</th><th>주요 업그레이드</th></tr></thead>
+<tbody>
+<tr><td>소형 초등학교</td><td class="num">9×6</td><td class="num">₡40,000</td><td class="num">₡5,000</td><td class="num">400</td><td class="num">20</td><td>별관 ₡8,000/₡1,000 → <b>+100명</b></td></tr>
+<tr><td><b>초등학교</b></td><td class="num">18×8</td><td class="num">₡100,000</td><td class="num">₡12,500</td><td class="num">1,000</td><td class="num">50</td><td>별관 ₡22,500/₡5,000 → <b>+500명</b> · 아동 클리닉 ₡24,000</td></tr>
+<tr><td>도시형 초등학교</td><td class="num">6×8</td><td class="num">₡150,000</td><td class="num">₡17,500</td><td class="num">1,500</td><td class="num">50</td><td>증축 층 ₡30,000/₡10,000 → +500명</td></tr>
+</tbody>
+<caption>초등학교는 <b>근처에 사는 유자녀 가구에 웰빙 보너스</b>를 줍니다(반경은 비공개, 체감상 주거 블록 몇 개 수준).</caption>
+</table>
+</div>
+
+<h4>고등학교 — 청소년 → 보통</h4>
+<div class="tablewrap">
+<table>
+<thead><tr><th>건물</th><th class="num">크기</th><th class="num">건설비</th><th class="num">월 유지비</th><th class="num">정원</th><th class="num">직원</th><th>주요 업그레이드</th></tr></thead>
+<tbody>
+<tr><td>소형 고등학교</td><td class="num">12×8</td><td class="num">₡150,000</td><td class="num">₡11,250</td><td class="num">400</td><td class="num">20</td><td>별관 ₡40,000/₡3,000 → +100명</td></tr>
+<tr><td><b>고등학교</b></td><td class="num">22×16</td><td class="num">₡300,000</td><td class="num">₡22,500</td><td class="num">800</td><td class="num">80</td><td>별관 ₡130,000/₡10,000 → <b>+400명</b> · <b>도서관 ₡85,000 → 졸업 확률 +0.1</b></td></tr>
+<tr><td>도시형 고등학교</td><td class="num">12×6</td><td class="num">₡300,000</td><td class="num">₡22,500</td><td class="num">800</td><td class="num">40</td><td>증축 층 ₡130,000/₡10,000 → +400명</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>고등교육</h4>
+<div class="tablewrap">
+<table>
+<thead><tr><th>건물</th><th class="num">DP</th><th class="num">크기</th><th class="num">건설비</th><th class="num">월 유지비</th><th class="num">정원</th><th>도시 광역 효과</th></tr></thead>
+<tbody>
+<tr><td><b>전문대학</b>(College)</td><td class="num">1</td><td class="num">22×16</td><td class="num">₡750,000</td><td class="num">₡75,000</td><td class="num">10,000</td><td>—</td></tr>
+<tr><td><b>종합대학</b>(University)</td><td class="num">2</td><td class="num">40×28</td><td class="num">₡1,500,000</td><td class="num">₡100,000</td><td class="num">15,000</td><td>—</td></tr>
+<tr><td>공과대학</td><td class="num">2</td><td class="num">53×38</td><td class="num">₡1,600,000</td><td class="num">₡80,000</td><td class="num">15,000</td><td><b>산업 효율 +10, 오피스 효율 +10</b></td></tr>
+<tr><td>의과대학</td><td class="num">2</td><td class="num">62×18</td><td class="num">₡2,400,000</td><td class="num">₡120,000</td><td class="num">15,000</td><td><b>회복 실패 -25%, 병원 효율 +10</b></td></tr>
+</tbody>
+<caption>정원 10,000/15,000은 <b>대규모 상향 패치 이후 수치</b>입니다. 출시 초기(2023)에는 전문대학 정원이 ≈1,500명에 불과했습니다.</caption>
+</table>
+</div>
+<p><strong>고등교육 업그레이드</strong>: 전문대학 별관 ₡300,000/₡27,500(+2,500명) · 도서관 ₡245,000/₡25,000(<strong>졸업 확률 +0.15</strong>) / 종합대학 별관 ₡375,000/₡37,500(+2,500명) · 도서관 ₡250,000/₡47,500(+0.15)</p>
+
+<h4>연구 시설</h4>
+<div class="tablewrap">
+<table>
+<thead><tr><th>건물</th><th class="num">건설비</th><th class="num">월 유지비</th><th>효과</th></tr></thead>
+<tbody>
+<tr><td>전파망원경</td><td class="num">₡3,200,000</td><td class="num">₡160,000</td><td>대학 졸업 확률 +5, <b>대학 진학 관심 +15%</b></td></tr>
+<tr><td>지질연구센터</td><td class="num">₡2,500,000</td><td class="num">₡115,000</td><td><b>광석·석유 매장량 +200%</b>, 전문대학 졸업 확률 +3</td></tr>
+<tr><td>대형강입자가속기</td><td class="num">₡4,000,000</td><td class="num">₡200,000</td><td>대학 진학 관심 +15%, 소프트웨어·전자 수요 +20%</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>10-3. 인구 대비 필요 학교 수 — 어림 공식</h3>
+<div class="formula">
+초등 좌석 ≈ 인구의 <b>15~20%</b> &nbsp;|&nbsp; 고교 좌석 ≈ 인구의 <b>10%</b>
+</div>
+<div class="tablewrap">
+<table>
+<thead><tr><th>학교</th><th>커버 인구</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td>일반 초등학교(1,000명)</td><td>인구 <b>≈5,000~6,000명</b> 1개</td><td>아이 비율 ≈15~20%</td></tr>
+<tr><td>고등학교(800명, 별관 시 1,200명)</td><td>인구 <b>≈8,000~12,000명</b> 1개</td><td>청소년 비율 ≈8~12%</td></tr>
+<tr><td>전문대학(10,000석)</td><td><b>인구 10만 이상까지 1개로 충분</b></td><td>실제 등록률 정원의 30~60%가 정상(선택제)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout money">
+<div class="ct">별관 증축이 항상 신축보다 쌉니다</div>
+<p>초등 별관은 <strong>좌석당 ₡45</strong>, 신축(일반)은 <strong>좌석당 ₡100</strong>입니다. 부지가 있다면 <strong>정원 부족 시 별관 먼저, 그다음 신축</strong>이 원칙입니다.</p>
+</div>
+
+<h3>10-4. 시민 생애주기</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>단계</th><th class="num">지속(게임월)</th><th>특징 &amp; 경로 선호</th></tr></thead>
+<tbody>
+<tr><td><b>아이</b>(Child)</td><td class="num">21</td><td>노동 불가, 건강 보너스. 자리 있으면 무조건 초등 등록. 가족수당 ₡400/월</td></tr>
+<tr><td><b>청소년</b>(Teen)</td><td class="num">15</td><td>취업 가능하지만 대부분 고교 진학. <b>최저 비용 경로 선호</b> → 대중교통이 등록률을 좌우</td></tr>
+<tr><td><b>성인</b>(Adult)</td><td class="num">60</td><td>취업·대학 진학 모두 가능. <b>최단 시간 경로 선호</b>. <b>성인 전환 시 주택이 없으면 즉시 노숙자가 되어 도시를 떠날 수 있음</b>. 실업수당 ₡800/월(최대 10일)</td></tr>
+<tr><td><b>노인</b>(Senior)</td><td class="num">≈7+ (사망까지)</td><td>노동 불가, 최대 건강이 서서히 감소. 연금 ₡1,200/월. <b>최고 편의 경로 선호</b></td></tr>
+</tbody>
+<caption>CS2는 <b>1게임일 = 달력상 1개월</b>로 흐릅니다. 연령 지속 기간은 커뮤니티 실측치.</caption>
+</table>
+</div>
+<div class="callout warn">
+<div class="ct">청소년 15게임월의 함정</div>
+<p>청소년 재학 기간이 15게임월로 짧아서 <strong>고교 정원이 잠깐만 부족해도 "무학 성인"이 양산</strong>됩니다. 한 번 무학 성인이 되면 되돌리기 어렵습니다(재지원 확률 회당 1%). <strong>고교 정원은 항상 여유 있게</strong> 잡으세요.</p>
+</div>
+
+<h3>10-5. 교육이 도시 경제에 미치는 영향</h3>
+<ol class="steps">
+<li><span class="st">일자리 매칭</span>모든 기업은 교육 수준별 일자리 슬롯을 가집니다. <strong>산업(제조)은 무학~저학력 비중이 크고, 오피스·고급 상업은 고학력·최고학력 슬롯 비중이 큽니다.</strong> 상위 슬롯을 못 채우면 기업 효율이 떨어지고 성장이 멈추거나 폐업합니다.<br>반대로 <strong>고학력자는 하위 일자리에 "하향 취업"</strong>할 수 있어서, 과잉 교육 시 저학력자가 일자리에서 밀려나는 <strong>연쇄 실업</strong>이 발생합니다.</li>
+<li><span class="st">구역 수요</span>고학력 실업자가 쌓이면 <strong>오피스 수요</strong>가 오르고, 무학·저학력 노동력이 풍부하면 <strong>산업 수요</strong>가 유지됩니다. 오피스·IT 중심 도시를 원하면 대학 먼저, 산업 도시를 유지하려면 학비 인상으로 진학률을 낮추는 조절이 가능합니다.</li>
+<li><span class="st">세수</span>경제 패널에서 <strong>교육 수준별 주민세율을 따로 설정</strong>할 수 있습니다. 고학력층 세율을 살짝 낮춰 유치하고 정착 후 올리는 운영이 유효합니다.</li>
+<li><span class="st">교육 예산 슬라이더</span>예산을 올리면 졸업 확률이 오르고, 내리면 유지비는 절약되지만 유급·중퇴가 늘어납니다.</li>
+</ol>
+
+<h3>10-6. 배치 규칙</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>시설</th><th>배치</th></tr></thead>
+<tbody>
+<tr><td><b>초등학교</b></td><td><b>주거 구역 한가운데, 도보권에.</b> 웰빙 보너스도 근거리 가구에만 적용됩니다. 저밀도 교외는 소형(400명), 중·고밀도는 <b>도시형(1,500명, 6×8칸)</b>이 밀집지 삽입에 최적</td></tr>
+<tr><td><b>고등학교</b></td><td><b>여러 주거 지구의 경계, 대중교통 결절점 옆.</b> 청소년은 최저 비용 경로를 고르므로 <b>정류장을 학교 정문 앞에</b> 놓으면 등록률이 오릅니다</td></tr>
+<tr><td><b>대학</b></td><td><b>도시 1~2곳에 집중 배치.</b> 정원이 만 단위라 여러 개 지을 필요가 없습니다. 대학역(지하철/트램)을 붙이고 중·고밀 주거를 주변에 배치하면 통학과 임대 수요가 함께 잡힙니다. <b>부지가 거대하므로(종합 40×28, 공대 53×38, 의대 62×18) 평지 예약 필수</b></td></tr>
+</tbody>
+</table>
+</div>
+<p>학교도 전기·상하수·쓰레기 서비스가 필요하고, <strong>학생 수만큼 쓰레기가 늘어납니다</strong>(Economy 2.0부터 학생도 쓰레기 발생 계산에 포함).</p>
+
+<h3>10-7. 도입 순서</h3>
+<ol class="steps">
+<li><span class="st">M2 직후</span><strong>소형 초등학교 1개(₡40,000)</strong>. 인구 1,000명 전후면 충분합니다.</li>
+<li><span class="st">인구 ≈2,000~4,000</span><strong>소형 고등학교(₡150,000)</strong> 추가. 첫 청소년 세대가 무학 성인이 되기 전에.</li>
+<li><span class="st">인구 ≈5,000~6,000</span>초등학교 정원 점검 → 별관 증축 또는 일반 초등학교로 교체.</li>
+<li><span class="st">DP 1점 여유 시 (M4~M6)</span><strong>전문대학(₡750,000)</strong>. 예산 부담이 크므로 대출 활용 가능. 오피스 수요의 기반입니다.</li>
+<li><span class="st">인구 ≈15,000~25,000</span><strong>종합대학(2DP, ₡1,500,000)</strong>. 단 <strong>오피스·고급 상업 일자리가 어느 정도 생긴 뒤에</strong> 지으세요.</li>
+<li><span class="st">후반</span>산업 특화 도시는 공과대학, 의료 강화가 필요하면 의과대학. 진학률이 낮으면 전파망원경(+15% 관심)으로 보정.</li>
+</ol>
+
+<h3>10-8. 흔한 실수</h3>
+<details class="acc"><summary>🚨 7가지 실수 (펼쳐보기)</summary><div class="acc-body">
+<ol>
+<li><strong>대학 선건설 → 고학력 실업 대란</strong>: 오피스 일자리가 없는데 종합대학부터 지으면 최고학력자가 하위 일자리를 잠식해 저학력 연쇄 실업 + 이탈이 발생합니다. <strong>오피스 구역과 대학을 같은 시기에 키우세요.</strong></li>
+<li><strong>고교 정원 과소 산정</strong>: 청소년 15게임월 창구를 놓치면 무학 성인이 양산됩니다.</li>
+<li><strong>등록률 낮다고 학교 증설</strong>: 고등교육 등록은 선택제라 정원의 절반만 차는 게 정상입니다. 증설 전에 <strong>대중교통 연결과 학비</strong>부터 점검하세요.</li>
+<li><strong>별관 대신 신축</strong>: 별관이 좌석당 비용·유지비 모두 쌉니다.</li>
+<li><strong>학비 인상으로 재정 메우기</strong>: 단기 수입은 늘지만 진학 의욕이 꺾여 장기적으로 고학력 세수가 줄어듭니다. <strong>초·고교 요금은 특히 건드리지 마세요.</strong></li>
+<li><strong>성인 전환기 주택 부족</strong>: 청소년이 성인이 되는 순간 집이 없으면 즉시 노숙·이탈. 대학 근처에 저가 중밀 주택을 미리 공급하세요.</li>
+<li><strong>동시 대량 주거 개발</strong>: 같은 나이대가 한꺼번에 들어와 학교가 "파도"처럼 넘쳤다 비었다 반복하고, 훗날 사망파가 됩니다. <strong>주거 확장은 시차를 두고 분할.</strong></li>
+</ol>
+</div></details>
+</section>
+
+<!-- ══════════ 11. 구역 ══════════ -->
+<section class="chapter" id="zoning">
+<h2><span class="num">11</span>구역 · 수요 · 지가 · 임대료</h2>
+
+<p class="lede">구역 셀 크기는 <strong>8×8m</strong>, 건물 부지는 도로에서 <strong>최대 6칸(48m) 깊이</strong>까지 성장합니다. 구역을 칠하는 것 자체는 <strong>무료</strong>이며(성장형 건물이므로 건설비 없음), 건물은 수요가 있을 때만 자연 성장합니다.</p>
+
+<h3>11-1. 전 구역 종류 총람</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>구역 종류</th><th>해금</th><th class="num">로트 크기</th><th>핵심 특성</th></tr></thead>
+<tbody>
+<tr><td><b>저밀 주거</b></td><td>시작</td><td class="num">2×2~4×6</td><td>단독·2세대. 가족·노인 선호. <b>지가 상승의 임대료 부담을 한 가구가 전부 짊어짐</b></td></tr>
+<tr><td><b>중밀 연립</b>(Row Housing)</td><td>M1</td><td class="num"><b>1×2~1×6</b></td><td><b>폭 1칸 지원 — 좁은 자투리 땅 활용의 유일한 선택지.</b> 저밀→고밀 이행기의 다리</td></tr>
+<tr><td>중밀 주거</td><td>M2</td><td class="num">2×2~6×6</td><td>소형 아파트. <b>임대료를 여러 가구가 분담 → 지가 상승에 덜 민감</b></td></tr>
+<tr><td>저임대 주택</td><td>M4</td><td class="num">2×2~6×6</td><td>수용력 최상급이나 <b>세수 낮음</b>, 자체 소음 발생</td></tr>
+<tr><td>혼합 주거</td><td>M5</td><td class="num">2×2~6×6</td><td>1층 상업 + 상층 주거. <b>주거·상업 수요를 동시에 소모.</b> 메인스트리트용. 자체 소음</td></tr>
+<tr><td><b>고밀 주거</b></td><td>M8</td><td class="num">2×2~6×6</td><td>학생·1인 가구 선호. 세대당 세수는 저밀보다 낮고, <b>좁은 도로에 교통 폭증 유발</b></td></tr>
+<tr><td>저밀 상업</td><td>시작</td><td class="num">2×2~5×6</td><td>상점·주유소·식당. 주거지 인접 + 지역 산업 근접 시 운송비 절감으로 수익성 상승</td></tr>
+<tr><td>고밀 상업</td><td>M9</td><td class="num">2×2~6×6</td><td>몰·호텔·백화점. 상업 수요를 빠르게 흡수</td></tr>
+<tr><td>저밀 사무</td><td>M4</td><td class="num">2×2~6×6</td><td>무형재(소프트웨어·금융·미디어) 생산. <b>토양 오염 없어 최고의 완충 구역</b></td></tr>
+<tr><td>고밀 사무</td><td>M10</td><td class="num">2×2~6×6</td><td>오피스 타워. 도심·대중교통 결절점용</td></tr>
+<tr><td>산업 제조</td><td>시작</td><td class="num">2×2~6×6</td><td><b>지역 내수 판매가 항상 더 수익성 높음.</b> 외부 수출은 이익 감소</td></tr>
+</tbody>
+<caption>건물 레벨은 1~5. 레벨이 오르면 전기·수도 소비가 단위당 감소하고, 중·고밀 주거는 <b>레벨 3과 5에서 세대 수가 추가</b>됩니다. 유럽/북미 테마는 외형 차이일 뿐 게임플레이 차이가 없습니다.</caption>
+</table>
+</div>
+
+<h3>11-2. 수요 막대 해석법 — 막대는 "건물"이 아니라 "가구" 단위</h3>
+<div class="callout info">
+<div class="ct">핵심 구조 3가지</div>
+<ul>
+<li><strong>주거 수요는 저밀/중밀/고밀 3개로 분리</strong>된 별도 막대입니다. 저밀을 원하는 가구는 중·고밀에 <strong>절대</strong> 입주하지 않습니다(역도 동일).</li>
+<li>상업·산업·사무는 각각 <strong>밀도 구분 없는 통합 막대</strong> 1개씩입니다.</li>
+<li>주거 막대는 <strong>이주 희망 가구 수</strong> 기반이므로 <strong>고밀 1줄이 저밀 5줄 분량의 수요를 한 번에 소진</strong>할 수 있습니다. 고밀을 칠했는데 막대가 순식간에 꺼지는 것은 정상입니다.</li>
+</ul>
+</div>
+
+<h4>수요를 "읽는" 정석 절차</h4>
+<ol class="steps">
+<li><span class="st">도시 정보(City Information) 패널을 연다</span>수요 막대 옆 둥근 버튼입니다.</li>
+<li><span class="st">긍정/부정 요인 목록을 확인한다</span>주거의 주요 요인: <strong>빈집(공실) 수, 일자리 가용성, 실업률, 세율, 행복도, 노숙자, 학생 정원, 가구 자산·가구 크기</strong>. "세율"이 부정 요인으로 뜨면 주거세를 1~2%p씩 낮춰 반응을 보세요.</li>
+<li><span class="st">수요층을 매칭한다</span><strong>가족·노인 → 저밀</strong>, <strong>학생·1인 가구 → 중·고밀</strong>. Economy 2.0 이후로는 <strong>부유한 가구 → 지가 높은 지역의 큰 집</strong>, <strong>가난한 가구 → 값싼 집</strong>이라는 자산 기반 선호가 추가됐습니다.</li>
+<li><span class="st">상업·산업 수요의 원인을 분리한다</span>상업 수요는 ① 팔 물건을 만드는 제조업 존재 ② 고객 구매력 ③ 노동력. 산업 수요는 ① 구직자 ② 상품을 원하는 지역 상업 ③ 지역 자원 ④ 교육 수준 매칭. <strong>실업이 늘면 주거 수요 자체가 꺼집니다.</strong></li>
+</ol>
+<div class="callout warn">
+<div class="ct">Economy 2.0에서 바뀐 수요 관련 수치</div>
+<ul>
+<li><strong>가구당 쇼핑 상한 4,000 → 2,000</strong> (절반) — 상업 과잉이 훨씬 빨리 드러납니다.</li>
+<li><strong>산업 공간 배수 1 → 5</strong> — 같은 수요에 훨씬 넓은 부지가 필요합니다. 산업 단지는 예전보다 크게 잡으세요.</li>
+<li>세율의 수요 영향이 강화됐습니다.</li>
+</ul>
+</div>
+
+<h3>11-3. 지가 메커니즘 — 서비스를 놓는다고 자동으로 오르지 않는다</h3>
+<p>CS2의 지가는 CS1과 달리 <strong>간접 상승</strong> 구조입니다. 공식 위키가 명시합니다: "서비스 건물을 잔뜩 갖다 놓는다고 지가가 자동으로 오르지 않는다."</p>
+<div class="formula">
+서비스·공원·저오염·직장/상점/학교 근접 → 시민 만족 → <b>더 높은 임대료를 지불할 의사</b> → 임대료 상승 → 지가 상승
+</div>
+<ul>
+<li><strong>상승 요인</strong>: 교육·소방·경찰·의료·대중교통 접근성, 공원·여가(Parks &amp; Recreation 정책으로 증폭), 낮은 대기/토양/소음 오염, 상점·직장 근접.</li>
+<li><strong>하락 요인</strong>: 각종 오염, 서비스 공백, 산업 인접.</li>
+<li>기업도 입지 선정 시 "지가+임대료" vs "자재 운송비"를 저울질합니다. <strong>산업이 저지가 외곽에 자리잡는 이유</strong>입니다.</li>
+</ul>
+<div class="callout danger">
+<div class="ct">지가는 축복이자 세금입니다</div>
+<p>저밀 주거 지역의 지가를 무한정 올리면 아래 임대료 공식에 따라 <strong>가난한 가구부터 튕겨 나갑니다</strong>(젠트리피케이션). <strong>고급 저밀 단지(고소득층용)와 서민 중·고밀 단지를 의도적으로 분리 설계</strong>하세요.</p>
+</div>
+
+<h3>11-4. 임대료와 "임대료가 너무 높음" 완전 해부</h3>
+<div class="formula">
+임대료 = (지가 + 구역타입계수 × 건물레벨) × 로트크기 × 공간배수
+</div>
+<p><strong>Economy 2.0(1.1.5f1)에서 바뀐 점</strong></p>
+<ul>
+<li><strong>가상 건물주(virtual landlord) 삭제</strong> — 건물 유지비를 전 입주 가구/기업이 <strong>균등 분담</strong>합니다.</li>
+<li>"임대료가 너무 높음" 경고는 이제 잔고가 아니라 <strong>가구 소득 기준</strong>으로 판정됩니다.</li>
+<li>입주자들이 유지비를 완납하면 건물 상태가 상승 → <strong>레벨업</strong>. 미납이 계속되면 상태 하락 → 방치 → 붕괴/폐건물.</li>
+</ul>
+
+<h4>해결 체크리스트 — 순서대로</h4>
+<ol class="steps">
+<li><span class="st">원인부터 판별</span>경고 건물을 클릭해 입주 가구의 <strong>소득/학력</strong>을 확인합니다. 저학력 저임금이 대부분이면 <strong>소득 문제</strong>, 지가가 급등한 지역이면 <strong>비용 문제</strong>입니다.</li>
+<li><span class="st">저임대 주택(M4)·중밀·고밀 공급</span>지가가 낮은 구역에 칠해 가난한 가구의 탈출구를 만듭니다. <strong>여러 가구가 임대료를 나누므로 1가구당 부담이 급감</strong>합니다.</li>
+<li><span class="st">교육 투자</span>고학력 일자리는 임금이 높습니다. 초→고→대학 파이프라인이 중장기적 근본 해결책입니다.</li>
+<li><span class="st">일자리 접근성 확보</span>인근에 상업·사무를 배치하고 산업 단지로의 대중교통을 연결합니다.</li>
+<li><span class="st">주거 세율 인하</span>실효 부담을 낮춰 사실상 임대료를 낮추는 효과.</li>
+<li><span class="st">건물 레벨 관리</span>공식상 레벨이 오를수록 임대료가 오릅니다. <strong>서민 지역의 지가를 억지로 올리지 않는 것 자체가 해법</strong>입니다.</li>
+<li><span class="st">신도시 급팽창기라면 일단 기다리기</span>소도시 급성장기엔 일시적으로 뜨는 게 정상입니다(개발사 공식 답변). 시뮬레이션이 안정되고 실업이 내려가면 대부분 사라집니다.</li>
+<li><span class="st">저가 주택 재고를 항상 남겨두기</span>1.2.5f1 이후 성인이 된 시민은 <strong>직장을 구하고 빈 저가 주택이 있는지 확인한 후에만 독립</strong>합니다. 저가 재고가 없으면 노숙자가 폭증합니다.</li>
+</ol>
+
+<h3>11-5. 저밀 → 고밀 전환 타이밍</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>시점</th><th>조치</th></tr></thead>
+<tbody>
+<tr><td><b>M1~M2</b> (인구 수백)</td><td>중밀 연립을 즉시 혼용 시작. <b>저밀만으로 도배하지 마세요</b> — 나중에 재구획 비용(주민 퇴거·수요 혼란)이 커집니다</td></tr>
+<tr><td><b>M4~M5</b> (인구 수천)</td><td>저임대·혼합 주거로 메인스트리트 형성. 혼합 주거는 상업 수요까지 같이 먹으므로 <b>상업 막대가 높을 때</b> 활용</td></tr>
+<tr><td><b>M8 전후</b></td><td>고밀 주거 해금. 단 <b>학생 수가 고밀 수요의 엔진</b>입니다 — 대학을 먼저 깔아 학생 인구를 만든 뒤 고밀을 칠하는 순서가 정석</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout warn">
+<div class="ct">한 번에 대량 재구획 금지</div>
+<p>기존 저밀 위에 덧칠하면 기존 건물이 철거되고 재성장합니다. <strong>한꺼번에 하면 퇴거 가구가 일시에 쏟아지며 수요·노숙 지표가 요동칩니다.</strong> 블록 1~2개씩, 고밀 수요 막대가 차 있을 때만 진행하세요.</p>
+<p><strong>위치 우선순위</strong>: 대중교통 정류장/역 도보권 → 대학가 → 도심 상업 인접. <strong>좁은 2차선 도로변 고밀은 교통 붕괴의 지름길</strong>입니다.</p>
+</div>
+
+<h3>11-6. 사무(Office) 수요 만드는 법</h3>
+<p>사무 수요의 본질 = <strong>고학력 노동력 + 무형재 소비처</strong>입니다.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>사무 업종</th><th>요구 노동력 구성(≈)</th></tr></thead>
+<tbody>
+<tr><td>소프트웨어·통신</td><td>고학력 25% + <b>최고학력 75%</b></td></tr>
+<tr><td>금융·미디어</td><td>보통 25% + 고학력 50% + 최고학력 25%</td></tr>
+</tbody>
+</table>
+</div>
+<ol>
+<li><strong>대학·전문대학 정원 확보가 0순위.</strong> 최고학력 시민 없이는 사무 수요가 0%에 고정됩니다.</li>
+<li>저밀 사무(M4)부터 소량 배치해 소프트웨어 등 무형재의 <strong>지역 생산</strong>을 시작 — 제조업·타 사무기업이 지역 조달하면 수익성이 올라 선순환합니다.</li>
+<li>사무 세율을 소폭 인하해 초기 입주를 유도.</li>
+<li>연령 구조도 영향: 성인·노인은 금융 상품을, 어린이·청소년은 미디어를 더 소비합니다.</li>
+</ol>
+<p class="lede" style="border-left-color:var(--amber)">주의(패치에 따라 변동): 1.2.5f1에서 임금이 비과세 소득에서 공제되는 버그가 수정되어 <strong>산업·사무 세수가 이전보다 감소</strong>했습니다. 사무를 세수 치트로 쓰던 전략은 하향된 상태입니다.</p>
+
+<h3>11-7. 구역 배치 원칙 — 오염 격리와 직주근접의 균형</h3>
+
+<figure class="diagram">
+<svg viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="구역 배치 단면 다이어그램">
+  <rect x="0" y="0" width="720" height="240" fill="var(--svg-fill)" rx="10"/>
+  <!-- 주거 -->
+  <rect x="30" y="60" width="180" height="110" fill="var(--green-soft)" stroke="var(--green)" stroke-width="2" rx="8"/>
+  <text x="120" y="96" class="svg-t" fill="var(--green)" text-anchor="middle" style="font-size:14px;font-weight:800">🏘️ 주거</text>
+  <text x="120" y="120" class="svg-ts" fill="var(--green)" text-anchor="middle">저밀 · 중밀 · 고밀</text>
+  <text x="120" y="140" class="svg-ts" fill="var(--green)" text-anchor="middle">초등학교 · 공원 · 진료소</text>
+  <!-- 완충 -->
+  <rect x="230" y="60" width="200" height="110" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2" rx="8"/>
+  <text x="330" y="96" class="svg-t" fill="var(--accent-text)" text-anchor="middle" style="font-size:14px;font-weight:800">🏢 완충 지대</text>
+  <text x="330" y="120" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">사무 · 저밀 상업 · 공원</text>
+  <text x="330" y="140" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">사무는 토양 오염 0, 소음 적음</text>
+  <!-- 산업 -->
+  <rect x="450" y="60" width="240" height="110" fill="var(--red-soft)" stroke="var(--red)" stroke-width="2" rx="8"/>
+  <text x="570" y="96" class="svg-t" fill="var(--red)" text-anchor="middle" style="font-size:14px;font-weight:800">🏭 산업</text>
+  <text x="570" y="120" class="svg-ts" fill="var(--red)" text-anchor="middle">제조 · 특화산업 · 화물역</text>
+  <text x="570" y="140" class="svg-ts" fill="var(--red)" text-anchor="middle">매립지 · 소각장 · 발전소</text>
+  <!-- 화살표 -->
+  <path d="M210 115 L228 115" stroke="var(--svg-line)" stroke-width="2"/>
+  <path d="M430 115 L448 115" stroke="var(--svg-line)" stroke-width="2"/>
+  <text x="360" y="200" class="svg-t" fill="var(--svg-line)" text-anchor="middle">통근 거리는 짧게, 오염은 멀리 — 사무가 그 둘을 동시에 해결합니다</text>
+  <text x="360" y="34" class="svg-t" fill="var(--svg-line)" text-anchor="middle">바람 방향 →&nbsp;&nbsp;&nbsp;&nbsp;물 흐름 →</text>
+</svg>
+<figcaption>정석 배치는 <b>주거 — (완충: 사무·저밀상업·공원) — 산업</b>. 산업 방향이 곧 바람이 빠져나가는 쪽이자 물의 하류여야 합니다.</figcaption>
+</figure>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>오염 종류</th><th>거동</th><th>대응</th></tr></thead>
+<tbody>
+<tr><td><b>토양 오염</b></td><td>산업 건물 아래에 <b>고정 축적(바람 무관)</b>, 원인 제거 시 서서히 소멸</td><td>주거·지하수 취수원과 절대 겹치지 않게. <b>구역 적합성(Zone Suitability) 인포뷰</b>가 토양 오염·고지가 경고를 겹쳐 보여주므로 반드시 켜고 칠하세요</td></tr>
+<tr><td><b>대기 오염</b></td><td>바람을 탐</td><td>산업 단지·석탄발전소·소각장은 <b>풍하측 맵 가장자리</b>로</td></tr>
+<tr><td><b>소음 오염</b></td><td>상업·혼합 주거·저임대 주택은 <b>자체 소음</b>을 냄</td><td>가족형 저밀 단지 한복판에 혼합/저임대를 끼워 넣지 마세요</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li><strong>상업 배치</strong>: 저밀 상업은 주거 사이사이(고객 도보권), 고밀 상업은 대로변·교통 결절점. <strong>상업 적합성 인포뷰가 "잠재 고객 위치"를 직접 보여줍니다.</strong></li>
+<li><strong>산업 내수 우선</strong>: 산업은 지역 상업에 팔 때 가장 수익이 좋고, 수출 의존은 이익·교통 모두 악화됩니다. <strong>상업 수요와 산업 규모를 세트로</strong> 늘리세요.</li>
+</ul>
+
+<h3>11-8. 흔한 실수</h3>
+<details class="acc"><summary>🚨 9가지 실수 (펼쳐보기)</summary><div class="acc-body">
+<ol>
+<li><strong>저밀만으로 도배</strong> → 서비스 커버리지 비효율 + 지가 상승 시 전 가구가 "임대료 너무 높음" 직행.</li>
+<li><strong>학생 없는 고밀 남발</strong> → 고밀 수요는 학생·1인 가구가 만듭니다. 대학 없이 칠하면 공실 타워만 생깁니다.</li>
+<li><strong>수요 막대만 보고 원인 무시</strong> → 같은 "수요 0"도 세율 문제와 실업 문제는 처방이 정반대입니다.</li>
+<li><strong>상업 과잉 구획</strong> → 쇼핑 상한 2,000 체제에선 구매력 대비 상점이 남으면 즉시 폐업 연쇄. <strong>상업은 항상 부족한 듯 유지.</strong></li>
+<li><strong>서비스 도배로 지가 펌핑</strong> → 서민 지역에 지가 부스팅은 축출 버튼입니다.</li>
+<li><strong>일괄 재구획</strong> → 대량 퇴거 → 노숙·수요 폭락.</li>
+<li><strong>산업을 주거 옆에</strong> → 토양 오염은 지워지는 데 오래 걸립니다.</li>
+<li><strong>타일 무한 확장</strong> → 9타일 초과분엔 유지비가 붙고 소급 적용됩니다.</li>
+<li><strong>외부 통근자 착시</strong> → 외부 연결 통근자는 <strong>세금도 인구도 기여하지 않습니다</strong>(1.1.5f1). 일자리는 내 시민으로 채워야 세수가 됩니다.</li>
+</ol>
+</div></details>
+</section>
+<!-- ══════════ 12. 경제 ══════════ -->
+<section class="chapter" id="economy">
+<h2><span class="num">12</span>경제 · 세금 · 특화 산업</h2>
+
+<p class="lede">Economy 2.0에서 <strong>정부 보조금이 완전히 삭제</strong>되어 초반부터 세수·수수료만으로 버텨야 합니다. 지출 측에는 서비스 건물 유지비 외에 <strong>서비스 직원 임금이 시 재정에서 직접 지급</strong>되고, 추가 구매한 타일에 <strong>타일 유지비</strong>가 붙습니다.</p>
+
+<h3>12-1. 세금 시스템</h3>
+<ul>
+<li><strong>세율 범위</strong>: 모든 항목 공통 <strong>-10% ~ 30%</strong>. <strong>음수 세율은 시 재정에서 지급하는 보조금(subsidy)</strong>입니다.</li>
+<li><strong>주거세</strong>: 시민의 <strong>월급에서 징수</strong>하며 <strong>교육 수준별로 개별 세율</strong>을 설정할 수 있습니다. 저세율 → 해당 계층 수요 증가·건물 레벨업 가속, 고세율 → 수요 감소·행복도 하락(약 -3~-4).</li>
+<li><strong>상업/산업/오피스세</strong>: 매출이 아니라 <strong>회사의 이익(profit)에 과세</strong>합니다. <strong>적자 기업이 가득한 구역은 세율을 아무리 올려도 세수가 거의 없습니다.</strong> "기업이 먼저 벌게 만든 뒤 걷는다"가 대원칙입니다.</li>
+<li><strong>품목별 개별 세율</strong>이 가능해, 특정 산업을 유치하고 싶으면 그 품목만 -10%로 내려 보조금을 주는 산업 정책이 가능합니다.</li>
+</ul>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>항목</th><th class="num">권장 세율</th><th>근거</th></tr></thead>
+<tbody>
+<tr><td>주거 전체 기본</td><td class="num">≈12~13%</td><td>수요를 유지하면서 흑자 확보 가능한 상한선</td></tr>
+<tr><td>미교육·저학력 주거</td><td class="num">≈10% 이하</td><td>저소득층 압박 시 노숙자 증가, 취학 유도 필요</td></tr>
+<tr><td>대졸·고학력 주거</td><td class="num">≈13~15%</td><td>고소득이라 세수 효율이 좋고 수요 타격이 적음</td></tr>
+<tr><td><b>특화 산업 원자재</b><br>(곡물·목재·석재·축산 등)</td><td class="num"><b>20~25%</b></td><td><span class="tag g">Economy 2.0 이후 초반 흑자의 핵심 재원</span></td></tr>
+<tr><td>유치하고 싶은 품목</td><td class="num">-10% ~ 0%</td><td>음수 세율 = 보조금으로 해당 업종 유입 촉진</td></tr>
+</tbody>
+<caption>커뮤니티 공통 권장치이며 패치에 따라 변동될 수 있습니다.</caption>
+</table>
+</div>
+
+<div class="callout money">
+<div class="ct">★ Economy 2.0 이후 초반 흑자의 최속 루트</div>
+<p>파라독스 포럼에서 컨센서스가 형성된 방법입니다.</p>
+<ol>
+<li>M1~M2에서 <strong>축산·채석</strong>(자원 불필요) 또는 <strong>곡물·임업</strong>(비옥지/숲 필요) 특화 면적을 자원 최농도 지점에 지정합니다.</li>
+<li>해당 <strong>특화 산업 품목 세율을 20~25%로 인상</strong>합니다.</li>
+<li>수요가 죽지 않는 선에서 품목별로 미세 조정합니다.</li>
+</ol>
+<p>이것 하나로 소도시 재정이 흑자로 돌아섭니다. 원자재 추출업은 이익률이 높아 고세율을 견딥니다.</p>
+</div>
+
+<h3>12-2. 예산·대출·서비스 수수료</h3>
+<h4>대출(Loans)</h4>
+<ul>
+<li>한도는 마일스톤 연동: M1에서 <strong>₡100,000</strong>부터 시작해 단계마다 상승합니다(2-1절 표 참조).</li>
+<li>이자는 월 지출에 합산되며, <strong>시청(City Hall) 건설 시 -1%, 중앙은행(Central Bank) 시 -2%</strong> 감면됩니다.</li>
+<li>언제든 증액·부분/전액 상환 가능. <strong>원칙: 수익 시설(발전소·특화산업 인프라)에만 쓰고, 적자 보전용으로는 절대 쓰지 않습니다.</strong></li>
+</ul>
+
+<h4>서비스 수수료 — 시 수입의 제2축</h4>
+<div class="tablewrap">
+<table>
+<thead><tr><th>서비스</th><th class="num">기본값/범위</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td>전기</td><td class="num">≈₡0.2/kWh</td><td>인상 → 소비 감소·불만 증가</td></tr>
+<tr><td>상수도</td><td class="num">≈₡0.3</td><td>하수 포함</td></tr>
+<tr><td>쓰레기</td><td class="num">≈₡1.0</td><td></td></tr>
+<tr><td>의료</td><td class="num">≈₡100/월</td><td>입원 시민 1인당</td></tr>
+<tr><td><b>교육</b></td><td class="num">초등 ₡50 / 고교 ₡100 / 대학 ₡200</td><td><span class="tag r">인상 시 진학률 하락 — 건드리지 마세요</span></td></tr>
+<tr><td>주차</td><td class="num">₡0~₡50</td><td>대중교통 유도 수단</td></tr>
+<tr><td>대중교통</td><td class="num">노선별 설정</td><td>무료화 시 이용률 40~50% 사례</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>서비스 수출입 단가</h4>
+<div class="tablewrap">
+<table>
+<thead><tr><th>항목</th><th class="num">수입</th><th class="num">수출</th></tr></thead>
+<tbody>
+<tr><td>전기</td><td class="num">≈₡5,000~9,000/MW</td><td class="num">≈₡2,500/MW</td></tr>
+<tr><td>물</td><td class="num">≈₡0.1/m³</td><td class="num">≈₡0.05/m³</td></tr>
+<tr><td>경찰·소방</td><td class="num">≈₡50/시민</td><td class="num">—</td></tr>
+<tr><td>의료·장의</td><td class="num">≈₡25/시민</td><td class="num">—</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout tip">
+<div class="ct">'도시 서비스 수입(Import City Services)' 정책 활용법</div>
+<p>Economy 2.0에서 추가된 정책으로, 구급차·영구차·소방차·쓰레기·경찰의 외부 수입을 켜고 끌 수 있습니다. <strong>초소도시(인구 수백)에서는 자체 서비스 건물보다 수입이 쌉니다.</strong> 다만 인구가 늘수록 수수료가 인구 비례로 커지므로 <strong>인구 ≈1,000~2,000명 전에는 자체 건물로 전환</strong>하는 것이 정석입니다.</p>
+</div>
+
+<h3>12-3. 특화 산업(Specialized Industry)</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>특화 산업</th><th>필요 자원</th><th>해금(≈)</th><th>오염(소음/토양/대기)</th></tr></thead>
+<tbody>
+<tr><td><b>축산</b>(Livestock)</td><td>없음</td><td><span class="tag g">기본 해금</span></td><td>저 / — / —</td></tr>
+<tr><td><b>채석</b>(Stone)</td><td>없음</td><td><span class="tag g">기본 해금</span></td><td>— / 중 / 중</td></tr>
+<tr><td>곡물(Grain)</td><td>비옥지</td><td>기본~M4</td><td>저 / — / —</td></tr>
+<tr><td>임업(Forestry)</td><td>숲</td><td>기본~M4</td><td>— / 중 / —</td></tr>
+<tr><td>채소(Vegetable)</td><td>비옥지</td><td>M5</td><td>저 / — / —</td></tr>
+<tr><td>석탄(Coal)</td><td>광석</td><td>M5</td><td>— / 중 / 중</td></tr>
+<tr><td>섬유작물(Cotton)</td><td>비옥지</td><td>M6</td><td>저 / — / —</td></tr>
+<tr><td>광석(Ore)</td><td>광석</td><td>M7</td><td>— / 중 / 중</td></tr>
+<tr><td>석유(Oil)</td><td>석유</td><td>M8</td><td>— / 중 / 중, <span class="tag r">화재 위험 높음</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout warn">
+<div class="ct">유한 자원 vs 재생 자원</div>
+<p><strong>석유·광석은 유한</strong>해서 채굴할수록 고갈됩니다. 고갈 후엔 수입 기반 가공업으로 전환할 계획을 미리 세우세요. <strong>비옥지·숲은 재생</strong>되지만 토양 오염에 취약합니다.</p>
+<p>참고: <strong>지질연구센터(₡2,500,000)</strong>가 광석·석유 매장량을 <strong>+200%</strong> 늘려줍니다(10-2절).</p>
+</div>
+
+<h4>배치 규칙 4가지</h4>
+<ol class="steps">
+<li><span class="st">자원 최농도 지점 위에만 면적을 그린다</span>특화 산업은 일반 구역 지정이 아니라 <strong>면적을 그리는 방식</strong>입니다. 중앙 관리 건물이 세워지고 면적을 넓히면 추출 시설이 자동 확장됩니다. <strong>자원이 옅은 외곽을 포함하면 회사가 입주하지 않아 낭비</strong>입니다.</li>
+<li><span class="st">오염 산업은 취수정·주거에서 멀리, 풍하측으로</span>임업·광업·석유는 토양 오염을 냅니다. 대기 오염(석탄·광석·석유)은 <strong>바람이 불어 나가는 방향</strong>에 두세요.</li>
+<li><span class="st">농업은 상하수 용량을 미리 증설</span>오염은 없지만 <strong>물 소비와 하수 배출이 큽니다</strong>.</li>
+<li><span class="st">화물 접근성 확보</span>화물 수요가 크므로 <strong>고속도로 외부 연결 또는 화물역/항구와 가까운 곳</strong>에 배치해 운송비를 줄입니다.</li>
+</ol>
+<p>참고: 특화 산업 건물은 <strong>버려지지(abandon) 않습니다</strong>. 회사가 들고 날 뿐이므로 일시적 공실은 정상입니다.</p>
+
+<h4>생산 체인 — 자원 36종</h4>
+<p>CS2의 자원은 <strong>원자재 10 + 물질재 18 + 비물질재 8 = 36종</strong>입니다. 흐름은 <code>추출(특화산업) → 가공(일반 산업) → 판매(상업)/수출</code>.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>원자재</th><th>주요 가공품</th></tr></thead>
+<tbody>
+<tr><td>곡물</td><td>음료, 편의식품, (일부) 석유화학</td></tr>
+<tr><td>축산</td><td>식품, 섬유, 편의식품</td></tr>
+<tr><td>채소</td><td>식품</td></tr>
+<tr><td>섬유작물</td><td>섬유 → 의류</td></tr>
+<tr><td>목재</td><td>목재(Timber) → 가구, 종이, 건물 유지 자재</td></tr>
+<tr><td>석재</td><td>콘크리트, 광물</td></tr>
+<tr><td>석탄</td><td>전력(석탄발전), 제철(Steel) 투입재</td></tr>
+<tr><td>금속 광석</td><td>금속 → 강철(+석탄) → 기계·차량</td></tr>
+<tr><td>원유</td><td>화학제품, 석유화학, 플라스틱 → 전자제품</td></tr>
+</tbody>
+<caption>비물질재(소프트웨어·통신·금융·미디어 등)는 오피스·상업에서 생산됩니다.</caption>
+</table>
+</div>
+
+<h4>회사·브랜드 시스템</h4>
+<p>구역 건물에는 고유 로고·컬러의 <strong>회사(Company)</strong>가 입주하며 각 회사는 특정 품목에 특화됩니다. 건물의 광고판·간판은 실제 입주 회사를 반영합니다. 회사는 <strong>이익·자원·노동력·운송비를 평가해 입지를 선택</strong>하고, 시는 그 이익에 과세합니다. <strong>선택 패널에서 개별 회사의 손익을 확인</strong>할 수 있으므로, 특정 품목 구역이 만성 적자라면 그 품목 세율을 내리거나 원자재 공급 경로를 개선하세요.</p>
+
+<div class="callout danger">
+<div class="ct">가장 흔한 오해: "수출하면 돈을 번다"</div>
+<p><strong>일반 상품의 수출 대금은 시 예산에 직접 들어오지 않습니다.</strong> 돈을 버는 것은 회사이고, 시는 그 이익에 대한 <strong>법인세로 간접 회수</strong>합니다.</p>
+<p>시 예산에 직접 잡히는 수출 수입은 <strong>전기·물 같은 유틸리티 수출뿐</strong>입니다. 그래서 6장에서 잉여 전력 수출(₡2,500/MW·월)을 "인구 성장과 무관한 안정 재원"이라고 부른 것입니다.</p>
+</div>
+
+<h3>12-4. Economy 2.0(1.1.5f1) 주요 변경점 요약</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>#</th><th>변경 내용</th><th>플레이 영향</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><b>정부 보조금 삭제</b></td><td>초반 무상 수입 소멸 — 월 수지 자체를 +로 만들어야 함</td></tr>
+<tr><td>2</td><td><b>가상 임대인 삭제</b><br>임대료 = (지가 + 구역타입×건물레벨) × 부지크기 × 공간계수</td><td>건물 유지비를 전 입주자가 균등 분담</td></tr>
+<tr><td>3</td><td><b>맵 타일 구매비 인상 + 타일 유지비 신설</b></td><td>시작 9타일 면제, 초과분은 5→25% 곡선 소급 적용</td></tr>
+<tr><td>4</td><td>서비스 건물 유지비 전면 조정, <b>서비스 직원 임금 시 재정 직접 지급</b></td><td>서비스 건물의 실질 비용 상승</td></tr>
+<tr><td>5</td><td><b>Import City Services 정책</b> 신설</td><td>초소도시에서 서비스 건물 건설 지연 가능</td></tr>
+<tr><td>6</td><td>수요 리워크</td><td>가구 유입이 행복도·노숙률·세율·학생 정원·일자리에 연동. 상업 수요는 가구 실수요 기반</td></tr>
+<tr><td>7</td><td>고령자 사망 곡선 완화</td><td>기존 도시는 패치 직후 일시적 사망 파동 발생</td></tr>
+<tr><td>8</td><td>전력 수입가 인상</td><td>≈₡5,000 → ≈₡9,000/MW — 수입 의존 전략 약화</td></tr>
+</tbody>
+<caption>이후 1.2~1.5.x 패치(디테일러 패치, 기념일 패치, Bridges &amp; Ports, 자전거 패치 등)는 주로 콘텐츠·버그 수정이며 경제 골격은 2.0 체제를 유지합니다.</caption>
+</table>
+</div>
+
+<h3>12-5. 흑자 전환 7단계 전략</h3>
+<ol class="steps">
+<li><span class="st">개시~인구 500</span>도로는 2차선 최소한으로. 전기는 소형 발전 + 필요 시 외부 수입. 서비스는 <strong>'Import City Services' 정책으로 대체</strong>하고 건물 건설을 미룹니다.</li>
+<li><span class="st">M1~M2</span>세금 패널 해금 즉시 주거세 ≈13% 설정. <strong>축산·채석·곡물·임업 특화 면적을 자원 최농도 지점에 지정.</strong></li>
+<li><span class="st">특화 산업 세율 20~25%로 인상 ★</span>Economy 2.0 이후 소도시 흑자의 최속 루트입니다.</li>
+<li><span class="st">인구 ≈1,000~2,000</span>서비스 수입 비용이 커지기 전에 <strong>진료소 → 초등학교 → 소방·경찰</strong> 순으로 자체 전환. 교육 수수료는 기본값 유지.</li>
+<li><span class="st">M5~M8</span>석탄→광석→석유 순으로 해금되는 대로 확장. <strong>대출은 이 시점의 추출 인프라 투자에만.</strong> 시청/중앙은행으로 이자율 -1%/-2% 확보.</li>
+<li><span class="st">잉여 전력 수출</span>MW당 ≈₡2,500/월. <strong>인구 성장과 무관한 안정 재원</strong>입니다.</li>
+<li><span class="st">도시 내 체인 완결</span>산업이 자리 잡으면 가공(일반 산업)·판매(상업)까지 도시 내에서 완결해 운송비를 줄이고 법인세원을 다층화합니다. <strong>흑자 전환 후에야</strong> 고학력 유치용 감세·복지 확대를 시작하세요.</li>
+</ol>
+
+<h3>12-6. 흔한 실수</h3>
+<details class="acc"><summary>🚨 8가지 실수 (펼쳐보기)</summary><div class="acc-body">
+<ol>
+<li><strong>적자 기업 구역에 증세</strong> — 이익 과세라 세수는 안 늘고 수요만 죽습니다. 먼저 원자재 공급·운송비를 고치세요.</li>
+<li><strong>타일 남매수</strong> — 타일마다 유지비가 나가고 소급 적용됩니다.</li>
+<li><strong>자원 옅은 곳까지 특화 면적 확장</strong> — 회사가 입주하지 않거나 저효율. 최농도 지점만 잘라서 지정.</li>
+<li><strong>석유·광석을 무한 자원으로 착각</strong> — 유한 자원입니다.</li>
+<li><strong>수출 = 시 수입이라는 착각</strong> — 시가 직접 버는 건 유틸리티 수출과 세금뿐입니다.</li>
+<li><strong>미교육층 증세</strong> — 취학 대신 노동을 택해 장기적으로 고학력 파이프라인이 붕괴합니다.</li>
+<li><strong>적자 보전용 대출</strong> — 이자만 늘어 파산이 가속됩니다.</li>
+<li><strong>오염 산업을 취수정·주거 풍상측에 배치</strong> — 의료비 폭증 + 비옥지·숲 자원까지 파괴됩니다.</li>
+</ol>
+</div></details>
+</section>
+
+<!-- ══════════ 13. 미관 ══════════ -->
+<section class="chapter" id="beauty">
+<h2><span class="num">13</span>재해 · 계절 · 공원 · 미관</h2>
+
+<h3>13-1. 자연재해 3종과 대비 시설</h3>
+<p>새 게임 생성 시 <strong>자연재해 ON/OFF 선택</strong>이 가능합니다. 기본 게임의 재해는 3종입니다.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>재해</th><th>발생 조건</th><th>피해</th></tr></thead>
+<tbody>
+<tr><td><b>산불</b>(Forest Fire)</td><td>건조한 날씨, 모든 기후</td><td>숲 → 건물로 번짐. 소방 대응 필요</td></tr>
+<tr><td><b>우박</b>(Hail Storm)</td><td>"춥지만 영하는 아닌" 날씨</td><td>건물 물리 피해(수리 필요), 교통사고 유발</td></tr>
+<tr><td><b>토네이도</b>(Tornado)</td><td>무작위 (가장 극단적)</td><td>건물 파괴, 시민 사상, 교통사고</td></tr>
+</tbody>
+</table>
+</div>
+<div class="tablewrap">
+<table>
+<thead><tr><th>시설</th><th class="num">건설비</th><th class="num">월 유지비</th><th>핵심 수치 / 효과</th></tr></thead>
+<tbody>
+<tr><td>소형 대피소</td><td class="num">₡35,000</td><td class="num">₡7,500</td><td>수용 1,000명. 업그레이드: 공기 재순환·추가 소모품</td></tr>
+<tr><td><b>대형 대피소</b></td><td class="num">₡315,000</td><td class="num">₡30,000</td><td>수용 <b>25,000명</b> + <b>대피 버스 20대</b>(시민을 직접 실어옴)</td></tr>
+<tr><td><b>조기 경보 시스템</b></td><td class="num">₡2,400,000</td><td class="num">₡120,000<br><span style="color:var(--text3)">(예산 따라 ≈216K)</span></td><td><b>도시 전체</b> 재해 경보 시간 <b>+360</b>, 재해 피해 <b>-20%</b></td></tr>
+<tr><td>산불 감시탑</td><td class="num">₡46,000</td><td class="num">₡12,500</td><td>반경 1km 산불 대응시간 -80%, 산불 위험 -10%</td></tr>
+<tr><td>소방 헬기 기지</td><td class="num">₡1,224,000</td><td class="num">₡72,500</td><td>헬기 5대. 도로 접근 불가 지역(숲) 화재 진압</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout warn">
+<div class="ct">대피소보다 조기 경보가 먼저입니다</div>
+<p><strong>경보가 있어야 시민이 대피소로 이동합니다.</strong> 대피소만 잔뜩 짓고 경보 시스템이 없으면 수용 시설이 무용지물이 됩니다.</p>
+<p><strong>용량 계산</strong>: 대형 1개 = 25,000명. 인구 10만 도시라면 대형 4개(또는 대형 3 + 소형 다수)를 <strong>권역별로 분산 배치</strong>하세요. 조기 경보 시스템은 도시 전체 적용이므로 위치가 자유롭습니다 — <strong>지가 낮은 외곽 산업지 근처</strong>에 두세요.</p>
+</div>
+<p><strong>타이밍</strong>: 재해 인프라 풀세트는 유지비가 월 수십만 ₡에 달합니다. <strong>인구 ≈2~3만 · 재정 흑자 안정화 이후</strong> 도입을 권장합니다. 그 전에는 소방서 + 감시탑만으로 산불에 대응하세요. 우박·토네이도 사후 복구를 위해 <strong>도로 유지관리소와 병원</strong>도 함께 갖춰야 합니다.</p>
+
+<h3>13-2. 계절·날씨의 영향</h3>
+<div class="cards">
+  <div class="card"><div class="cv">100% → ≈200%</div><div class="cl">난방 전력 소비</div><div class="cd"><strong>18~22°C에서 100%(최적)</strong>, 극단 온도(≈-18°C 이하)에서 <strong>최대 ≈200%</strong>. 한랭 맵은 여름 기준 발전량의 +50~100% 여유 필수</div></div>
+  <div class="card"><div class="cv">≈-25%</div><div class="cl">흐린 날 태양광</div><div class="cd">한랭 맵 겨울은 <strong>수요 최대 + 일조 최소</strong>. 태양광 단독 의존은 금물</div></div>
+  <div class="card"><div class="cv">3개월 = 1계절</div><div class="cl">시간 구조</div><div class="cd">인게임 1개월 = 낮밤 1사이클. <strong>남반구 맵은 계절이 반전</strong>됩니다</div></div>
+  <div class="card"><div class="cv">제설차</div><div class="cl">겨울 대비</div><div class="cd">한랭 맵은 적설 시 <strong>도로 유지관리소의 제설차</strong>가 없으면 도로 상태 악화 → 감속·사고 증가</div></div>
+</div>
+<p><strong>날씨와 여가 행동</strong>: 맑고 따뜻하면 시민이 야외 공원으로, 춥거나 비/눈이 오면 실내 상업·오락시설로 몰립니다. <strong>수영장 등은 "여름 계절 레저" 분류라 겨울엔 이용률이 급감</strong>합니다 — 실내·야외 레저를 섞어 배치해야 웰빙이 계절을 타지 않습니다.</p>
+
+<h3>13-3. 공원 &amp; 레크리에이션</h3>
+<p>공원은 <strong>여가(Leisure) 수요를 충족해 웰빙을 올리고</strong>, <strong>어트랙티브니스로 관광객을 유치</strong>하며, 주변 <strong>지가 상승</strong>에 기여합니다.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>시설</th><th class="num">크기</th><th class="num">건설비</th><th class="num">월 유지비</th><th class="num">어트랙티브</th><th class="num">여가</th><th>해금</th></tr></thead>
+<tbody>
+<tr><td>초소형 공원</td><td class="num">1×1</td><td class="num">₡1,500</td><td class="num">₡400</td><td class="num">+1</td><td class="num">야외 +1</td><td>기본</td></tr>
+<tr><td>소형 놀이터</td><td class="num">2×2</td><td class="num">₡5,000</td><td class="num">₡1,000</td><td class="num">+1</td><td class="num">야외 +1</td><td>기본</td></tr>
+<tr><td>개 공원</td><td class="num">4×3</td><td class="num">₡10,000</td><td class="num">₡2,000</td><td class="num">+1</td><td class="num">야외 +2</td><td>기본</td></tr>
+<tr><td>소형 광장</td><td class="num">6×6</td><td class="num">₡20,000</td><td class="num">₡4,000</td><td class="num">+5</td><td class="num">야외 +2</td><td>기본</td></tr>
+<tr><td>대형 놀이터</td><td class="num">3×4</td><td class="num">₡14,000</td><td class="num">₡2,500</td><td class="num">+5</td><td class="num">야외 +5</td><td>대형 공원</td></tr>
+<tr><td>대형 도시공원</td><td class="num">10×8</td><td class="num">₡42,000</td><td class="num">₡8,500</td><td class="num">+10</td><td class="num">야외 +3</td><td>대형 공원</td></tr>
+<tr><td>굽잇길 공원</td><td class="num">12×12</td><td class="num">₡70,000</td><td class="num">₡14,000</td><td class="num">+20</td><td class="num">야외 +7</td><td>대형 공원</td></tr>
+<tr><td>비즈니스 광장</td><td class="num">8×10</td><td class="num">₡90,000</td><td class="num">₡18,000</td><td class="num">+25</td><td class="num">야외 +9</td><td>대형 공원</td></tr>
+<tr><td>축구장 / 미식축구장</td><td class="num">12×15 / 20×12</td><td class="num">₡160,000</td><td class="num">₡15,000</td><td class="num">+25</td><td class="num"><b>야외 +20</b></td><td>대형 스포츠</td></tr>
+<tr><td>커뮤니티 수영장</td><td class="num">7×7</td><td class="num">₡80,000</td><td class="num">₡8,000</td><td class="num">+15</td><td class="num"><span class="tag a">여름 한정 +20</span></td><td>대형 스포츠</td></tr>
+<tr><td><b>워터파크</b></td><td class="num">12×6</td><td class="num">₡800,000</td><td class="num">₡40,000</td><td class="num"><b>+75</b></td><td class="num">여름 +25</td><td>관광 명소</td></tr>
+<tr><td>전망탑</td><td class="num">19×14</td><td class="num">₡3,200,000</td><td class="num">₡160,000</td><td class="num">+40</td><td class="num">실내 +75</td><td>관광 명소</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout tip">
+<div class="ct">공원 유지관리소(Park Maintenance Depot) — 잊기 쉬운 필수 시설</div>
+<p>7×10칸, <strong>건설 ₡90,000 / 월 ₡20,000</strong>, 유지관리 차량 10대. <strong>잘 관리된 공원만 최대 여가 효과를 냅니다.</strong> 공원이 10개를 넘기 시작하면 반드시 1개소 설치하고, 대도시는 권역별로 증설하세요. 관리 안 된 공원은 <strong>유지비만 새는 장식</strong>이 됩니다.</p>
+</div>
+<p><strong>배치 팁</strong>: 소형 공원은 주거 블록 사이 자투리(1×1~2×2)에 촘촘히 깔아 지가·웰빙을 <strong>면 단위로 커버</strong>합니다. 고액 시설(광장·워터파크·전망탑)은 <strong>관광 클러스터</strong>(호텔 상업지구 + 대중교통역 인접)에 모아 어트랙티브니스 시너지를 냅니다.</p>
+
+<h3>13-4. 시그니처 건물</h3>
+<p>시그니처 건물은 <strong>특정 조건 달성 시 해금 → 도시당 1회 배치</strong>하는 특수 건물로, 배치 시 XP를 주고 광역 버프를 제공합니다.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>건물</th><th>존</th><th>해금 조건</th><th>효과</th><th class="num">XP</th></tr></thead>
+<tbody>
+<tr><td>Century Castle</td><td>북미 고밀 주거</td><td><b>레벨 5 건물 100채</b></td><td>반경 2.5km 웰빙 +10</td><td class="num">1,500</td></tr>
+<tr><td>Colossal Tower</td><td>북미 고밀 주거</td><td>레벨 5 건물 200채</td><td>반경 3km 웰빙 +12</td><td class="num">≈3,000</td></tr>
+<tr><td>Watanabe Tower</td><td>북미 고밀 주거</td><td>레벨 5 건물 ≈50채</td><td>반경 1.5km 웰빙 +6</td><td class="num">≈750</td></tr>
+<tr><td>Painter Mansion</td><td>북미 저밀 주거</td><td>≈25,000셀 + 행복도 60%</td><td>반경 1.5km 웰빙 +6</td><td class="num">≈1,000</td></tr>
+<tr><td>Baltar Pines</td><td>북미 중밀 연립</td><td>≈1,000셀</td><td>반경 750m 웰빙 +3</td><td class="num">≈300</td></tr>
+<tr><td>Activity Plaza</td><td>유럽 고밀 상업</td><td>레벨 5 건물 ≈120채</td><td>수입비용 -1%, 어트랙티브 +1%, 웰빙 +5(1.5km)</td><td class="num">≈750</td></tr>
+<tr><td>Cane Residences</td><td>혼합 주거</td><td>M5 + 혼합주거 ≈5,000셀</td><td>도시 어트랙티브 +1%, 웰빙 +10(2km)</td><td class="num">≈1,500</td></tr>
+</tbody>
+<caption>기본 게임에만 주거 30여 종·상업 20여 종·산업 20여 종·오피스 20여 종이 있습니다. DLC/에셋 팩 전용도 다수 존재합니다.</caption>
+</table>
+</div>
+<div class="callout info">
+<div class="ct">시그니처 운영 팁</div>
+<p>효과 반경이 크므로 <strong>해금 즉시 아무 데나 두지 말고 버프 대상(주거 밀집지·산업단지) 중심</strong>에 배치하세요. 레벨 5 조건형은 <strong>지가·서비스 커버리지를 끌어올린 "부촌"을 의도적으로 조성</strong>하면 빠르게 달성됩니다.</p>
+</div>
+
+<h3>13-5. 랜드마크</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>랜드마크</th><th class="num">크기</th><th class="num">건설비</th><th class="num">월 유지비</th><th class="num">어트랙티브</th><th class="num">여가</th></tr></thead>
+<tbody>
+<tr><td><b>노트르담</b></td><td class="num">10×25</td><td class="num">₡5,600,000</td><td class="num">₡280,000</td><td class="num"><b>175</b></td><td class="num">야외 +125</td></tr>
+<tr><td>식물원</td><td class="num">12×16</td><td class="num">₡1,600,000</td><td class="num">₡80,000</td><td class="num">125</td><td class="num">야외 +100</td></tr>
+<tr><td>남대문</td><td class="num">14×14</td><td class="num">₡5,600,000</td><td class="num">₡280,000</td><td class="num">125</td><td class="num">야외 +100</td></tr>
+<tr><td>시안 종루</td><td class="num">16×16</td><td class="num">₡5,600,000</td><td class="num">₡280,000</td><td class="num">125</td><td class="num">야외 +100</td></tr>
+<tr><td>국립미술관</td><td class="num">42×18</td><td class="num">₡3,200,000</td><td class="num">₡160,000</td><td class="num">120</td><td class="num">실내 +100</td></tr>
+<tr><td>그랜드 호텔</td><td class="num">14×10</td><td class="num">₡1,600,000</td><td class="num">₡80,000</td><td class="num">115</td><td class="num">실내 +75</td></tr>
+<tr><td>대관람차</td><td class="num">20×16</td><td class="num">₡5,600,000</td><td class="num"><b>₡560,000</b></td><td class="num">110</td><td class="num">실내 +75</td></tr>
+<tr><td>분수 광장</td><td class="num">14×14</td><td class="num">₡1,600,000</td><td class="num">₡80,000</td><td class="num">100</td><td class="num">야외 +50</td></tr>
+</tbody>
+<caption>상당수는 예약구매 특전 "Landmark Buildings" 팩·이벤트 출신이므로 <b>보유 콘텐츠에 따라 목록이 다릅니다</b>. 분수 광장은 무료 Treasure Hunt 이벤트 보상.</caption>
+</table>
+</div>
+<p><strong>도입 타이밍</strong>: 유지비가 월 ₡80,000~560,000이므로 <strong>월 흑자 ₡1M+ · 인구 10만 이상</strong>에서 관광 수입 극대화용으로 도입하는 것이 정석입니다. <strong>대관람차는 어트랙티브니스 대비 유지비(₡560,000)가 최악</strong>이므로 후순위입니다. 배치는 자유지만 <strong>호텔·공항·역과 가까울수록 관광객 동선이 짧아져 교통 부하가 줄어듭니다.</strong></p>
+
+<h3>13-6. 도시 미관 팁 6가지</h3>
+<ol class="steps">
+<li><span class="st">나무 라인 툴 활용</span>나무를 개별이 아닌 <strong>라인 모드</strong>로 도로·강변에 심으면 가로수 길이 즉시 완성됩니다. 도로 자체의 가로수 옵션(장식 포함 도로)과 <strong>중복 배치</strong>하면 밀도감이 확 올라갑니다.</li>
+<li><span class="st">데칼·프롭 디테일링</span>Detailer's Patch #1(1.1.6f1) · Decorations Patch(1.1.8f1) · Detailer's Patch #2(1.2.0f1)로 표면(Surface)·프롭 배치가 기본 게임에 순차 추가됐습니다. <strong>주차장 표면, 자갈·포장 데칼로 건물 사이 빈 땅을 메우는 것이 미관의 핵심</strong>입니다.</li>
+<li><span class="st">지형 정리</span>언덕 주거지는 <strong>도로를 등고선과 평행하게</strong> 깔고, 옹벽/급경사 대신 <strong>완만한 테라스</strong>로 성형하면 건물 바닥 파묻힘이 줄어듭니다.</li>
+<li><span class="st">원형 교차로 + 광장 조합</span>소형 광장(6×6)을 로터리 중심이나 상업 축 끝에 두면 유럽식 경관 포인트가 됩니다.</li>
+<li><span class="st">워터프런트 완성</span>Bridges &amp; Ports(1.3.x, 2025-10) 이후 부두·교량 자산이 대폭 늘었습니다. <strong>부두 + 등대 + 해안 산책 공원</strong> 조합으로 수변을 완성하세요.</li>
+<li><span class="st">커스텀 에셋</span>Asset Mods 패치(1.5.2f1, 2025-12) 이후 에디터로 제작된 커스텀 자산을 Paradox Mods에서 받아 기본 자산 부족을 보완할 수 있습니다(PC 한정).</li>
+</ol>
+
+<div class="callout warn">
+<div class="ct">미관 작업의 흔한 실수</div>
+<ul>
+<li><strong>공원 유지관리소 생략</strong> — 관리 안 된 공원은 여가 효과가 떨어져 유지비만 새는 장식이 됩니다.</li>
+<li><strong>수영장·해변만으로 여가 커버</strong> — 여름 한정 레저라 겨울에 웰빙이 꺼집니다.</li>
+<li><strong>랜드마크를 저인구 도시에 조기 건설</strong> — 관광 수요가 없으면 월 ₡280,000+ 유지비만 나갑니다.</li>
+<li><strong>재해 인프라 조기 과투자</strong> — 초반에는 재해 OFF 또는 소방+감시탑만으로 버티세요.</li>
+</ul>
+</div>
+</section>
+<!-- ══════════ 14. 체크리스트 ══════════ -->
+<section class="chapter" id="checklist">
+<h2><span class="num">14</span>인구 단계별 체크리스트</h2>
+
+<p class="lede">각 구간에서 "지금 뭘 해야 하나"를 한 장으로 정리했습니다. 인쇄하거나 다른 모니터에 띄워두고 쓰세요.</p>
+
+<h3>🌱 인구 0 ~ 1,000 <span style="font-size:14px;font-weight:500;color:var(--text3)">(M1~M2)</span></h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>분야</th><th>해야 할 일</th><th>하지 말 것</th></tr></thead>
+<tbody>
+<tr><td>🛣️ 도로</td><td>2차선/자갈길로 골격만. 건설 중 일시정지</td><td>4차선·대로 조기 건설, 격자 과잉</td></tr>
+<tr><td>⚡ 전력</td><td>풍력 2~4기(4.5MW 이상 지점) 또는 외부 수입</td><td><b>석탄 화력(₡1,000,000)</b></td></tr>
+<tr><td>💧 상하수</td><td>상류 취수장 1 + 최하류 배출구 1. 예산 60~70%</td><td>하수 처리장(₡400,000), 급수탑</td></tr>
+<tr><td>🏘️ 구역</td><td>저밀 주거 2~3블록 + 상업 1 + 산업 1~2. <b>중밀 연립 혼용</b></td><td>한 번에 대량 구획(→ 사망파)</td></tr>
+<tr><td>💰 재정</td><td>주거세 2~5%로 인하. 서비스 예산 전부 50%</td><td>타일 구매, 대출 풀당김</td></tr>
+<tr><td>🏥 서비스</td><td>소형 진료소 1. <b>Import City Services 정책 활용</b></td><td>매립지 조기 건설(M6까지 미뤄도 됨)</td></tr>
+<tr><td>🎯 DP</td><td><b>Advanced Road Services(1pt)</b></td><td>교통·공항 트리</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>🏘️ 인구 1,000 ~ 5,000 <span style="font-size:14px;font-weight:500;color:var(--text3)">(M3~M5)</span></h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>분야</th><th>해야 할 일</th><th>체크 포인트</th></tr></thead>
+<tbody>
+<tr><td>🚒 안전</td><td>소방서(₡120,000) → 파출소(₡160,000) 순</td><td>출동 경로에 정체 없는지</td></tr>
+<tr><td>🏫 교육</td><td>소형 초등학교(₡40,000) → 소형 고등학교(₡150,000)</td><td>고교 좌석 = 인구의 ≈10%</td></tr>
+<tr><td>💰 특화산업</td><td><b>축산·채석·곡물·임업 면적 지정 + 세율 20~25% ★</b></td><td>자원 최농도 지점만</td></tr>
+<tr><td>🚌 교통</td><td>M4에서 버스 차고지 + 통근축 노선 1~2개</td><td>요금 0으로 시작해 이용률 확보</td></tr>
+<tr><td>🤝 복지</td><td><b>복지 사무소(1DP, ₡110,000)</b> — 저소득 주거 한가운데</td><td>부촌에 지으면 효과 없음</td></tr>
+<tr><td>📮 우편</td><td>M5에서 우체국 1곳</td><td>범위 2,000으로 짧음</td></tr>
+<tr><td>🗑️ 쓰레기</td><td>매립지 1개 (아직 소각장 불필요)</td><td>취수원 상류·풍상측 금지</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>🏙️ 인구 5,000 ~ 20,000 <span style="font-size:14px;font-weight:500;color:var(--text3)">(M6~M9)</span></h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>분야</th><th>해야 할 일</th><th>체크 포인트</th></tr></thead>
+<tbody>
+<tr><td>⚡ 전력</td><td><b>지열(지하수 지대) / 수력(협곡) / 가스</b> 중 지형에 맞게</td><td>MW당 유지비 서열 확인(6-2절)</td></tr>
+<tr><td>🗑️ 쓰레기</td><td><b>소각장 + 외부 송전 연결</b>(잉여 전력 수출로 풀가동)</td><td>매립지는 70~80%에서 비우기</td></tr>
+<tr><td>🏥 의료</td><td>인구 10,000 전후 종합병원 1개 (진료소는 유지)</td><td>진료소 철거 금지</td></tr>
+<tr><td>🎓 교육</td><td>전문대학(1DP, ₡750,000). 오피스와 동시에 키우기</td><td>대학만 먼저 = 고학력 실업</td></tr>
+<tr><td>🚋 교통</td><td>화물 기차역(산업지구 옆) → 트램(고밀 회랑)</td><td>여객·화물 선로 분리</td></tr>
+<tr><td>🏘️ 구역</td><td>M8 고밀 해금 — <b>대학 먼저, 그다음 고밀</b>. 블록 1~2개씩</td><td>좁은 2차선 도로변 고밀 금지</td></tr>
+<tr><td>🛣️ 도로</td><td>도로 정비창 1개소. 첫 병목 진단(Traffic Routes)</td><td>차선 증설 전에 교차로 점검</td></tr>
+<tr><td>⚰️ 장묘</td><td>화장장 해금 즉시 1개 (묘지는 버퍼로 유지)</td><td>사망파 대비 확장 선제 투자</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>🌆 인구 20,000 ~ 100,000 <span style="font-size:14px;font-weight:500;color:var(--text3)">(M10~M15)</span></h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>분야</th><th>해야 할 일</th><th>체크 포인트</th></tr></thead>
+<tbody>
+<tr><td>🚇 교통</td><td>지하철 1~2호선(도심 척추) + 버스 피더 재편</td><td>월 흑자가 유지비의 2배일 때만</td></tr>
+<tr><td>⚡ 전력</td><td>총 소비 500MW 초과 시 <b>변전소 분산 + 고압 백본</b></td><td>저압망 병목(주황) 확인</td></tr>
+<tr><td>💧 상하수</td><td>하수 처리장 도입, 고급 취수장 통합 검토</td><td>상수 = 하수 1:1</td></tr>
+<tr><td>🎓 교육</td><td>종합대학(2DP) — 오피스 일자리 확보 후</td><td>등록률 50%는 정상</td></tr>
+<tr><td>🚓 치안</td><td>경찰 본부 / 소방 본부, 교도소(유치장 포화 시)</td><td>구역 지정 순찰 필수</td></tr>
+<tr><td>🌪️ 재해</td><td>조기 경보 시스템 → 대피소(대형 1개=25,000명)</td><td><b>경보가 대피소보다 먼저</b></td></tr>
+<tr><td>🌳 공원</td><td>공원 10개 넘으면 <b>공원 유지관리소</b> 필수</td><td>여름·실내 레저 혼합</td></tr>
+<tr><td>🏭 산업</td><td>산업 폐기물 처리장(맵당 1개), 화물항</td><td>산업 클러스터 인근에</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>🌃 인구 100,000+ <span style="font-size:14px;font-weight:500;color:var(--text3)">(M16~M20)</span></h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>분야</th><th>해야 할 일</th></tr></thead>
+<tbody>
+<tr><td>⚡ 전력</td><td><b>원자력(8DP, 750MW)</b> — 물 40만 m³/월 + 고학력 75명 선확보. 잉여 전력 수출로 유지비 회수</td></tr>
+<tr><td>🚇 교통</td><td>지하철 다노선망, 국제공항, <b>전용 화물 철도망 분리</b></td></tr>
+<tr><td>🚓 치안</td><td>CIB(도시 전체 -8%) + 시청 법원(대응 시간 -50%)</td></tr>
+<tr><td>🏛️ 미관</td><td>랜드마크·시그니처를 관광 클러스터에 집중. 월 흑자 ₡1M+ 확인 후</td></tr>
+<tr><td>💰 재정</td><td>도시 내 생산 체인 완결(추출→가공→판매)로 운송비 절감 + 법인세원 다층화</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ══════════ 15. 트러블슈팅 ══════════ -->
+<section class="chapter" id="troubleshoot">
+<h2><span class="num">15</span>증상별 트러블슈팅</h2>
+
+<p class="lede">증상을 클릭해 펼치면 원인과 처방이 나옵니다. <strong>대부분의 CS2 문제는 "보이는 증상"과 "실제 원인"이 다른 곳에 있습니다.</strong></p>
+
+<h3>💸 재정</h3>
+<details class="acc"><summary>돈이 계속 마이너스인데 뭘 줄여야 할지 모르겠다</summary><div class="acc-body">
+<ol>
+<li><strong>서비스 예산 슬라이더를 전부 50%로</strong> 내리고 민원이 뜨는 것만 올립니다. 효율은 비선형이라 손실이 크지 않습니다.</li>
+<li><strong>특화 산업 세율을 20~25%로</strong> 올립니다(12-1절). 이것 하나로 소도시는 대개 흑자가 됩니다.</li>
+<li>불필요하게 산 <strong>타일</strong>이 있는지 확인합니다 — 유지비가 소급 적용됩니다.</li>
+<li><strong>화장장·대형 병원·재활용 센터</strong> 같은 조기 건설 예산 블랙홀이 있는지 확인합니다.</li>
+<li>전기·수도 <strong>서비스 요금을 ≈110%</strong>로 올립니다.</li>
+<li>그래도 안 되면 <strong>주거세를 12~13%까지</strong> 올려봅니다(수요 막대를 보면서 조금씩).</li>
+</ol>
+</div></details>
+<details class="acc"><summary>세율을 올렸는데 세수가 늘지 않는다</summary><div class="acc-body">
+<p>상업/산업/오피스세는 <strong>매출이 아니라 이익에 과세</strong>합니다. 적자 기업이 가득한 구역은 세율을 올려도 세수가 거의 없고 수요만 죽습니다.</p>
+<p><strong>처방</strong>: 회사 선택 패널에서 개별 손익을 확인하고, ① 원자재 지역 공급을 늘리거나 ② 화물역/항구로 운송비를 낮추거나 ③ 해당 품목 세율을 오히려 <strong>내려서</strong> 기업을 먼저 살리세요.</p>
+</div></details>
+
+<h3>🚗 교통</h3>
+<details class="acc"><summary>특정 교차로에서 항상 막힌다</summary><div class="acc-body">
+<p>4-10절의 진단 순서를 그대로 따르세요:</p>
+<ol>
+<li><strong>Traffic Routes 정보뷰</strong>로 가장 빨간 지점 <strong>1곳만</strong> 특정.</li>
+<li><strong>위계 위반</strong>인지 확인 — 2차선이 6차선/램프에 직결돼 있으면 그것이 원인입니다.</li>
+<li>램프 직후 신호라면 <strong>첫 교차로를 뒤로 밀거나 회전교차로화</strong>.</li>
+<li>비대칭 교차로에 회전교차로가 있으면 <strong>신호로 환원</strong>.</li>
+<li>횡단보도 제거(대체 횡단로 확보 후), 중앙분리로 좌회전 봉쇄.</li>
+<li>마지막으로 <strong>보행자 길·자전거 차선·대중교통</strong>으로 수요 자체를 덜어냅니다.</li>
+</ol>
+<p><strong>6차선으로 넓히는 것은 대개 해결책이 아닙니다</strong> — 교차로 신호주기가 길어져 오히려 악화되는 경우가 많습니다.</p>
+</div></details>
+<details class="acc"><summary>고밀 지구 주변에 차들이 계속 빙빙 돈다</summary><div class="acc-body">
+<p><strong>주차 부족</strong>입니다. 고밀 건물은 자체 주차면이 아파트 2~3면 수준으로 매우 적습니다.</p>
+<p><strong>처방</strong>: ① 다층 주차 빌딩(₡200,000, 200~300면)을 <strong>콜렉터 쪽 출입구</strong>로 배치 ② 도로 정보뷰에서 주차 이용률 확인 ③ 동시에 <strong>주차요금을 올려</strong> 대중교통으로 유도(지구 정책).</p>
+</div></details>
+<details class="acc"><summary>대중교통을 깔았는데 아무도 안 탄다</summary><div class="acc-body">
+<ol>
+<li><strong>요금을 0으로</strong> 내려봅니다 — 무료 노선이 이용률 40~50%까지 오른 사례가 있습니다.</li>
+<li><strong>주차를 불편하게</strong> 만듭니다(노상 주차 요금 인상/주차칸 제거). 요금 인하보다 강력한 경우가 많습니다.</li>
+<li><strong>환승 2회 이상</strong>이면 시민은 차를 몹니다. 노선을 짧고 직선적으로 재설계하세요.</li>
+<li>정류장까지 <strong>걸어갈 수 있는지</strong> 확인 — 보행자 길로 접근 동선을 단축.</li>
+<li>만차로 정류장을 지나치고 있다면 <strong>증차</strong>(이용률 80% 이상이면 증차 신호).</li>
+</ol>
+</div></details>
+<details class="acc"><summary>화물역을 지었는데 전혀 사용되지 않는다</summary><div class="acc-body">
+<p>버그가 아니라 <strong>"회사 입장에서 트럭 직송이 더 싸다"</strong>는 뜻일 가능성이 큽니다. 화물 터미널이 산업지구에서 멀면 아예 쓰지 않습니다.</p>
+<p><strong>처방</strong>: 화물 기차역을 <strong>산업 지구 한복판 또는 바로 옆</strong>으로 옮기고, 산업 전용 도로로 간선과 분리하세요.</p>
+</div></details>
+
+<h3>🏚️ 주거·수요</h3>
+<details class="acc"><summary>"임대료가 너무 높음" 경고가 계속 뜬다</summary><div class="acc-body">
+<p>11-4절의 8단계 체크리스트를 순서대로 실행하세요. 요약하면:</p>
+<ol>
+<li>건물을 클릭해 <strong>소득 문제인지 지가 문제인지</strong> 먼저 판별.</li>
+<li><strong>저임대·중밀·고밀 공급</strong>으로 탈출구 만들기(여러 가구가 임대료 분담).</li>
+<li><strong>교육 투자</strong>(근본 해결) + 일자리 접근성.</li>
+<li>주거 세율 인하.</li>
+<li><strong>서민 지역의 지가를 억지로 올리지 않기</strong> — 서비스 도배는 축출 버튼입니다.</li>
+</ol>
+<p>단, <strong>신도시 급팽창기에는 일시적으로 뜨는 게 정상</strong>입니다(개발사 공식 답변). 실업이 내려가면 대부분 사라집니다.</p>
+</div></details>
+<details class="acc"><summary>고밀 주거를 칠했는데 아무도 안 들어온다</summary><div class="acc-body">
+<p><strong>고밀 수요의 엔진은 학생·1인 가구</strong>입니다. 대학이 없으면 고밀 막대는 오르지 않습니다.</p>
+<p><strong>처방</strong>: 전문대학/종합대학을 먼저 짓고 학생 인구를 만든 뒤 고밀을 칠하세요. 또한 주거 수요 막대는 <strong>저/중/고밀이 완전히 분리</strong>되어 있으므로, 저밀 수요가 높다고 고밀이 채워지지 않습니다.</p>
+</div></details>
+<details class="acc"><summary>노숙자가 갑자기 늘어났다</summary><div class="acc-body">
+<p>1.2.5f1 이후 <strong>성인이 된 시민은 직장을 구하고 빈 저가 주택이 있는지 확인한 후에만 독립</strong>합니다. 저가 주택 재고가 없으면 노숙이 발생합니다.</p>
+<p><strong>처방</strong>: ① <strong>저임대 주택(M4)을 항상 약간 여유 있게</strong> 유지 ② 실업률 점검 ③ 복지 사무소를 저소득 지역에 배치 ④ 일괄 재구획으로 대량 퇴거를 만들지 않기.</p>
+</div></details>
+<details class="acc"><summary>상점들이 계속 폐업한다</summary><div class="acc-body">
+<p>Economy 2.0에서 <strong>가구당 쇼핑 상한이 4,000 → 2,000으로 절반</strong>이 됐습니다. 구매력 대비 상점이 남아돌면 폐업 연쇄가 일어납니다.</p>
+<p><strong>처방</strong>: <strong>상업은 항상 부족한 듯 유지</strong>하세요. 또한 상업 수요는 ① 팔 물건을 만드는 제조업 ② 고객 구매력 ③ 노동력의 3박자이므로, 산업이 없으면 상업도 살아나지 않습니다.</p>
+</div></details>
+
+<h3>🏥 서비스</h3>
+<details class="acc"><summary>한 동네만 시민들이 집단으로 아프다</summary><div class="acc-body">
+<p><strong>십중팔구 물이 원인입니다.</strong></p>
+<ol>
+<li>하수 배출구가 취수장 <strong>상류</strong>에 있지 않은지 확인(7장 다이어그램).</li>
+<li>둘이 하류 관계여도 <strong>너무 가까우면 펌프 흡입력이 흐름을 역전</strong>시킵니다.</li>
+<li>지하수 펌프라면 <strong>지면 오염(매립지·오염 산업)과 겹치는지</strong> 확인. 겹쳤다면 고급 여과 시스템(₡22,000)으로 급한 불을 끄고 오염원을 이전.</li>
+<li>고인 호수에 방류 중이라면 <strong>하수 처리장으로 전환</strong>.</li>
+</ol>
+<p>의료 시설 증설로는 해결되지 않습니다.</p>
+</div></details>
+<details class="acc"><summary>소각장을 지었는데 쓰레기가 계속 쌓인다</summary><div class="acc-body">
+<p><strong>소각장은 전력 수요에 따라 가동률이 결정</strong>됩니다. 도시 전력이 남아돌면 저출력으로 돌고 처리량도 떨어집니다.</p>
+<p><strong>처방</strong>: <strong>외부 연결 송전선에 물려 잉여 전력을 수출</strong>하면 항상 풀가동합니다. 이것이 이 증상의 대부분입니다.</p>
+<p>공업 도시라면 추가로 <strong>산업 폐기물</strong>을 의심하세요 — 소각장·재활용 센터는 산업 폐기물을 <strong>보관만 할 뿐 처리하지 못합니다.</strong> 전용 시설(맵당 1개)이 필요합니다.</p>
+</div></details>
+<details class="acc"><summary>시설은 충분한데 시신/쓰레기가 수거되지 않는다</summary><div class="acc-body">
+<p>영구차·쓰레기차는 모두 <strong>도로 차량</strong>입니다. 원인은 대개 시설이 아니라 도로입니다:</p>
+<ul>
+<li><strong>정체 구간</strong> — 4장의 진단 순서로 병목 해소.</li>
+<li><strong>막다른 골목</strong> — 회차 공간이 없으면 차량이 진입을 포기합니다.</li>
+<li><strong>도로 미연결 건물</strong>.</li>
+<li><strong>매립지 만땅</strong> — 가득 차면 그 매립지의 트럭 15대가 수거를 전면 중단합니다. 70~80%에서 비우기.</li>
+<li><strong>묘지 만땅</strong> — 5,000구가 차면 영구차 15대가 통째로 놉니다.</li>
+</ul>
+</div></details>
+<details class="acc"><summary>범죄가 갑자기 늘었다</summary><div class="acc-body">
+<p><strong>1.2.5f1(2025-03) 패치에서 범죄 확률 누적 버그가 수정</strong>됐습니다. 그 전까지 경찰 없이 잘 돌아가던 도시들이 이 패치 이후 체감 범죄가 크게 늘었습니다.</p>
+<p><strong>처방(효과 순)</strong>:</p>
+<ol>
+<li><strong>실업률을 5% 이하로</strong> — 범죄의 근본 원인은 웰빙·실업·저학력입니다.</li>
+<li><strong>복지 사무소</strong>를 저소득 지역에 — 파출소 5개보다 효과적입니다.</li>
+<li><strong>구역(District)을 그려 파출소를 할당</strong> — 순찰이 분산되지 않습니다(사실상 필수 테크닉).</li>
+<li>유치장 포화 경고가 뜨면 <strong>교도소</strong>(정원 500).</li>
+<li>대도시라면 <strong>시청 법원</strong>(대응 시간 -50%) → <strong>CIB</strong>(도시 전체 -8%).</li>
+</ol>
+</div></details>
+
+<h3>⚡ 인프라</h3>
+<details class="acc"><summary>발전량이 충분한데 일부 구역만 정전된다</summary><div class="acc-body">
+<p><strong>저압망 병목</strong>입니다. 총 발전량이 충분해도 특정 저압 구간이 과부하되면 그 구역만 정전됩니다.</p>
+<p><strong>처방</strong>: 전기 정보 뷰에서 <strong>주황색으로 포화된 간선</strong>을 찾아 ① 병렬 저압 케이블 추가 ② 병목 근처에 변전소+고압선 신설 ③ 발전소에서 나가는 도로 추가. 참고로 <strong>고속도로에는 저압 전선이 없습니다.</strong></p>
+</div></details>
+<details class="acc"><summary>겨울만 되면 전력이 부족하다</summary><div class="acc-body">
+<p>전력 소비는 <strong>18~22°C에서 100%</strong>가 최적이고 <strong>극단 온도(≈-18°C 이하)에서 최대 ≈200%</strong>까지 오릅니다. 한랭 맵(Lakeland -15°C, Mountain Village -12°C)은 겨울마다 수요가 사실상 2배가 됩니다.</p>
+<p><strong>처방</strong>: 여름 기준 발전량의 <strong>+50~100% 여유분</strong>을 확보하거나 외부 수입 경로를 열어두세요. <strong>태양광은 겨울에 최악</strong>입니다(수요 최대 + 일조 최소, 흐린 날 추가 -25%).</p>
+</div></details>
+<details class="acc"><summary>수력댐을 지었는데 발전량이 0에 가깝다</summary><div class="acc-body">
+<p>발전량 = <strong>유량(유속) × 낙차</strong>입니다. 유속이 약한 지점에 지으면 장식물이 됩니다.</p>
+<p><strong>처방</strong>: 철거 후 강을 따라 이동하며 <strong>배치 커서의 MW 미리보기가 두 자리 이상 나오는 지점</strong>을 찾으세요. 양안이 높은 절벽인 좁은 협곡이 이상적입니다. 유지비가 규모와 거의 무관하므로 <strong>지을 거면 최대한 크게</strong>.</p>
+<p>또한 담수 시 상류 수위가 8~9개월(게임 내)에 걸쳐 오르므로 <strong>상류 저지대 시가지가 잠기지 않는지</strong> 미리 확인하세요.</p>
+</div></details>
+
+<h3>🎓 교육·성장</h3>
+<details class="acc"><summary>대학을 지었는데 고학력자가 실업 상태다</summary><div class="acc-body">
+<p><strong>오피스 일자리 없이 대학부터 지은 경우</strong>입니다. 최고학력자가 하위 일자리를 잠식해 저학력 연쇄 실업이 발생합니다.</p>
+<p><strong>처방</strong>: ① <strong>저밀 사무(M4)부터 소량 배치</strong>해 무형재 지역 생산을 시작 ② 사무 세율 소폭 인하로 입주 유도 ③ 그래도 안 되면 <strong>학비를 올려 진학률을 낮춰</strong> 산업 노동력을 확보. 소프트웨어·통신 기업은 <strong>최고학력을 75%</strong> 요구하므로, 반대로 이 업종이 들어오면 고학력 실업이 빠르게 해소됩니다.</p>
+</div></details>
+<details class="acc"><summary>대학 정원이 남는데 등록률이 낮다</summary><div class="acc-body">
+<p>고등교육은 <strong>선택제</strong>라 정원의 30~60%만 차는 것이 정상입니다. 증설 전에 확인할 것:</p>
+<ul>
+<li><strong>접근성</strong> — CS2는 커버리지 반경이 없고 실제 통학 경로를 탐색합니다. 대학역(지하철/트램)을 붙이세요.</li>
+<li><strong>학비</strong> — 높으면 진학 의욕이 떨어집니다.</li>
+<li><strong>진학 관심</strong> — 전파망원경(+15%)으로 보정 가능.</li>
+</ul>
+</div></details>
+<details class="acc"><summary>인구가 한꺼번에 대량 사망한다 (사망파)</summary><div class="acc-body">
+<p>초반에 <strong>주거를 한 번에 대량 구획</strong>해서 같은 연령대가 동시 입주했기 때문입니다. 성인 지속 기간이 60게임월이므로 그만큼 뒤에 일제히 사망합니다.</p>
+<p><strong>예방</strong>: 주거 확장을 여러 마일스톤에 걸쳐 <strong>시차를 두고 분할</strong>합니다.</p>
+<p><strong>대응(이미 늦었다면)</strong>: 화장장의 <strong>추가 소각로 + 영구차 차고</strong>를 선제 확장하고, 묘지는 비우기를 걸어 버퍼로 운용하세요.</p>
+</div></details>
+
+<div class="divider"></div>
+
+<h3>🏆 마지막으로 — 아름답고 안 막히는 도시의 7가지 습관</h3>
+<ol class="steps">
+<li><span class="st">짓기 전에 인포뷰를 켠다</span>바람 방향, 물 흐름, 지하수, 구역 적합성. 3초면 됩니다.</li>
+<li><span class="st">위계를 지킨다</span>고속도로 → 간선 → 콜렉터 → 국지. 한 단계씩만 연결.</li>
+<li><span class="st">한 번에 조금씩 확장한다</span>수요 막대가 찰 때만, 블록 1~2개씩. 연령이 분산되고 재정이 안정됩니다.</li>
+<li><span class="st">해금됐다고 짓지 않는다</span>민원이 뜰 때 짓습니다. 예산 슬라이더는 50%에서 시작.</li>
+<li><span class="st">보행자 길과 자전거 차선을 아낌없이 깐다</span>가장 싸고 확실한 교통 대책이자 미관 요소입니다.</li>
+<li><span class="st">교육에 일찍 투자하고, 오피스와 같이 키운다</span>고학력 시민 1명의 세수가 무학의 13배입니다.</li>
+<li><span class="st">문제가 생기면 증상이 아니라 원인을 고친다</span>범죄는 경찰이 아니라 실업, 정체는 차선이 아니라 교차로, 질병은 병원이 아니라 물입니다.</li>
+</ol>
+</section>
+<!-- CONTENT:END -->
+</main>
+</div>
+<footer class="site">
+  <strong>시티즈 스카이라인 2 초정밀 공략집</strong><br>
+  Economy 2.0(1.1.5f1) 이후 ~ 2025–2026 현행 패치 기준 · 게임 내 수치는 패치에 따라 달라질 수 있습니다<br>
+  <a class="inline" href="https://github.com/g23252a-svg/ssk2">github.com/g23252a-svg/ssk2</a>
+</footer>
+<script>
+const prog=document.getElementById('progress');
+addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  const max=h.scrollHeight-h.clientHeight;
+  prog.style.width=(max>0?h.scrollTop/max*100:0)+'%';
+},{passive:true});
+const sb=document.getElementById('sidebar'),mb=document.getElementById('menuBtn'),scrim=document.getElementById('scrim');
+const setDrawer=open=>{
+  sb.classList.toggle('open',open);
+  scrim.classList.toggle('show',open);
+  scrim.hidden=!open;
+  mb.setAttribute('aria-expanded',open);
+};
+setDrawer(false);
+mb.addEventListener('click',()=>setDrawer(!sb.classList.contains('open')));
+scrim.addEventListener('click',()=>setDrawer(false));
+sb.addEventListener('click',e=>{if(e.target.closest('a'))setDrawer(false)});
+addEventListener('keydown',e=>{if(e.key==='Escape')setDrawer(false)});
+const links=[...document.querySelectorAll('#sidebar a[href^="#"]')];
+const spy=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      const id='#'+e.target.id;
+      links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')===id));
+      const act=document.querySelector('#sidebar a.active');
+      if(act&&sb.scrollHeight>sb.clientHeight){
+        const r=act.offsetTop-sb.scrollTop;
+        if(r<40||r>sb.clientHeight-60)sb.scrollTop=act.offsetTop-sb.clientHeight/2;
+      }
+    }
+  });
+},{rootMargin:'-15% 0px -75% 0px'});
+links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean).forEach(s=>spy.observe(s));
+</script>
+</body>
+</html>
