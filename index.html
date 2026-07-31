@@ -2555,6 +2555,51 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </table>
 </div>
 
+<h3>6-6. 지구 배치 생성기 📐</h3>
+<p class="lede">지구 종류와 크기, 간선이 붙는 방향을 고르면 <strong>이 공략집의 치수 규칙을 그대로 적용한 도면</strong>을 그려 줍니다. 콜렉터 20셀(160m), 국지 ≤12셀, 구획 깊이 6칸, 국지도로의 간선 관통 금지 — 전부 반영됩니다. 도로 길이·건설비·유지비와 시공 순서도 같이 나옵니다.</p>
+
+<div class="advisor">
+<form id="genForm">
+  <div class="adv-q">
+    <span class="aq">지구 종류</span>
+    <div class="chips-in">
+      <input type="radio" name="gt" id="gt-r" value="res" checked><label for="gt-r">🏘️ 주거</label>
+      <input type="radio" name="gt" id="gt-c" value="com"><label for="gt-c">🏬 상업·업무</label>
+      <input type="radio" name="gt" id="gt-m" value="mix"><label for="gt-m">🏙️ 혼합</label>
+      <input type="radio" name="gt" id="gt-i" value="ind"><label for="gt-i">🏭 산업</label>
+    </div>
+  </div>
+  <div class="adv-q">
+    <span class="aq">지구 크기 <span class="hint">표준 블록(160m) 단위</span></span>
+    <div class="chips-in">
+      <input type="radio" name="gn" id="gn-2" value="2"><label for="gn-2">소 2×2 (320m)</label>
+      <input type="radio" name="gn" id="gn-3" value="3" checked><label for="gn-3">중 3×3 (480m)</label>
+      <input type="radio" name="gn" id="gn-4" value="4"><label for="gn-4">대 4×4 (640m)</label>
+    </div>
+  </div>
+  <div class="adv-q">
+    <span class="aq">간선이 붙는 방향 <span class="hint">산업은 화물 IC 방향</span></span>
+    <div class="chips-in">
+      <input type="radio" name="gs" id="gs-n" value="북" checked><label for="gs-n">↑ 북</label>
+      <input type="radio" name="gs" id="gs-s" value="남"><label for="gs-s">↓ 남</label>
+      <input type="radio" name="gs" id="gs-w" value="서"><label for="gs-w">← 서</label>
+      <input type="radio" name="gs" id="gs-e" value="동"><label for="gs-e">→ 동</label>
+    </div>
+  </div>
+  <div class="adv-q" style="margin-bottom:0">
+    <span class="aq">바람이 빠져나가는 쪽 <span class="hint">오염 방향 검증용 · <a class="inline" href="#advForm">1-4절 진단기</a>에 입력했다면 자동으로 따라옵니다</span></span>
+    <div class="chips-in">
+      <input type="radio" name="gw2" id="gw-n" value="북"><label for="gw-n">↑ 북</label>
+      <input type="radio" name="gw2" id="gw-s" value="남"><label for="gw-s">↓ 남</label>
+      <input type="radio" name="gw2" id="gw-w" value="서"><label for="gw-w">← 서</label>
+      <input type="radio" name="gw2" id="gw-e" value="동"><label for="gw-e">→ 동</label>
+      <input type="radio" name="gw2" id="gw-x" value="" checked><label for="gw-x">모름 / 검증 안 함</label>
+    </div>
+  </div>
+</form>
+<div id="genOut"></div>
+</div>
+
 <div class="callout money">
 <div class="ct">확장할 때마다 되짚을 5가지</div>
 <ol>
@@ -5711,6 +5756,191 @@ addEventListener('keydown',e=>{if(e.key==='Escape')setDrawer(false)});
   }
 
   form.addEventListener('change',e=>{ if(e.target.name) render(); });
+  render();
+})();
+
+/* ── 지구 배치 생성기 ── */
+(function(){
+  const form=document.getElementById('genForm'); if(!form) return;
+  const out=document.getElementById('genOut');
+  const OPP={'동':'서','서':'동','남':'북','북':'남'};
+  const B=120, GAPA=72, M=46, PPM=B/160;   // 블록 120px=160m → 0.75px/m
+  const RATE={art:[7000,938],col:[5500,712],loc:[4000,487]};
+  const v=n=>form.querySelector('input[name="'+n+'"]:checked')?.value;
+
+  function layout(t,N){
+    const S=[],R=[],T=[]; const body=N*B, CW=M*2+body;
+    let CH, BT, artY;
+    if(t==='com'){ CH=M*2+body; BT=M; artY=BT+Math.floor(N/2)*B; }
+    else { CH=M+GAPA+body+M; BT=M+GAPA; artY=M; }
+
+    if(t==='ind'){
+      S.push({x1:0,y1:artY,x2:CW,y2:artY,c:'art'});
+      // 4램프 (개략)
+      const cx=M+body/2;
+      S.push({x1:cx-30,y1:artY+6,x2:cx-10,y2:BT-14,c:'col'});
+      S.push({x1:cx+30,y1:artY+6,x2:cx+10,y2:BT-14,c:'col'});
+      S.push({x1:cx-34,y1:BT-14,x2:cx+34,y2:BT-14,c:'col'});
+      S.push({x1:cx,y1:BT-14,x2:cx,y2:BT,c:'col'});
+      T.push({x:cx,y:artY-12,s:'화물 전용 IC (4램프)',f:'amber'});
+      // 폐루프
+      S.push({x1:M,y1:BT,x2:M+body,y2:BT,c:'col'});
+      S.push({x1:M,y1:BT+body,x2:M+body,y2:BT+body,c:'col'});
+      S.push({x1:M,y1:BT,x2:M,y2:BT+body,c:'col'});
+      S.push({x1:M+body,y1:BT,x2:M+body,y2:BT+body,c:'col'});
+      S.push({x1:cx,y1:BT,x2:cx,y2:BT+body,c:'col'});
+      for(let i=0;i<N;i++)for(let j=0;j<2;j++)
+        R.push({x:M+j*(body/2)+10,y:BT+i*B+10,w:body/2-20,h:B-20,k:'ind'});
+      S.push({x1:M-34,y1:BT+body-B/2,x2:M,y2:BT+body-B/2,c:'col'});
+      T.push({x:M+body/2,y:BT+body+26,s:'통근 진입은 반대편에',f:'teal'});
+      return {S,R,T,CW,CH,BT,artY,body};
+    }
+
+    S.push({x1:0,y1:artY,x2:CW,y2:artY,c:'art'});
+    for(let i=0;i<=N;i++){ if(t==='com'&&BT+i*B===artY) continue;
+      S.push({x1:M,y1:BT+i*B,x2:M+body,y2:BT+i*B,c:'col'}); }
+    for(let j=0;j<=N;j++) S.push({x1:M+j*B,y1:BT,x2:M+j*B,y2:BT+body,c:'col'});
+    if(t!=='com'){
+      S.push({x1:M,y1:artY,x2:M,y2:BT,c:'col'});
+      S.push({x1:M+body,y1:artY,x2:M+body,y2:BT,c:'col'});
+      R.push({x:M,y:artY+10,w:body,h:GAPA-20,k:'buf'});
+    }
+    for(let i=0;i<N;i++) S.push({x1:M,y1:BT+i*B+B/2,x2:M+body,y2:BT+i*B+B/2,c:'loc'});
+    for(let j=0;j<N;j++){
+      const x=M+j*B+B/2;
+      if(t==='com'){ if(j%2===0) S.push({x1:x,y1:BT,x2:x,y2:artY,c:'loc'});
+                     else S.push({x1:x,y1:artY,x2:x,y2:BT+body,c:'loc'}); }
+      else S.push({x1:x,y1:BT,x2:x,y2:BT+body,c:'loc'});
+    }
+    for(let i=0;i<N;i++)for(let j=0;j<N;j++)for(let a=0;a<2;a++)for(let b=0;b<2;b++){
+      const x=M+j*B+a*B/2, y=BT+i*B+b*B/2;
+      let k='low';
+      if(t==='res') k=(i===0)?'mid':'low';
+      else if(t==='mix') k=(i===0)?'com':'mid';
+      else if(t==='com'){ const d=Math.abs((BT+i*B+b*B/2+B/4)-artY); k=(d<B)?'com':'mid'; }
+      R.push({x:x+7,y:y+7,w:B/2-14,h:B/2-14,k});
+    }
+    return {S,R,T,CW,CH,BT,artY,body};
+  }
+
+  function render(){
+    const t=v('gt'), N=+v('gn'), side=v('gs');
+    const wAdv=document.querySelector('#advForm input[name="wind"]:checked')?.value;
+    const wOwn=v('gw2');
+    const wind=wOwn||wAdv||null;
+    const L=layout(t,N);
+    const {S,R,T,CW,CH}=L;
+    const P = side==='북' ? (x,y)=>[x,y]
+            : side==='남' ? (x,y)=>[x,CH-y]
+            : side==='서' ? (x,y)=>[y,x]
+            : (x,y)=>[CH-y,x];
+    const W = (side==='서'||side==='동')?CH:CW, H=(side==='서'||side==='동')?CW:CH;
+    const SW={art:13,col:7,loc:3.6}, SC={art:'#2563eb',col:'#0d9488',loc:'#8a93a5'};
+    const FC={low:'#16a34a',mid:'#16a34a',com:'#d97706',ind:'#dc2626'},
+          FO={low:.3,mid:.5,com:.5,ind:.4};
+    let g='';
+    R.forEach(r=>{ if(r.k==='buf'){ const [a,b]=P(r.x,r.y),[c,d]=P(r.x+r.w,r.y+r.h);
+        g+='<rect x="'+Math.min(a,c)+'" y="'+Math.min(b,d)+'" width="'+Math.abs(c-a)+'" height="'+Math.abs(d-b)+'" fill="none" stroke="#64748b" stroke-width="1.6" stroke-dasharray="5 4" rx="5"/>'; return; }
+      const [a,b]=P(r.x,r.y),[c,d]=P(r.x+r.w,r.y+r.h);
+      g+='<rect x="'+Math.min(a,c)+'" y="'+Math.min(b,d)+'" width="'+Math.abs(c-a)+'" height="'+Math.abs(d-b)+'" fill="'+FC[r.k]+'" opacity="'+FO[r.k]+'" rx="2"/>'; });
+    ['loc','col','art'].forEach(cl=>S.filter(s=>s.c===cl).forEach(s=>{
+      const [a,b]=P(s.x1,s.y1),[c,d]=P(s.x2,s.y2);
+      g+='<line x1="'+a+'" y1="'+b+'" x2="'+c+'" y2="'+d+'" stroke="'+SC[cl]+'" stroke-width="'+SW[cl]+'" stroke-linecap="butt"/>'; }));
+    T.forEach(x=>{ let [a,b]=P(x.x,x.y);
+      const tw=x.s.length*6.4;                       // 회전해도 안 넘치게 클램프
+      a=Math.max(tw/2+4,Math.min(W-tw/2-4,a));
+      b=Math.max(13,Math.min(H-5,b));
+      g+='<text x="'+a+'" y="'+b+'" class="svg-ts" fill="var(--'+x.f+')" text-anchor="middle">'+x.s+'</text>'; });
+
+    // 길이·비용
+    const len={art:0,col:0,loc:0};
+    S.forEach(s=>{ len[s.c]+=Math.hypot(s.x2-s.x1,s.y2-s.y1)/PPM; });
+    let build=0,up=0; Object.keys(len).forEach(k=>{ build+=len[k]/1000*RATE[k][0]; up+=len[k]/1000*RATE[k][1]; });
+    // 교차로
+    let ix=0; S.filter(s=>s.c==='art').forEach(a=>S.filter(s=>s.c!=='art').forEach(o=>{
+      const aH=a.y1===a.y2,oH=o.y1===o.y2; if(aH===oH)return;
+      const h=aH?a:o, vv=aH?o:a;
+      if(vv.x1>=Math.min(h.x1,h.x2)-1&&vv.x1<=Math.max(h.x1,h.x2)+1&&h.y1>=Math.min(vv.y1,vv.y2)-1&&h.y1<=Math.max(vv.y1,vv.y2)+1) ix++; }));
+    let thru=0; S.filter(s=>s.c==='art').forEach(a=>S.filter(s=>s.c==='loc').forEach(o=>{
+      const aH=a.y1===a.y2,oH=o.y1===o.y2; if(aH===oH)return;
+      const h=aH?a:o, vv=aH?o:a;
+      if(vv.x1>Math.min(h.x1,h.x2)+2&&vv.x1<Math.max(h.x1,h.x2)-2&&h.y1>Math.min(vv.y1,vv.y2)+2&&h.y1<Math.max(vv.y1,vv.y2)-2) thru++; }));
+
+    const NAME={res:'주거 지구',com:'상업·업무 지구',mix:'혼합 지구',ind:'산업 지구'};
+    const pop = t==='ind' ? null : (t==='res'? N*600+(N*N-N)*200 : t==='mix'? (N*N-N)*400 : (N*N-Math.min(N*2,N*N))*600+N*300);
+    const km=x=>(x/1000).toFixed(2), won=x=>'₡'+Math.round(x).toLocaleString();
+
+    let h='<figure class="diagram" style="margin:0 0 14px"><div class="dg-title">'+NAME[t]+' '+N+'×'+N+' · 간선 '+side+'쪽 · 축척 1블록=160m</div>'+
+      '<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="생성된 지구 배치 도면">'+
+      '<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="var(--svg-fill)" rx="8"/>'+g+'</svg>'+
+      '<div class="legend"><span><i style="background:#2563eb"></i>간선 6차선</span><span><i style="background:#0d9488"></i>콜렉터 4차선</span>'+
+      '<span><i style="background:#8a93a5"></i>국지 2차선</span><span><i style="background:#16a34a"></i>주거</span>'+
+      '<span><i style="background:#d97706"></i>상업</span><span><i style="background:#dc2626"></i>산업</span></div></figure>';
+
+    h+='<div class="ao-h">📐 규모와 비용</div>';
+    h+='<div class="tablewrap" style="margin:6px 0 14px"><table><thead><tr><th>항목</th><th class="ctr">길이</th><th class="ctr">건설비</th><th class="ctr">월 유지비</th></tr></thead><tbody>'+
+      ['art','col','loc'].filter(k=>len[k]>1).map(k=>{
+        const nm={art:'간선 6차선',col:'콜렉터 4차선',loc:'국지 2차선'}[k];
+        return '<tr><td><b>'+nm+'</b></td><td class="ctr">'+km(len[k])+' km</td><td class="ctr">'+won(len[k]/1000*RATE[k][0])+'</td><td class="ctr">'+won(len[k]/1000*RATE[k][1])+'</td></tr>';
+      }).join('')+
+      '<tr><td><b>합계</b></td><td class="ctr">'+km(len.art+len.col+len.loc)+' km</td><td class="ctr"><b>'+won(build)+'</b></td><td class="ctr"><b>'+won(up)+'/월</b></td></tr>'+
+      '</tbody></table></div>';
+    h+='<ul style="font-size:14.5px;color:var(--text2);margin:0 0 4px 20px">'+
+      '<li>한 변 <b>'+(N*160)+'m</b> · 총 <b>'+(N*N)+'개 블록</b> · 부지 ≈'+((N*160/1000)*(N*160/1000)).toFixed(2)+' km²</li>'+
+      (pop!==null?'<li>수용 인구 어림 <b>≈'+pop.toLocaleString()+'명</b> <span style="color:var(--text3)">(밀도 구성에 따라 크게 달라집니다)</span></li>':
+       '<li><b>산업 지구</b> — Economy 2.0에서 공간 배수가 1→5로 올라 같은 수요에 넓은 부지가 필요합니다</li>')+
+      '<li>간선 관련 교차로 <b>'+ix+'개</b> · <b>국지도로의 간선 관통 '+thru+'건</b>'+(thru===0?' <span style="color:var(--green)">✓ 위계 정상</span>':'')+'</li>'+
+      '</ul>';
+
+    // 배치 방향 검증
+    h+='<div class="ao-h">🧭 이 지구를 도시 어디에 놓나</div>';
+    if(!wind){
+      h+='<div class="ao-wait" style="text-align:left;padding:4px 0">바람 방향을 고르면(위 마지막 항목 또는 <a class="inline" href="#advForm">1-4절 진단기</a>) 오염 방향까지 검증해 드립니다.</div>';
+    } else if(t==='ind'){
+      h+=(side===wind
+        ? '<div class="ao-ok">✓ 바람이 <b>'+wind+'쪽</b>으로 빠지고 화물 IC도 <b>'+side+'쪽</b>입니다. 이 산업 지구를 도시의 <b>'+wind+'쪽 끝</b>에 놓으면 오염이 도시를 통과하지 않고 맵 밖으로 나갑니다.</div>'
+        : '<div class="ao-warn">⚠️ 바람은 <b>'+wind+'쪽</b>으로 빠지는데 화물 IC를 <b>'+side+'쪽</b>에 뒀습니다. 배치 자체는 가능하지만, <b>산업 지구는 반드시 도시의 '+wind+'쪽 끝</b>에 놓으세요. 주거를 '+wind+'쪽에 두면 오염이 직격합니다.</div>');
+      h+='<ul style="font-size:14.5px;color:var(--text2);margin:8px 0 0 20px"><li>물 <b>하류</b>에, 지하수 취수원에서 <b>멀리</b></li><li>주거와의 사이에 <b>사무·공원 완충지대</b></li><li>화물역을 지구에 <b>붙여서</b> — 멀면 회사가 트럭 직송을 택해 역이 놉니다</li></ul>';
+    } else {
+      h+='<div class="ao-ok">✓ 이 지구는 도시의 <b>'+OPP[wind]+'쪽(풍상측)</b>에 놓으세요. 바람이 '+wind+'쪽으로 빠지므로 오염원에서 가장 먼 쪽입니다.</div>';
+      h+='<ul style="font-size:14.5px;color:var(--text2);margin:8px 0 0 20px"><li>산업·발전소·매립지는 반대편(<b>'+wind+'쪽</b>)에</li>'+
+        (t!=='com'?'<li>도면의 <b>점선 띠</b>가 간선과 지구 사이 완충지대입니다 — 사무·공원·저밀 상업을 넣으세요</li>':'')+
+        '<li>취수장은 강 상류, 하수 배출구는 하류 — 이 지구와 무관하게 도시 전체 원칙입니다</li></ul>';
+    }
+
+    // 시공 순서
+    h+='<div class="ao-h">🔨 시공 순서</div><ol style="font-size:14.5px;color:var(--text2);margin:0 0 0 20px">';
+    if(t==='ind'){
+      h+='<li><b>화물 전용 IC부터</b> — 고속도로 상·하행 <b>4개 램프</b>를 모두 연결하세요. 하나라도 빠지면 반대 방향 트럭이 다음 IC까지 우회합니다</li>'+
+         '<li>램프 종점을 <b>회전교차로</b>로 받아 신호 역류를 막습니다</li>'+
+         '<li><b>폐루프</b>를 먼저 그립니다 — 막다른 골목이 없어야 트럭이 회차합니다</li>'+
+         '<li>중앙 스파인 + 넓은 로트로 구획 (Economy 2.0 공간 배수 5배)</li>'+
+         '<li>반대편에 <b>통근 콜렉터</b>를 따로 내서 버스 노선을 넣습니다 — 화물 동선과 절대 겹치지 않게</li>'+
+         '<li>화물 기차역을 지구에 <b>붙여</b> 배치 (₡150,000, 저장 ≈15.5kt)</li>';
+    } else {
+      h+='<li><b>간선을 '+side+'쪽에 먼저 연장</b>합니다'+(t==='com'?' — 상업 지구이므로 간선이 지구 <b>한가운데</b>를 지납니다':' — 주거 성격이라 간선이 지구를 <b>비껴갑니다</b>')+'</li>'+
+         '<li><b>콜렉터 폐루프</b>를 뽑습니다. 간선에는 <b>'+(t==='com'?'세로 콜렉터가 교차':'양 끝 2곳에서만 접속')+'</b>합니다</li>'+
+         '<li>콜렉터 격자를 <b>160m(20셀) 간격</b>으로 채웁니다 — 이게 곧 간선 신호 교차로 간격이 됩니다</li>'+
+         '<li>블록 안에 <b>국지도로를 80m 간격</b>으로 1개씩. <b>간선을 관통시키지 마세요</b>'+(t==='com'?' (도면처럼 좌우를 엇갈려 T자로)':'')+'</li>'+
+         '<li>구획: '+(t==='com'?'<b>간선 전면은 상업·사무</b>, 콜렉터 바깥은 주거':t==='mix'?'<b>간선변 한 줄은 상업</b>, 안쪽은 주거':'<b>콜렉터변은 중밀</b>, 안쪽은 저밀')+'</li>'+
+         '<li>버스 정류장은 <b>콜렉터(4차선)</b>에 — 2차선에 두면 정차한 버스가 그 방향을 막습니다</li>';
+    }
+    h+='</ol>';
+    out.innerHTML=h;
+    // 렌더 후 실측으로 라벨을 viewBox 안으로 밀어넣기 (회전 방향 무관)
+    const sv=out.querySelector('svg');
+    if(sv){ const vb=sv.viewBox.baseVal;
+      sv.querySelectorAll('text').forEach(el=>{
+        let b; try{b=el.getBBox()}catch(e){return} if(!b.width) return;
+        let x=+el.getAttribute('x'), y=+el.getAttribute('y');
+        if(b.x<2) x+=2-b.x; else if(b.x+b.width>vb.width-2) x-=b.x+b.width-(vb.width-2);
+        if(b.y<2) y+=2-b.y; else if(b.y+b.height>vb.height-2) y-=b.y+b.height-(vb.height-2);
+        el.setAttribute('x',x); el.setAttribute('y',y);
+      });
+    }
+  }
+  form.addEventListener('change',render);
+  const adv=document.getElementById('advForm'); if(adv) adv.addEventListener('change',render);
   render();
 })();
 
