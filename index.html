@@ -5656,106 +5656,191 @@ addEventListener('keydown',e=>{if(e.key==='Escape')setDrawer(false)});
     render();
   });
 
-  const H=(t)=>'<div class="ao-h">'+t+'</div>';
-  const UL=(a)=>'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+  const OPPD={'동':'서','서':'동','남':'북','북':'남'};
+  const FIG=(t,vb,body,cap)=>'<figure class="diagram" style="margin:0 0 16px"><div class="dg-title">'+t+'</div>'+
+    '<svg viewBox="0 0 '+vb+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+t+'">'+
+    '<rect x="0" y="0" width="'+vb.split(' ')[0]+'" height="'+vb.split(' ')[1]+'" fill="var(--svg-fill)" rx="8"/>'+
+    body+'</svg>'+(cap?'<figcaption>'+cap+'</figcaption>':'')+'</figure>';
+  const TX=(x,y,s,o)=>{o=o||{};return '<text x="'+x+'" y="'+y+'" text-anchor="'+(o.a||'middle')+'" class="'+(o.c||'svg-ts')+'" fill="'+(o.f||'var(--text2)')+'"'+(o.w?' font-weight="800"':'')+'>'+s+'</text>';};
+
+  /* ═══ 도면 1 : 시작 배치도 ═══ */
+  function figPlan(wind,river){
+    const X0=190,Y0=100,S=320,C=X0+S/2,M=Y0+S/2;
+    const vert = (wind==='북'||wind==='남');
+    const order = wind==='남' ? ['res','buf','ind'] : wind==='북' ? ['ind','buf','res']
+                : wind==='동' ? ['res','buf','ind'] : ['ind','buf','res'];
+    const Z={res:{c:'#16a34a',t:'🏘️ 주거 · 상업',s:'풍상측 — 깨끗한 공기'},
+             ind:{c:'#dc2626',t:'🏭 산업 · 발전소 · 매립지',s:'풍하측 — 오염이 맵 밖으로'},
+             buf:{c:null,t:'완충지대',s:'사무 · 공원 · 저밀 상업'}};
+    let g='<defs>'+
+      '<marker id="pw" markerWidth="10" markerHeight="10" refX="8" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#0d9488"/></marker>'+
+      '<marker id="pr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#3b82f6"/></marker>'+
+      '</defs>';
+    // 대형 바람 화살표 (도형이라 라벨과 겹칠 일 없음)
+    const ep=d=> d==='북'?[C,Y0] : d==='남'?[C,Y0+S] : d==='서'?[X0,M] : [X0+S,M];
+    const [wax,way]=ep(OPPD[wind]), [wbx,wby]=ep(wind);
+    g+='<line x1="'+wax+'" y1="'+way+'" x2="'+wbx+'" y2="'+wby+'" stroke="#0d9488" stroke-width="34" opacity=".13" stroke-linecap="round"/>';
+    // 3분할 밴드
+    order.forEach((k,i)=>{
+      const x = vert ? X0 : X0+i*S/3, y = vert ? Y0+i*S/3 : Y0;
+      const w = vert ? S : S/3, hh = vert ? S/3 : S;
+      const z=Z[k];
+      g += z.c ? '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+hh+'" fill="'+z.c+'" opacity=".2" rx="6"/>'
+               : '<rect x="'+(x+5)+'" y="'+(y+5)+'" width="'+(w-10)+'" height="'+(hh-10)+'" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="6 5" rx="6"/>';
+      const col = z.c||'#64748b';
+      if(vert){ g+=TX(x+w/2,y+hh/2-4,z.t,{c:'svg-t',f:col,w:1}) + TX(x+w/2,y+hh/2+16,z.s,{f:col}); }
+      else    { g+=TX(x+w/2,Y0+30,z.t,{c:'svg-t',f:col,w:1})    + TX(x+w/2,Y0+50,z.s,{f:col}); }
+    });
+    g += '<rect x="'+X0+'" y="'+Y0+'" width="'+S+'" height="'+S+'" fill="none" stroke="var(--border2)" stroke-width="2" rx="6"/>';
+    // 바람 표시 (판 안쪽 우하단 — 밴드 라벨과 항상 떨어져 있음)
+    g += '<line x1="'+(wax*.25+wbx*.75)+'" y1="'+(way*.25+wby*.75)+'" x2="'+(wax*.12+wbx*.88)+'" y2="'+(way*.12+wby*.88)+'" stroke="#0d9488" stroke-width="5" marker-end="url(#pw)"/>';
+    g += TX(X0+S-10,Y0+S-14,'바람 → '+wind+'쪽',{c:'svg-t',f:'#0d9488',a:'end',w:1});
+    // 나침반 (판 바깥)
+    g += '<circle cx="44" cy="44" r="17" fill="var(--surface)" stroke="var(--border2)" stroke-width="1.5"/>';
+    g += '<path d="M44 32 L40 45 L48 45 Z" fill="var(--red)"/>';
+    g += TX(44,56,'N',{f:'var(--text2)',w:1});
+    // 강 + 취수/배출 (박스는 전부 판 바깥)
+    const BOX={'북':[290,44],'남':[290,442],'서':[52,239],'동':[528,239]};
+    const box=(d,fill,stroke,l1,l2)=>{ const[bx,by]=BOX[d];
+      return '<rect x="'+bx+'" y="'+by+'" width="120" height="42" fill="'+fill+'" stroke="'+stroke+'" stroke-width="2.5" rx="7"/>'+
+             TX(bx+60,by+18,l1,{c:'svg-t',f:stroke,w:1})+TX(bx+60,by+34,l2,{f:stroke}); };
+    const link=(d)=>{ const[ex,ey]=ep(d), [bx,by]=BOX[d];
+      return '<line x1="'+(bx+60)+'" y1="'+(by+21)+'" x2="'+ex+'" y2="'+ey+'" stroke="var(--border2)" stroke-width="2" stroke-dasharray="4 3"/>'; };
+    if(river!=='none'){
+      const [ux,uy]=ep(OPPD[river]), [dx,dy]=ep(river);
+      g+='<line x1="'+ux+'" y1="'+uy+'" x2="'+dx+'" y2="'+dy+'" stroke="#3b82f6" stroke-width="22" opacity=".3" stroke-linecap="round"/>';
+      g+='<line x1="'+ux+'" y1="'+uy+'" x2="'+dx+'" y2="'+dy+'" stroke="#3b82f6" stroke-width="2.5" opacity=".7" stroke-dasharray="10 8" marker-end="url(#pr)"/>';
+      g+=link(OPPD[river])+link(river);
+      g+=box(OPPD[river],'var(--green-soft)','var(--green)','💧 취수장 (상류)','₡25,000 · 100,000m³');
+      g+=box(river,'var(--amber-soft)','var(--amber)','🚰 배출구 (하류)','맵 밖으로 흘려보냄');
+    } else {
+      g+='<rect x="120" y="440" width="460" height="46" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="2" rx="7"/>';
+      g+=TX(350,461,'⚠️ 흐르는 강 없음 — 고인 물은 오염이 축적됩니다',{c:'svg-t',f:'var(--amber)',w:1});
+      g+=TX(350,478,'배출구 대신 하수 처리장(₡400,000)을 일찍 준비하세요',{f:'var(--amber)'});
+    }
+    // 화물 IC — 산업 쪽 가장자리, 중앙에서 비켜서
+    const t=0.25;
+    const icp = wind==='북'?[X0+S*t,Y0] : wind==='남'?[X0+S*t,Y0+S] : wind==='서'?[X0,Y0+S*t] : [X0+S,Y0+S*t];
+    g+='<circle cx="'+icp[0]+'" cy="'+icp[1]+'" r="14" fill="var(--amber)"/>';
+    g+=TX(icp[0],icp[1]+4,'IC',{f:'#fff',w:1});
+    return FIG('🧭 시작 배치도 — 이 맵에 맞춰 방향을 잡았습니다','700 520',g,
+      '<b>산업은 '+wind+'쪽 끝, 주거는 '+OPPD[wind]+'쪽.</b> 이 방향은 1단계에서 정하면 끝까지 안 바뀝니다 — 토양 오염이 오래 남아 나중에 옮길 수 없습니다. 주황 ● 은 화물 전용 IC 자리입니다.');
+  }
+
+  /* ═══ 도면 2 : 도로 승격 타임라인 ═══ */
+  function figRoad(wind){
+    const st=[
+      {p:'0~15분',t:'2차선',w:6,c:'#8a93a5',d:['₡4,000/km · 40km/h',OPPD[wind]+'쪽으로 축 하나','양옆 1~2칸 비워둘 것']},
+      {p:'1,000~5,000',t:'4차선 콜렉터',w:11,c:'#0d9488',d:['₡5,500/km · 50km/h','중앙축 승격 + 폐루프','버스 1노선']},
+      {p:'5,000~20,000',t:'6차선 간선',w:16,c:'#2563eb',d:['₡7,000/km · 60km/h','간선 십자 완성','콜렉터 20셀 간격']},
+      {p:'20,000+',t:'두 번째 IC',w:16,c:'#7c3aed',d:['IC 하나면 반드시 막힘','산업은 전용 IC 분리','램프 4개 전부 연결']}
+    ];
+    let g='';
+    st.forEach((s,i)=>{
+      const x=18+i*171;
+      g+='<rect x="'+x+'" y="34" width="157" height="176" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5" rx="9"/>';
+      g+='<rect x="'+(x+10)+'" y="44" width="'+(10+s.p.length*7)+'" height="20" fill="'+s.c+'" opacity=".18" rx="10"/>';
+      g+=TX(x+15+(10+s.p.length*7)/2-5,58,s.p,{f:s.c,w:1});
+      g+='<line x1="'+(x+16)+'" y1="92" x2="'+(x+141)+'" y2="92" stroke="'+s.c+'" stroke-width="'+s.w+'" stroke-linecap="round"/>';
+      g+=TX(x+78,120,s.t,{c:'svg-t',f:s.c,w:1});
+      s.d.forEach((d,j)=>{ g+=TX(x+78,142+j*19,d,{f:'var(--text2)'}); });
+      if(i<3) g+=TX(x+165,124,'▸',{c:'svg-t',f:'var(--text3)'});
+    });
+    g+='<rect x="18" y="222" width="664" height="24" fill="var(--accent-soft)" rx="6"/>';
+    g+=TX(350,239,'간격: 국지 ≤12셀(96m) · 콜렉터 20셀(160m) · 램프 종점~첫 신호 ≥20셀 · 국지도로는 간선을 관통시키지 말 것',{f:'var(--accent-text)'});
+    return FIG('🛣️ 도로 승격 계획 — 인구 구간별','700 258',g,
+      '<b>같은 축을 계속 승격</b>합니다. 새로 그리는 게 아니라 2차선 → 4차선 → 6차선으로 덧그리세요. 버스 정류장은 <b>4차선 콜렉터</b>에 둡니다.');
+  }
+
+  /* ═══ 도면 3 : 발전 전략 ═══ */
+  function figPower(gw,cy,win){
+    const mid = cy==='yes' ? {n:'💧 수력댐',dp:'2 DP',k:'MW당 ₡58~370 — 압도적 1위',w:'담수 8~9개월 · 상류 침수 확인'}
+              : gw==='yes' ? {n:'🌋 지열',dp:'2 DP',k:'풀업글 300MW · MW당 ≈₡1,630',w:'지하수 지대 위에만 건설 가능'}
+              : {n:'🔥 가스',dp:'2 DP',k:'250MW · 화석연료 중 오염 최소',w:'연료 수입 필요 — 유지비 무거움'};
+    const st=[
+      {t:'초반 ~2,000',n:'🌬️ 풍력 터빈',s:'₡25,000 · 최대 5MW',x:'4.5MW 이상 지점만',c:'#0d9488'},
+      {t:'중반 2,000~20,000',n:mid.n,s:mid.dp+' · '+mid.k,x:mid.w,c:'#16a34a',hi:1},
+      {t:'후반 20,000+',n:'☢️ 원자력',s:'8 DP · 750MW',x:'물 40만m³ + 고학력 75명',c:'#7c3aed'}
+    ];
+    let g='';
+    st.forEach((s,i)=>{
+      const x=20+i*228;
+      g+='<rect x="'+x+'" y="'+(s.hi?28:38)+'" width="212" height="'+(s.hi?126:106)+'" fill="'+(s.hi?'var(--green-soft)':'var(--surface)')+'" stroke="'+(s.hi?'var(--green)':'var(--border)')+'" stroke-width="'+(s.hi?3:1.5)+'" rx="9"/>';
+      if(s.hi) g+=TX(x+106,46,'★ 이 맵의 추천',{f:'var(--green)',w:1});
+      g+=TX(x+106,s.hi?68:60,s.t,{f:'var(--text3)'});
+      g+=TX(x+106,s.hi?92:84,s.n,{c:'svg-tb',f:s.c});
+      g+=TX(x+106,s.hi?112:104,s.s,{f:'var(--text2)'});
+      g+=TX(x+106,s.hi?132:124,s.x,{f:'var(--text3)'});
+      if(i<2) g+=TX(x+220,s.hi?86:96,'▸',{c:'svg-t',f:'var(--text3)'});
+    });
+    g+='<rect x="20" y="166" width="420" height="24" fill="var(--red-soft)" rx="6"/>';
+    g+=TX(230,183,'✕ 석탄은 어느 단계에도 없습니다 (소형 MW당 ₡3,500 · 대형 오염 100,000×3)',{f:'var(--red)'});
+    g+='<rect x="452" y="166" width="230" height="24" fill="var(--accent-soft)" rx="6"/>';
+    g+=TX(567,183,'잉여 전력 수출 ≈₡2,500/MW·월',{f:'var(--accent-text)'});
+    if(win==='sub'){
+      g+='<rect x="20" y="198" width="662" height="26" fill="var(--amber-soft)" rx="6"/>';
+      g+=TX(351,216,'❄️ 겨울 영하 맵 — 전력 소비가 최대 ≈200%까지. 여름 기준 +50~100% 여유 확보 · 태양광 단독 금물',{f:'var(--amber)'});
+    }
+    return FIG('⚡ 발전 전략 — 지형이 답을 정합니다','700 '+(win==='sub'?236:200),g,
+      cy==='yes'?'협곡이 있으니 <b>수력이 이 맵의 정답</b>입니다. 유지비가 규모와 무관하니 지을 거면 최대한 크게 지으세요.'
+      :gw==='yes'?'지하수 지대가 있으니 <b>지열</b>이 중반 최고 가성비입니다. "추가 터빈+바이너리 사이클"은 몇 안 되는 본전 뽑히는 업그레이드입니다.'
+      :'협곡도 지하수도 없으니 <b>가스</b>로 갑니다. 석탄은 어떤 경우에도 권하지 않습니다.');
+  }
+
+  /* ═══ 도면 4 : 자원 · 물류 ═══ */
+  function figAsset(res,conn){
+    const R=[{k:'fertile',i:'🌾',n:'비옥지',d:'곡물·채소 특화'},{k:'forest',i:'🌲',n:'산림',d:'임업 → 가구·종이'},
+             {k:'ore',i:'⛏️',n:'광석',d:'M7 · 유한 자원'},{k:'oil',i:'🛢️',n:'석유',d:'M8 · 화재 위험'}];
+    const C=[{k:'rail',i:'🚂',n:'철도',y:'화물 기차역 ₡150,000<tspan> </tspan>· 인구 8천~1.5만',x:'화물이 전부 고속도로로 — 전용 IC 필수'},
+             {k:'ship',i:'🚢',n:'선박',y:'화물항 ₡490,000 · 인구 ≈3만',x:'해상 무역 계획 금지'},
+             {k:'air',i:'✈️',n:'항공',y:'공항 ₡750,000 · 인구 8만+',x:'항공 물류 불가'}];
+    let g='';
+    g+=TX(30,32,'시작 타일 자원',{c:'svg-t',f:'var(--text)',a:'start',w:1});
+    R.forEach((r,i)=>{
+      const x=24+i*168, on=res.includes(r.k);
+      g+='<rect x="'+x+'" y="42" width="156" height="76" fill="'+(on?'var(--green-soft)':'var(--surface2)')+'" stroke="'+(on?'var(--green)':'var(--border2)')+'" stroke-width="'+(on?2.5:1.5)+'" rx="9"'+(on?'':' opacity=".55"')+'/>';
+      g+=TX(x+78,70,r.i+' '+r.n,{c:'svg-tb',f:on?'var(--green)':'var(--text3)'});
+      g+=TX(x+78,90,on?r.d:'없음',{f:on?'var(--green)':'var(--text3)'});
+      g+=TX(x+78,108,on?'✓ 세율 20~25%':'—',{f:on?'var(--green)':'var(--text3)',w:on?1:0});
+    });
+    g+=TX(30,150,'외부 연결',{c:'svg-t',f:'var(--text)',a:'start',w:1});
+    C.forEach((c,i)=>{
+      const x=24+i*224, on=conn.includes(c.k);
+      g+='<rect x="'+x+'" y="160" width="212" height="74" fill="'+(on?'var(--accent-soft)':'var(--red-soft)')+'" stroke="'+(on?'var(--accent)':'var(--red)')+'" stroke-width="2" rx="9"/>';
+      g+=TX(x+106,186,c.i+' '+c.n+(on?' 있음':' 없음'),{c:'svg-tb',f:on?'var(--accent-text)':'var(--red)'});
+      g+=TX(x+106,208,on?c.y:c.x,{f:on?'var(--accent-text)':'var(--red)'});
+      g+=TX(x+106,226,on?'✓':'✕',{c:'svg-t',f:on?'var(--accent-text)':'var(--red)',w:1});
+    });
+    g+='<rect x="24" y="246" width="652" height="26" fill="var(--green-soft)" rx="6"/>';
+    g+=TX(350,264,'축산·채석은 천연자원 없이도 기본 해금 — 자원이 없어도 즉시 시작 가능합니다',{f:'var(--green)'});
+    return FIG('💰 자원과 물류 — 이 맵이 가진 것','700 284',g,
+      '초반 흑자의 최속 루트는 <b>특화 산업 원자재 세율 20~25%</b>입니다. 주거세는 초반 2~5%로 낮췄다가 흑자 안정 후 12~13%로 복원하세요.');
+  }
 
   function render(){
     const wind=val('wind'), river=val('river'), gw=val('gw'), cy=val('cy'), win=val('win');
     const res=vals('res'), conn=vals('conn');
     if(!wind||!river||!gw||!cy||!win){
-      out.innerHTML='<div class="ao-wait">1~7번을 모두 고르면 이 맵에 맞는 시작 계획이 나옵니다.</div>'; return;
+      out.innerHTML='<div class="ao-wait">1~7번을 모두 고르면 이 맵에 맞는 <b>시작 배치도</b>가 그려집니다.</div>'; return;
     }
-    const bd=M?M[0]:null;
-    let h='';
-
-    /* 방향 */
-    h+=H('🧭 도시 방향 잡기');
-    h+=UL([
-      '<b>산업·발전소·매립지·소각장 → 맵의 '+wind+'쪽 끝</b> (바람이 빠져나가는 쪽이라 오염이 도시를 통과하지 않습니다)',
-      '<b>주거 → '+OPP[wind]+'쪽</b> (풍상측, 깨끗한 공기와 높은 지가)',
-      '그 사이에 <b>완충지대</b> — 사무·저밀 상업·공원. 사무는 토양 오염이 0이라 완충으로 최적입니다',
-      '이 방향은 <b>1단계에서 정하면 끝까지 안 바뀝니다.</b> 토양 오염은 오래 남아 나중에 못 옮깁니다'
-    ]);
-
-    /* 도로 */
-    h+=H('🛣️ 도로 골격과 차선 계획');
-    const roadRows=[
-      '<b>0~15분 · 2차선만</b> (₡4,000/km, 40km/h) — 고속도로 IC에서 축 하나를 '+OPP[wind]+'쪽으로 내리고 좌우로 가지. 중앙 세로축은 <b>미래 간선 자리</b>이므로 양옆 1~2칸을 비워 두세요(나중에 승격할 때 건물이 안 철거됩니다)',
-      '<b>인구 1,000~5,000 · 중앙축을 4차선으로 승격</b> (₡5,500/km, 50km/h) — 그 주위로 <b>콜렉터 폐루프</b>를 만들고 루프 안쪽만 국지도로로 채웁니다. 버스 1노선이 이 루프를 그대로 돕니다',
-      '<b>인구 5,000~20,000 · 중앙축을 6차선 간선으로 승격</b> (₡7,000/km, 60km/h 중앙분리) — 간선 십자를 완성하고 콜렉터를 <b>20셀(160m) 간격</b>으로 평행 배치',
-      '<b>인구 20,000+ · 두 번째 IC</b> — 하나의 IC에 도시 전체가 매달리면 반드시 막힙니다',
-      '<b>산업 진입로는 4차선 이상 + 전용 IC</b> — 고속도로 상·하행 <b>4개 램프</b>를 모두 연결해야 반대 방향 트럭이 우회하지 않습니다'
-    ];
-    h+=UL(roadRows);
-    h+=UL([
-      '<b>간격 기준</b> — 국지도로 <b>≤12셀(96m)</b> · 콜렉터 <b>20셀(160m)</b> · 램프 종점~첫 신호 <b>≥20셀(160m)</b>',
-      '<b>국지도로는 간선을 관통시키지 마세요.</b> T자로 붙이고 좌우를 엇갈리게 두면 간선이 멈추지 않습니다',
-      '버스 정류장은 <b>4차선 콜렉터</b>에 — 2차선에 두면 정차한 버스가 그 방향을 통째로 막습니다'
-    ]);
-    if(bd!==null&&bd<=25) h+='<div class="ao-warn">⚠️ 건설 가능 면적이 <b>'+bd+'%</b>로 매우 좁습니다. 교량·터널(지상 대비 ≈8배) 비용이 크므로 <b>도로를 적게 깔고 고밀 위주</b>로 가세요. 터널보다 절토·성토 도구가 훨씬 쌉니다.</div>';
-    else if(bd!==null&&bd>=60) h+='<div class="ao-ok">✓ 건설 가능 면적 <b>'+bd+'%</b>로 넉넉합니다. 처음부터 간선 격자를 여유 있게 잡아도 됩니다.</div>';
-
-    /* 상하수 */
-    h+=H('💧 상하수 배치');
-    if(river!=='none'){
-      h+=UL([
-        '<b>취수장(₡25,000 / 100,000m³) → '+OPP[river]+'쪽(상류)</b>',
-        '<b>하수 배출구(₡25,000 / 100,000m³) → '+river+'쪽(하류), 물이 맵 밖으로 나가는 가장자리 직전</b>',
-        '두 시설은 <b>서로 잇는 게 아니라</b> 각자 가장 가까운 도로에만 닿으면 됩니다 (도로에 배관 내장)',
-        '둘 사이를 <b>최대한 멀리</b> — 가까우면 취수 펌프의 흡입력이 흐름을 국지적으로 역전시킵니다',
-        '이 배치면 오염이 생기자마자 맵 밖으로 쓸려 나가므로 <b>하수 처리장(₡400,000)은 중반까지 미뤄도 됩니다</b>'
-      ]);
-    } else {
-      h+='<div class="ao-warn">⚠️ <b>흐르는 강이 없습니다.</b> 고인 물(호수·바다)에 방류하면 오염이 그 자리에 축적되고 회복이 매우 느립니다. 배출구 대신 <b>하수 처리장(₡400,000 / 400,000m³)</b>을 일찍 준비하세요.</div>';
-      h+=UL([
-        gw==='yes'
-          ? '취수는 <b>지하수 펌프장(₡40,000 / 75,000m³)</b>으로 — 단 산업·매립지의 지반 오염에서 멀리 떨어뜨리세요'
-          : '취수는 호수·바다 <b>취수장</b>으로 하되, 배출 지점과 최대한 멀리 떨어뜨리세요',
-        '<b>급수탑은 피하세요</b> — 30,000 용량에 월 ≈₡30,000으로, 같은 유지비면 취수장 3개(300,000)를 돌립니다',
-        '초반엔 물 예산 슬라이더를 <b>60~70%</b>로 낮춰 유지비를 아끼세요'
-      ]);
+    let h = figPlan(wind,river) + figRoad(wind) + figPower(gw,cy,win) + figAsset(res,conn);
+    if(river==='none'){
+      h+='<div class="ao-warn">💧 <b>흐르는 강이 없는 맵입니다.</b> 고인 물에 방류하면 오염이 그 자리에 축적되고 회복이 매우 느립니다. 배출구 대신 <b>하수 처리장(₡400,000 / 400,000m³)</b>을 일찍 준비하세요. '+
+        (gw==='yes'?'취수는 <b>지하수 펌프장(₡40,000)</b>으로 하되 산업·매립지의 지반 오염에서 멀리 떨어뜨리세요.':'취수는 호수·바다 취수장으로 하되 배출 지점과 최대한 멀리 두세요.')+
+        ' <b>급수탑은 피하세요</b> — 30,000 용량에 월 ≈₡30,000으로, 같은 유지비면 취수장 3개를 돌립니다.</div>';
     }
-
-    /* 발전 */
-    h+=H('⚡ 발전 전략');
-    const pw=['<b>초반(인구 ~2,000)</b>: 풍력 터빈(₡25,000, 최대 5MW) 2~4기. 터빈을 들고 커서를 움직이면 예상 발전량이 뜨니 <b>4.5MW 이상 지점만</b> 고르세요. 바람이 약하면 변전소+고압선으로 <b>외부 수입</b>(≈₡9,000/MW)을 임시로'];
-    if(cy==='yes') pw.push('<b>중반 최우선: 수력댐(2DP)</b> — MW당 ₡58~370으로 압도적 1위입니다. 협곡이 있으니 이 맵의 정답입니다. 담수에 <b>8~9개월</b> 걸리고 상류 수위가 오르므로 저지대 시가지 침수를 미리 확인하세요. 유지비가 규모와 무관하니 <b>지을 거면 최대한 크게</b>');
-    else if(gw==='yes') pw.push('<b>중반 최우선: 지열(2DP)</b> — ₡750,000에 150MW, "추가 터빈+바이너리 사이클" 풀업글 시 300MW·MW당 ≈₡1,630으로 중반 최고 가성비입니다. 몇 안 되는 본전 뽑히는 업그레이드');
-    else pw.push('<b>중반: 가스 발전소(2DP, 250MW)</b> — 협곡도 지하수도 없으니 화석연료 중 오염이 가장 적은 가스로 갑니다. <b>석탄은 어느 경우에도 비추천</b>(소형은 MW당 ≈₡3,500로 최악, 대형은 오염 100,000×3)');
-    pw.push('<b>후반(인구 20,000+)</b>: 원자력(8DP, 750MW). 물 ≈40만 m³/월과 고학력 노동자 75명을 먼저 확보하세요');
-    pw.push('잉여 전력은 자동 수출되어 <b>MW당 ≈₡2,500/월</b> — 인구와 무관한 안정 재원입니다');
-    h+=UL(pw);
-    if(gw==='yes'&&cy==='yes') h+='<div class="ao-ok">✓ 협곡과 지하수가 모두 있습니다. 수력을 먼저 짓고 지열을 예비로 두면 전력 걱정이 사실상 끝납니다.</div>';
-    if(win==='sub') h+='<div class="ao-warn">❄️ <b>겨울에 영하로 내려가는 맵입니다.</b> 전력 소비는 18~22°C에서 100%가 최적이고 극단 온도(≈-18°C 이하)에서 <b>최대 ≈200%</b>까지 오릅니다. 여름 기준 발전량의 <b>+50~100% 여유</b>를 확보하거나 외부 수입 경로를 열어두세요. <b>태양광 단독 의존은 금물</b>(겨울 = 수요 최대 + 일조 최소, 흐린 날 추가 -25%). 도로 유지관리소의 제설차도 겨울 전에 준비하세요.</div>';
-
-    /* 흑자 */
-    h+=H('💰 초반 흑자 루트');
-    const eco=[];
-    if(res.includes('fertile')) eco.push('🌾 <b>비옥지 있음 → 곡물·채소 특화가 최속 루트</b>. 자원 농도가 가장 짙은 지점에만 면적을 그리고, 그 품목 세율을 <b>20~25%</b>로 올리세요');
-    if(res.includes('forest')) eco.push('🌲 <b>산림 있음 → 임업 특화</b>. 목재는 가구·종이로 이어지는 체인이 길어 가공업까지 키우기 좋습니다 (토양 오염 주의)');
-    if(res.includes('ore')) eco.push('⛏️ <b>광석 있음</b> — M7에서 해금됩니다. <b>유한 자원</b>이라 고갈되니 나중에 수입 기반 가공업으로 전환할 계획을 세워두세요');
-    if(res.includes('oil')) eco.push('🛢️ <b>석유 있음</b> — M8 해금, <b>화재 위험이 높으니</b> 소방서를 산업 단지 입구에 전담 배치하세요. 역시 유한 자원입니다');
-    eco.push('자원이 뭐가 됐든 <b>축산·채석은 천연자원 없이도 기본 해금</b>이라 즉시 시작할 수 있습니다');
-    eco.push('<b>핵심</b>: Economy 2.0 이후 소도시 흑자의 최속 루트는 <b>특화 산업 원자재 세율 20~25%</b>입니다. 주거세는 초반 2~5%로 낮춰 유입을 가속하고, 흑자가 안정되면 12~13%로 복원하세요');
-    eco.push('서비스 예산 슬라이더는 <b>전부 50%에서 시작</b> — 민원이 뜨는 항목만 올리세요');
-    if(!res.length) h+='<div class="ao-warn">시작 타일에 쓸 만한 자원이 없습니다. <b>축산·채석</b>으로 버티면서, 확장 허가가 나오면 자원 타일 방향으로 넓히세요.</div>';
-    h+=UL(eco);
-
-    /* 화물 */
-    h+=H('🚛 화물·물류 전략');
-    const cg=[];
-    if(conn.includes('rail')) cg.push('🚂 <b>철도 있음 → 화물 기차역(₡150,000, 저장 ≈15.5kt)</b>을 인구 8천~1.5만에 도입. <b>반드시 산업지구 바로 옆</b>에 — 멀면 회사가 트럭 직송을 택해 역이 놉니다');
-    else cg.push('<span style="color:var(--amber)">🚂 <b>철도 연결이 없습니다.</b> 화물이 전부 고속도로로 나가므로 <b>산업 전용 IC 분리</b>가 더더욱 중요합니다</span>');
-    if(conn.includes('ship')) cg.push('🚢 <b>선박 있음 → 화물항(₡490,000, 15,500t)</b>을 인구 ≈3만에. <b>철도 연결 업그레이드(₡80,000)</b>를 달면 "배→기차→내륙"이 한 번에 이어집니다');
-    else cg.push('<span style="color:var(--amber)">🚢 <b>선박 연결이 없습니다.</b> 해상 무역을 전제한 계획은 세우지 마세요</span>');
-    if(conn.includes('air')) cg.push('✈️ 항공은 후반(인구 8만+) 사무·첨단산업 도시에서만. 공항 ₡750,000 + 화물 터미널 업그레이드 ₡500,000');
-    cg.push('일반 화물 <b>수출 대금은 시 예산에 직접 안 들어옵니다</b> — 회사 이익에 붙는 법인세로만 회수됩니다. 시가 직접 버는 수출은 전기·물뿐입니다');
-    h+=UL(cg);
-
+    if(!res.length) h+='<div class="ao-warn">🪨 시작 타일에 쓸 만한 자원이 없습니다. <b>축산·채석</b>으로 버티면서, 확장 허가가 나오면 자원 타일 방향으로 넓히세요.</div>';
     out.innerHTML=h;
+    out.querySelectorAll('svg').forEach(sv=>{ const vb=sv.viewBox.baseVal;
+      sv.querySelectorAll('text').forEach(el=>{ let b; try{b=el.getBBox()}catch(e){return} if(!b.width)return;
+        let x=+el.getAttribute('x'), y=+el.getAttribute('y');
+        if(b.x<2) x+=2-b.x; else if(b.x+b.width>vb.width-2) x-=b.x+b.width-(vb.width-2);
+        if(b.y<2) y+=2-b.y; else if(b.y+b.height>vb.height-2) y-=b.y+b.height-(vb.height-2);
+        el.setAttribute('x',x); el.setAttribute('y',y); });
+    });
   }
 
-  form.addEventListener('change',e=>{ if(e.target.name) render(); });
+  form.addEventListener('change',render);
   render();
 })();
 
