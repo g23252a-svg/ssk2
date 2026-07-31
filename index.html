@@ -137,6 +137,7 @@ tbody tr:last-child td{border-bottom:none}
 tbody tr:hover{background:color-mix(in srgb,var(--accent-soft) 32%,transparent)}
 td b,td strong,th b{color:var(--text)}
 td.num,th.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+td.ctr,th.ctr{text-align:center;font-variant-numeric:tabular-nums}
 caption{caption-side:bottom;padding:10px 13px;font-size:12.5px;color:var(--text3);text-align:left}
 .callout{border-radius:var(--radius);padding:15px 18px 15px 50px;margin:18px 0;position:relative;font-size:14.5px;border:1px solid}
 .callout::before{position:absolute;left:16px;top:13px;font-size:19px;line-height:1.3}
@@ -186,8 +187,27 @@ code{background:var(--surface2);border-radius:5px;padding:1px 6px;font-size:13.5
 figure.diagram{margin:20px 0 24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);overflow-x:auto}
 figure.diagram svg{display:block;margin:0 auto;max-width:100%;height:auto}
 figure.diagram figcaption{text-align:center;font-size:12.5px;color:var(--text3);margin-top:12px;line-height:1.6}
+figure.diagram .dg-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+figure.diagram .dg-title .pill{font-size:11px;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--accent-soft);color:var(--accent-text)}
 .svg-t{font-family:inherit;font-size:12px;font-weight:600}
 .svg-ts{font-family:inherit;font-size:10.5px}
+.svg-tb{font-family:inherit;font-size:13px;font-weight:800}
+/* 2-up / 3-up 비교 도해 */
+.dgrid{display:grid;gap:12px;margin:18px 0 24px}
+.dgrid.c2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.dgrid.c3{grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.dgrid figure.diagram{margin:0}
+.dcap{font-size:13px;color:var(--text2);margin-top:9px;line-height:1.62}
+.dcap b{color:var(--text)}
+.good{border-color:color-mix(in srgb,var(--green) 45%,var(--border)) !important}
+.bad{border-color:color-mix(in srgb,var(--red) 45%,var(--border)) !important}
+.vs-tag{display:inline-block;font-size:11.5px;font-weight:800;border-radius:6px;padding:2px 8px;margin-bottom:8px}
+.vs-tag.ok{background:var(--green-soft);color:var(--green)}
+.vs-tag.no{background:var(--red-soft);color:var(--red)}
+.vs-tag.mid{background:var(--amber-soft);color:var(--amber)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 0;font-size:12px;color:var(--text2);justify-content:center}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:16px;height:5px;border-radius:2px;display:inline-block}
 details.acc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin:12px 0;box-shadow:var(--shadow);overflow:hidden}
 details.acc summary{padding:13px 17px;font-weight:700;cursor:pointer;font-size:15px;list-style:none;display:flex;align-items:center;gap:9px}
 details.acc summary::-webkit-details-marker{display:none}
@@ -226,21 +246,22 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
   <a href="#buildorder"><span class="ico">⏱️</span>3. 첫 3시간 빌드오더</a>
   <div class="nav-group">교통 — 이 게임의 본체</div>
   <a href="#roads"><span class="ico">🛣️</span>4. 도로 설계 &amp; 교통 공학</a>
-  <a href="#transit"><span class="ico">🚇</span>5. 대중교통 &amp; 화물 물류</a>
+  <a href="#growth"><span class="ico">🌱</span>5. 도시 확장 로드맵 &amp; 산업지구</a>
+  <a href="#transit"><span class="ico">🚇</span>6. 대중교통 &amp; 화물 물류</a>
   <div class="nav-group">필수 인프라</div>
-  <a href="#power"><span class="ico">⚡</span>6. 전력</a>
-  <a href="#water"><span class="ico">💧</span>7. 상수도·하수도</a>
-  <a href="#garbage"><span class="ico">🗑️</span>8. 쓰레기·의료·장묘</a>
-  <a href="#safety"><span class="ico">🚓</span>9. 치안·소방·우편·복지</a>
+  <a href="#power"><span class="ico">⚡</span>7. 전력</a>
+  <a href="#water"><span class="ico">💧</span>8. 상수도·하수도</a>
+  <a href="#garbage"><span class="ico">🗑️</span>9. 쓰레기·의료·장묘</a>
+  <a href="#safety"><span class="ico">🚓</span>10. 치안·소방·우편·복지</a>
   <div class="nav-group">성장 엔진</div>
-  <a href="#education"><span class="ico">🏫</span>10. 교육 &amp; 시민 생애주기</a>
-  <a href="#zoning"><span class="ico">🏘️</span>11. 구역·수요·지가·임대료</a>
-  <a href="#economy"><span class="ico">💰</span>12. 경제·세금·특화 산업</a>
+  <a href="#education"><span class="ico">🏫</span>11. 교육 &amp; 시민 생애주기</a>
+  <a href="#zoning"><span class="ico">🏘️</span>12. 구역·수요·지가·임대료</a>
+  <a href="#economy"><span class="ico">💰</span>13. 경제·세금·특화 산업</a>
   <div class="nav-group">아름다운 도시</div>
-  <a href="#beauty"><span class="ico">🌳</span>13. 재해·계절·공원·미관</a>
+  <a href="#beauty"><span class="ico">🌳</span>14. 재해·계절·공원·미관</a>
   <div class="nav-group">실전 레퍼런스</div>
-  <a href="#checklist"><span class="ico">✅</span>14. 인구 단계별 체크리스트</a>
-  <a href="#troubleshoot"><span class="ico">🔧</span>15. 증상별 트러블슈팅</a>
+  <a href="#checklist"><span class="ico">✅</span>15. 인구 단계별 체크리스트</a>
+  <a href="#troubleshoot"><span class="ico">🔧</span>16. 증상별 트러블슈팅</a>
 </nav>
 <main>
 <div class="hero">
@@ -303,13 +324,15 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </div>
 
 <h3>이 문서를 읽는 순서</h3>
-<p>처음 시작하는 분은 <strong>1 → 2 → 3장</strong>을 순서대로 읽고 게임을 켜세요. 이미 도시가 있는데 문제가 생겼다면 <strong>15장 증상별 트러블슈팅</strong>에서 증상을 찾아 해당 장으로 점프하는 것이 빠릅니다. 인구 구간마다 뭘 해야 할지 모르겠다면 <strong>14장 체크리스트</strong>가 요약표입니다.</p>
+<p>처음 시작하는 분은 <strong>1 → 2 → 3장</strong>을 순서대로 읽고 게임을 켜세요. 이미 도시가 있는데 문제가 생겼다면 <strong>16장 증상별 트러블슈팅</strong>에서 증상을 찾아 해당 장으로 점프하는 것이 빠릅니다. 인구 구간마다 뭘 해야 할지 모르겠다면 <strong>15장 체크리스트</strong>가 요약표입니다.</p>
+<p><strong>"마을을 키우다 보니 도로를 어떻게 늘려야 할지 모르겠다"</strong>, <strong>"산업지구 도로를 어떻게 짜야 할지 모르겠다"</strong> — 이 게임에서 가장 많이 막히는 두 지점입니다. 이 둘만 따로 떼어 <strong>5장 도시 확장 로드맵</strong>에 단계별 도면으로 담았습니다.</p>
 
 <div class="toc-mini">
   <a href="#buildorder"><div class="tm-t">⏱️ 지금 막 시작했어요</div><div class="tm-d">3장 빌드오더 — 0~15분에 뭘 짓는지 분 단위로</div></a>
   <a href="#roads"><div class="tm-t">🚗 차가 막혀요</div><div class="tm-d">4장 도로 공학 — 위계·교차로 간격·주차</div></a>
-  <a href="#economy"><div class="tm-t">💸 돈이 계속 마이너스예요</div><div class="tm-d">12장 경제 — 특화 산업 20~25% 세율 전략</div></a>
-  <a href="#zoning"><div class="tm-t">🏚️ 임대료가 너무 높대요</div><div class="tm-d">11장 구역 — Economy 2.0 임대료 공식과 8단계 처방</div></a>
+  <a href="#growth"><div class="tm-t">🌱 도로를 어떻게 늘려야 하죠</div><div class="tm-d">5장 확장 로드맵 — 인구 500→10만 단계별 도면</div></a>
+  <a href="#economy"><div class="tm-t">💸 돈이 계속 마이너스예요</div><div class="tm-d">13장 경제 — 특화 산업 20~25% 세율 전략</div></a>
+  <a href="#zoning"><div class="tm-t">🏚️ 임대료가 너무 높대요</div><div class="tm-d">12장 구역 — Economy 2.0 임대료 공식과 8단계 처방</div></a>
 </div>
 </section>
 
@@ -365,7 +388,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <ol class="steps">
 <li><span class="st">선박·철도 연결이 있는가?</span>화물 수출입 비용에 직결됩니다. 철도가 없는 Twin Mountain, 선박이 없는 Lakeland는 물류 전략이 통째로 달라집니다.</li>
 <li><span class="st">겨울 최저기온이 몇 도인가?</span>전력 소비는 <strong>18~22°C에서 100%</strong>가 최적이고, 극단 온도(≈-18°C 이하)에서 <strong>최대 ≈200%</strong>까지 오릅니다. 영하 맵은 여름 기준 발전량의 +50~100% 여유가 필요합니다.</li>
-<li><span class="st">강의 유량과 방향은?</span>수력발전 가능 여부와 하수 배출 방향이 여기서 결정됩니다. 시작 타일에 <strong>흐르는 강</strong>이 걸쳐 있으면 상하수 운영이 훨씬 쉽습니다(7장 참조).</li>
+<li><span class="st">강의 유량과 방향은?</span>수력발전 가능 여부와 하수 배출 방향이 여기서 결정됩니다. 시작 타일에 <strong>흐르는 강</strong>이 걸쳐 있으면 상하수 운영이 훨씬 쉽습니다(8장 참조).</li>
 <li><span class="st">시작 9타일에 비옥토가 걸쳐 있는가?</span>있으면 3장 빌드오더에서 곧바로 농업 특화 산업으로 초반 흑자를 만들 수 있습니다. 이것이 Economy 2.0 이후 가장 확실한 초반 흑자 루트입니다.</li>
 </ol>
 </section>
@@ -434,7 +457,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <li><span class="st">🗑️ 쓰레기: 재활용 센터 → 소각장 방면</span><strong>해금만 먼저, 건설은 흑자 후.</strong> 재활용 센터는 ₡880,000 / 월 ≈₡80,000이라 초반 건설은 자살행위입니다.</li>
 <li><span class="st">🏫 교육: 전문대학(College, 1pt) 선행 노드</span>고학력 → 오피스 수요 → 고세수 사이클의 시동입니다.</li>
 <li><span class="st">🤝 복지 사무소(Welfare Office, 1pt)</span>건설비 ₡110,000로 저렴한데 저소득층 웰빙을 지탱해 <strong>범죄를 근본적으로 억제</strong>합니다. 파출소 5개보다 효과적입니다.</li>
-<li><span class="st">⚡ 전기: 가스(2pt) 또는 지열(2pt) 또는 수력(2pt)</span>맵 지형에 따라 선택. 지하수 지대가 있으면 <strong>지열이 중반 최고 가성비</strong>, 좋은 협곡이 있으면 수력이 게임을 끝냅니다(6장).</li>
+<li><span class="st">⚡ 전기: 가스(2pt) 또는 지열(2pt) 또는 수력(2pt)</span>맵 지형에 따라 선택. 지하수 지대가 있으면 <strong>지열이 중반 최고 가성비</strong>, 좋은 협곡이 있으면 수력이 게임을 끝냅니다(7장).</li>
 <li><span class="st">🏛️ 시청(City Hall) → 중앙은행(Central Bank)</span>대출 이자율 각각 -1%, -2%. 대출을 쓸 계획이면 빠를수록 이득입니다.</li>
 <li><span class="st">🚋 교통: 기차(1pt) → 트램(2pt)</span>같은 도로 폭에서 버스보다 수송량 우위. 수출 도시라면 화물역 때문에 기차 우선순위가 올라갑니다.</li>
 </ol>
@@ -491,7 +514,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 
 <h3>3-2. <span class="tag b">15~40분</span> 첫 주민 유치 (M1 도달 목표)</h3>
 <ol class="steps">
-<li><span class="st">저밀도 주거를 소규모로 지정</span>골격 도로 안쪽에 2~3블록만. <strong>한 번에 왕창 지정하지 마세요</strong> — 수요 막대가 다시 차오를 때마다 추가하는 것이 원칙입니다. 동시에 대량 입주시키면 훗날 <strong>사망파(Death Wave)</strong>가 옵니다(10장).</li>
+<li><span class="st">저밀도 주거를 소규모로 지정</span>골격 도로 안쪽에 2~3블록만. <strong>한 번에 왕창 지정하지 마세요</strong> — 수요 막대가 다시 차오를 때마다 추가하는 것이 원칙입니다. 동시에 대량 입주시키면 훗날 <strong>사망파(Death Wave)</strong>가 옵니다(11장).</li>
 <li><span class="st">상업 1블록 + 산업 1~2블록</span>주거 옆에 소규모 상업, 골격 도로 바깥(<strong>주거 기준 바람 하류</strong>)에 산업. 산업은 일자리와 세수의 핵심입니다.</li>
 <li><span class="st">M1(750XP) 도달 — 보통 15~30분</span>도로·건물 설치만으로도 능동 XP가 쌓입니다. 보상: ₡25,000, 개발 포인트 1, 확장 허가 3, <strong>대출 해금</strong>.</li>
 <li><span class="st">세금 패널에서 주거세 인하</span>기본 10% → <strong>≈2~5%</strong>로 낮춰 유입을 가속합니다(커뮤니티 전략은 1%까지 내리기도 함). 상업·산업은 10% 유지. 흑자가 안정되면 서서히 복원합니다.</li>
@@ -674,10 +697,76 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </tbody>
 </table>
 </div>
+<h4>그림으로 보는 판단 기준 — 교통량 "균형"이 전부입니다</h4>
+<div class="dgrid c2">
+<figure class="diagram good">
+<div class="dg-title"><span class="pill">회전교차로 ✓</span>사방 교통량이 비슷할 때</div>
+<svg viewBox="0 0 300 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="균형 잡힌 교차로에 회전교차로가 적합한 경우">
+  <defs><marker id="rbA" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="var(--green)"/></marker></defs>
+  <rect x="0" y="0" width="300" height="230" fill="var(--svg-fill)" rx="8"/>
+  <g stroke="var(--svg-line)" stroke-width="17" opacity=".45">
+    <line x1="150" y1="16" x2="150" y2="214"/><line x1="16" y1="115" x2="284" y2="115"/>
+  </g>
+  <circle cx="150" cy="115" r="34" fill="none" stroke="var(--green)" stroke-width="15" opacity=".8"/>
+  <circle cx="150" cy="115" r="16" fill="var(--green-soft)" stroke="var(--green)" stroke-width="2"/>
+  <path d="M150 96 A19 19 0 0 1 169 115" fill="none" stroke="var(--green)" stroke-width="3" marker-end="url(#rbA)"/>
+  <g class="svg-tb" fill="var(--green)" text-anchor="middle">
+    <text x="150" y="12">25%</text><text x="150" y="226">25%</text>
+  </g>
+  <g class="svg-tb" fill="var(--green)"><text x="4" y="110">25%</text><text x="262" y="110">25%</text></g>
+</svg>
+<div class="dcap"><span class="vs-tag ok">적합</span> 네 방향이 고르게 나눠 쓰면 <b>모든 진입로가 공평하게 틈을 얻습니다.</b> 좌회전도 신호 대기 없이 처리돼 처리량이 신호보다 높습니다.</div>
+</figure>
+<figure class="diagram bad">
+<div class="dg-title"><span class="pill" style="background:var(--red-soft);color:var(--red)">회전교차로 ✕</span>한 축만 압도적일 때</div>
+<svg viewBox="0 0 300 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="비대칭 교차로에서 회전교차로가 부적합한 경우">
+  <rect x="0" y="0" width="300" height="230" fill="var(--svg-fill)" rx="8"/>
+  <g stroke="var(--svg-line)" stroke-width="10" opacity=".35"><line x1="150" y1="16" x2="150" y2="214"/></g>
+  <g stroke="var(--red)" stroke-width="24" opacity=".5"><line x1="16" y1="115" x2="284" y2="115"/></g>
+  <circle cx="150" cy="115" r="34" fill="none" stroke="var(--amber)" stroke-width="15" opacity=".75"/>
+  <circle cx="150" cy="115" r="16" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="2"/>
+  <!-- 대기 차량 -->
+  <g fill="var(--red)"><rect x="143" y="176" width="14" height="9" rx="2"/><rect x="143" y="190" width="14" height="9" rx="2"/><rect x="143" y="204" width="14" height="9" rx="2"/></g>
+  <text x="150" y="12" class="svg-tb" fill="var(--red)" text-anchor="middle">5%</text>
+  <g class="svg-tb" fill="var(--red)"><text x="4" y="110">45%</text><text x="256" y="110">45%</text></g>
+  <text x="150" y="226" class="svg-ts" fill="var(--red)" text-anchor="middle">부도로 — 영원히 못 들어감</text>
+</svg>
+<div class="dcap"><span class="vs-tag no">부적합</span> 회전교차로는 <b>회전 중인 차에 우선권</b>이 있습니다. 주도로가 끊임없이 돌면 부도로 차량은 틈이 안 생겨 <b>무한 대기</b>에 빠집니다. → <b>신호등으로 환원</b>하세요.</div>
+</figure>
+</div>
+
 <div class="callout warn">
 <div class="ct">회전교차로는 만능이 아닙니다</div>
-<p>최악의 신호 교차로를 소형 회전교차로로 바꾸면 처리량이 수십 % 오르는 사례가 많지만, <strong>진입로 수와 교통 균형을 먼저 확인</strong>해야 합니다. 또 회전교차로끼리 너무 가깝게 직결하면 서로 잠급니다 — 사이에 거리나 신호 교차로를 두세요.</p>
+<p>최악의 신호 교차로를 소형 회전교차로로 바꾸면 처리량이 수십 % 오르는 사례가 많지만, <strong>진입로 수와 교통 균형을 먼저 확인</strong>해야 합니다. 또 회전교차로끼리 너무 가깝게 직결하면 서로 잠급니다.</p>
 </div>
+
+<figure class="diagram">
+<div class="dg-title">회전교차로 간격 — 너무 붙이면 서로 잠급니다</div>
+<svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="회전교차로 간격에 따른 잠김 현상">
+  <rect x="0" y="0" width="700" height="250" fill="var(--svg-fill)" rx="8"/>
+  <!-- BAD 좌측 -->
+  <text x="20" y="24" class="svg-tb" fill="var(--red)">✕ 너무 가까움 — 대기열이 옆 회전교차로를 막음</text>
+  <line x1="20" y1="90" x2="320" y2="90" stroke="var(--svg-line)" stroke-width="14" opacity=".4"/>
+  <circle cx="110" cy="90" r="26" fill="none" stroke="var(--red)" stroke-width="12" opacity=".7"/>
+  <circle cx="230" cy="90" r="26" fill="none" stroke="var(--red)" stroke-width="12" opacity=".7"/>
+  <g fill="var(--red)"><rect x="146" y="85" width="12" height="9" rx="2"/><rect x="162" y="85" width="12" height="9" rx="2"/><rect x="178" y="85" width="12" height="9" rx="2"/><rect x="194" y="85" width="12" height="9" rx="2"/></g>
+  <path d="M136 116 L204 116" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="170" y="134" class="svg-ts" fill="var(--red)" text-anchor="middle">대기열이 다 안 들어감 → 역류</text>
+  <!-- GOOD 우측 -->
+  <text x="380" y="24" class="svg-tb" fill="var(--green)">✓ 충분한 간격 — 대기열이 여유롭게 수용됨</text>
+  <line x1="380" y1="90" x2="680" y2="90" stroke="var(--svg-line)" stroke-width="14" opacity=".4"/>
+  <circle cx="422" cy="90" r="26" fill="none" stroke="var(--green)" stroke-width="12" opacity=".7"/>
+  <circle cx="638" cy="90" r="26" fill="none" stroke="var(--green)" stroke-width="12" opacity=".7"/>
+  <g fill="var(--green)"><rect x="560" y="85" width="12" height="9" rx="2"/><rect x="576" y="85" width="12" height="9" rx="2"/></g>
+  <path d="M450 116 L610 116" stroke="var(--green)" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="530" y="134" class="svg-ts" fill="var(--green)" text-anchor="middle">최소 ≈150m (약 20셀) 확보</text>
+  <!-- 하단 원칙 -->
+  <rect x="20" y="164" width="660" height="66" fill="var(--accent-soft)" rx="8"/>
+  <text x="350" y="190" class="svg-t" fill="var(--accent-text)" text-anchor="middle">원칙: 회전교차로 사이에는 대기열 전체가 들어갈 길이를 두거나,</text>
+  <text x="350" y="212" class="svg-t" fill="var(--accent-text)" text-anchor="middle">사이에 신호 교차로를 하나 끼워 흐름을 끊어 준다</text>
+</svg>
+<figcaption>게임 셀 1칸 = 8m. 회전교차로 사이가 20셀 미만이면 한쪽 대기열이 다른 쪽 원형부를 점거해 <b>양쪽이 동시에 잠깁니다.</b></figcaption>
+</figure>
 
 <h3>4-6. 인터체인지 설계</h3>
 <p>CS2에는 프리셋 회전교차로는 있지만 <strong>인터체인지는 직접 그려야 합니다</strong>(고가·터널 자유 조합 가능).</p>
@@ -693,6 +782,104 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </tbody>
 </table>
 </div>
+<h4>형식별 도면</h4>
+<div class="dgrid c3">
+<figure class="diagram">
+<div class="dg-title"><span class="pill">초반 표준</span>다이아몬드</div>
+<svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="다이아몬드 인터체인지 도면">
+  <rect x="0" y="0" width="240" height="200" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="100" x2="240" y2="100" stroke="var(--purple)" stroke-width="16"/>
+  <line x1="120" y1="0" x2="120" y2="200" stroke="var(--teal)" stroke-width="10"/>
+  <path d="M60 108 Q90 108 116 145" stroke="var(--purple)" stroke-width="5" fill="none" opacity=".65"/>
+  <path d="M180 108 Q150 108 124 145" stroke="var(--purple)" stroke-width="5" fill="none" opacity=".65"/>
+  <path d="M60 92 Q90 92 116 55" stroke="var(--purple)" stroke-width="5" fill="none" opacity=".65"/>
+  <path d="M180 92 Q150 92 124 55" stroke="var(--purple)" stroke-width="5" fill="none" opacity=".65"/>
+  <circle cx="120" cy="55" r="6" fill="var(--amber)"/><circle cx="120" cy="145" r="6" fill="var(--amber)"/>
+  <text x="120" y="192" class="svg-ts" fill="var(--amber)" text-anchor="middle">● 신호 2개소</text>
+</svg>
+<div class="dcap"><span class="vs-tag ok">싸고 좁음</span> 교차 도로가 <b>2차선</b>일 때 소~중 교통량에 충분. 교차 도로를 6차선으로 올리면 신호가 생겨 금방 역류합니다.</div>
+</figure>
+<figure class="diagram">
+<div class="dg-title"><span class="pill">중반 최적</span>SPUI</div>
+<svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SPUI 인터체인지 도면">
+  <rect x="0" y="0" width="240" height="200" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="100" x2="240" y2="100" stroke="var(--purple)" stroke-width="16"/>
+  <line x1="120" y1="0" x2="120" y2="200" stroke="var(--teal)" stroke-width="10"/>
+  <path d="M46 108 Q108 112 118 128" stroke="var(--purple)" stroke-width="5" fill="none" opacity=".65"/>
+  <path d="M194 108 Q132 112 122 128" stroke="var(--purple)" stroke-width="5" fill="none" opacity=".65"/>
+  <path d="M46 92 Q108 88 118 72" stroke="var(--purple)" stroke-width="5" fill="none" opacity=".65"/>
+  <path d="M194 92 Q132 88 122 72" stroke="var(--purple)" stroke-width="5" fill="none" opacity=".65"/>
+  <circle cx="120" cy="100" r="9" fill="var(--green)"/>
+  <text x="120" y="192" class="svg-ts" fill="var(--green)" text-anchor="middle">● 신호 1개소로 통합</text>
+</svg>
+<div class="dcap"><span class="vs-tag ok">처리량 우위</span> 다이아몬드에서 <b>쉽게 개조 가능</b>. 부지 소요는 비슷한데 신호가 하나로 합쳐져 대기 시간이 줄어듭니다.</div>
+</figure>
+<figure class="diagram">
+<div class="dg-title"><span class="pill">추천</span>파클로 (ParClo)</div>
+<svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="파클로 인터체인지 도면">
+  <rect x="0" y="0" width="240" height="200" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="100" x2="240" y2="100" stroke="var(--purple)" stroke-width="16"/>
+  <line x1="120" y1="0" x2="120" y2="200" stroke="var(--teal)" stroke-width="10"/>
+  <path d="M70 92 A30 30 0 0 1 112 50" stroke="var(--accent)" stroke-width="5" fill="none"/>
+  <path d="M170 108 A30 30 0 0 1 128 150" stroke="var(--accent)" stroke-width="5" fill="none"/>
+  <path d="M60 108 Q92 108 116 142" stroke="var(--purple)" stroke-width="5" fill="none" opacity=".6"/>
+  <path d="M180 92 Q148 92 124 58" stroke="var(--purple)" stroke-width="5" fill="none" opacity=".6"/>
+  <text x="120" y="192" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">━ 좌회전 수요 큰 쪽만 루프</text>
+</svg>
+<div class="dcap"><span class="vs-tag ok">실전 최적해</span> 좌회전 수요가 큰 방향에만 루프를 둡니다. <b>도시 진입 IC</b>에 가장 자주 권장되는 형태입니다.</div>
+</figure>
+<figure class="diagram bad">
+<div class="dg-title"><span class="pill" style="background:var(--amber-soft);color:var(--amber)">주의</span>클로버리프</div>
+<svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="클로버리프 인터체인지의 위빙 문제">
+  <rect x="0" y="0" width="240" height="200" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="100" x2="240" y2="100" stroke="var(--purple)" stroke-width="16"/>
+  <line x1="120" y1="0" x2="120" y2="200" stroke="var(--purple)" stroke-width="16"/>
+  <g stroke="var(--accent)" stroke-width="4.5" fill="none">
+    <path d="M78 92 A28 28 0 0 1 112 58"/><path d="M162 92 A28 28 0 0 0 128 58"/>
+    <path d="M78 108 A28 28 0 0 0 112 142"/><path d="M162 108 A28 28 0 0 1 128 142"/>
+  </g>
+  <rect x="52" y="86" width="30" height="28" fill="var(--red)" opacity=".25" rx="4"/>
+  <rect x="158" y="86" width="30" height="28" fill="var(--red)" opacity=".25" rx="4"/>
+  <text x="120" y="192" class="svg-ts" fill="var(--red)" text-anchor="middle">▨ 위빙(교차 합류) 구간</text>
+</svg>
+<div class="dcap"><span class="vs-tag mid">상성 나쁨</span> 신호가 없는 건 장점이나, 붉은 <b>위빙 구간</b>이 CS2의 "출구 직전 급차선변경" AI와 충돌합니다. 집산로를 따로 붙이면 개선됩니다.</div>
+</figure>
+<figure class="diagram">
+<div class="dg-title"><span class="pill" style="background:var(--purple-soft);color:var(--purple)">후반</span>시스템 IC (스택)</div>
+<svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="스택형 시스템 인터체인지 도면">
+  <rect x="0" y="0" width="240" height="200" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="100" x2="240" y2="100" stroke="var(--purple)" stroke-width="16"/>
+  <line x1="120" y1="0" x2="120" y2="200" stroke="var(--purple)" stroke-width="16"/>
+  <g stroke="var(--teal)" stroke-width="5" fill="none">
+    <path d="M56 90 Q92 90 110 54 Q118 34 120 14"/>
+    <path d="M184 110 Q148 110 130 146 Q122 166 120 186"/>
+    <path d="M110 186 Q110 150 74 128 Q40 112 12 110"/>
+    <path d="M130 14 Q130 50 166 72 Q200 88 228 90"/>
+  </g>
+  <text x="120" y="192" class="svg-ts" fill="var(--teal)" text-anchor="middle">━ 루프 없는 직결 램프 (위빙 0)</text>
+</svg>
+<div class="dcap"><span class="vs-tag ok">이상적</span> 고속도로×고속도로용. 모든 방향이 <b>직결 램프</b>라 위빙이 없습니다. 대신 부지와 고가 비용이 큽니다.</div>
+</figure>
+<figure class="diagram">
+<div class="dg-title">램프 합류의 정석</div>
+<svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="램프 합류 시 추가 차선 확보 원칙">
+  <rect x="0" y="0" width="240" height="200" fill="var(--svg-fill)" rx="8"/>
+  <text x="12" y="26" class="svg-ts" fill="var(--red)">✕ 본선에 바로 밀어넣기</text>
+  <line x1="10" y1="56" x2="230" y2="56" stroke="var(--svg-line)" stroke-width="12" opacity=".45"/>
+  <path d="M40 92 Q90 92 120 62" stroke="var(--red)" stroke-width="5" fill="none"/>
+  <circle cx="126" cy="57" r="9" fill="var(--red)" opacity=".35"/>
+  <text x="150" y="88" class="svg-ts" fill="var(--red)">급브레이크</text>
+  <text x="12" y="132" class="svg-ts" fill="var(--green)">✓ 추가 차선으로 받고 뒤에서 합류</text>
+  <line x1="10" y1="158" x2="230" y2="158" stroke="var(--svg-line)" stroke-width="12" opacity=".45"/>
+  <line x1="88" y1="170" x2="196" y2="170" stroke="var(--green)" stroke-width="10"/>
+  <path d="M40 186 Q68 186 88 172" stroke="var(--green)" stroke-width="5" fill="none"/>
+  <path d="M196 170 Q210 170 218 162" stroke="var(--green)" stroke-width="5" fill="none"/>
+  <text x="142" y="192" class="svg-ts" fill="var(--green)" text-anchor="middle">≈10셀+ 가속 차선</text>
+</svg>
+<div class="dcap">형식과 무관하게 가장 중요한 원칙입니다. <b>합류는 항상 추가 차선으로 받고</b>, 본선 합류는 한참 뒤에서 시키세요.</div>
+</figure>
+</div>
+
 <p><strong>공통 원칙 4가지</strong></p>
 <ol>
 <li>출구 램프는 <strong>분기 지점 훨씬 앞(≈10셀+)에서 감속 차선을 분리</strong>해 본선 급브레이크를 방지합니다.</li>
@@ -731,6 +918,54 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </ul>
 </div>
 
+<figure class="diagram">
+<div class="dg-title">주차 공급 무시 → "배회 교통"이 만들어지는 과정</div>
+<svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="주차 부족으로 인한 배회 교통과 해결 배치">
+  <defs>
+    <marker id="pkA" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="var(--red)"/></marker>
+    <marker id="pkG" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="var(--green)"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="300" fill="var(--svg-fill)" rx="8"/>
+  <!-- BAD -->
+  <text x="20" y="26" class="svg-tb" fill="var(--red)">✕ 주차 없는 고밀 상업지구</text>
+  <g stroke="var(--svg-line)" stroke-width="11" opacity=".4">
+    <line x1="30" y1="60" x2="310" y2="60"/><line x1="30" y1="200" x2="310" y2="200"/>
+    <line x1="30" y1="60" x2="30" y2="200"/><line x1="310" y1="60" x2="310" y2="200"/>
+    <line x1="170" y1="60" x2="170" y2="200"/>
+  </g>
+  <g fill="var(--purple)" opacity=".55">
+    <rect x="44" y="76" width="110" height="48" rx="4"/><rect x="186" y="76" width="110" height="48" rx="4"/>
+    <rect x="44" y="140" width="110" height="46" rx="4"/><rect x="186" y="140" width="110" height="46" rx="4"/>
+  </g>
+  <text x="170" y="105" class="svg-ts" fill="#fff" text-anchor="middle">고밀 상업 (자체 주차 2~3면)</text>
+  <path d="M60 60 L300 60 L300 195 L40 195 L40 70 L290 70" stroke="var(--red)" stroke-width="3" fill="none" stroke-dasharray="6 4" marker-end="url(#pkA)"/>
+  <g fill="var(--red)"><rect x="90" y="54" width="13" height="9" rx="2"/><rect x="120" y="54" width="13" height="9" rx="2"/><rect x="230" y="194" width="13" height="9" rx="2"/><rect x="260" y="194" width="13" height="9" rx="2"/></g>
+  <text x="170" y="232" class="svg-t" fill="var(--red)" text-anchor="middle">빈자리 찾아 블록을 계속 순환</text>
+  <text x="170" y="252" class="svg-ts" fill="var(--red)" text-anchor="middle">= 목적지 없는 차가 도로 용량을 갉아먹음</text>
+  <!-- GOOD -->
+  <text x="390" y="26" class="svg-tb" fill="var(--green)">✓ 주차 빌딩 + 요금 정책</text>
+  <g stroke="var(--accent)" stroke-width="13" opacity=".55"><line x1="390" y1="60" x2="670" y2="60"/></g>
+  <text x="392" y="48" class="svg-ts" fill="var(--accent-text)">간선 — 진입 금지</text>
+  <g stroke="var(--teal)" stroke-width="10" opacity=".65">
+    <line x1="390" y1="200" x2="670" y2="200"/><line x1="530" y1="60" x2="530" y2="200"/>
+  </g>
+  <text x="392" y="220" class="svg-ts" fill="var(--teal)">콜렉터 — 주차 진입은 여기로</text>
+  <g fill="var(--purple)" opacity=".55">
+    <rect x="404" y="76" width="106" height="46" rx="4"/><rect x="552" y="76" width="106" height="46" rx="4"/>
+  </g>
+  <rect x="470" y="140" width="120" height="48" fill="var(--green-soft)" stroke="var(--green)" stroke-width="2.5" rx="5"/>
+  <text x="530" y="160" class="svg-t" fill="var(--green)" text-anchor="middle">🅿 다층 주차 빌딩</text>
+  <text x="530" y="178" class="svg-ts" fill="var(--green)" text-anchor="middle">200→300면 / ₡200,000</text>
+  <path d="M470 200 Q470 176 468 166" stroke="var(--green)" stroke-width="3" fill="none" marker-end="url(#pkG)"/>
+  <text x="530" y="232" class="svg-t" fill="var(--green)" text-anchor="middle">도보 2~3블록 안 + 콜렉터 쪽 출입구</text>
+  <text x="530" y="252" class="svg-ts" fill="var(--green)" text-anchor="middle">동시에 주차요금 인상 → 대중교통으로 수요 이전</text>
+  <!-- 하단 -->
+  <rect x="20" y="266" width="660" height="24" fill="var(--amber-soft)" rx="6"/>
+  <text x="350" y="283" class="svg-t" fill="var(--amber)" text-anchor="middle">CS2 시민은 "건물 부지 → 노변 → 주차장 → 대중교통" 순으로 탐색합니다. 앞 단계가 비면 계속 돕니다.</text>
+</svg>
+<figcaption>주차 부족은 <b>정체의 원인이지 결과가 아닙니다.</b> 도로 정보뷰에서 주차 이용률을 먼저 확인하세요.</figcaption>
+</figure>
+
 <h3>4-8. 무료에 가까운 교통 대책 3종</h3>
 <div class="cards">
   <div class="card">
@@ -758,6 +993,57 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <li><strong>실전 세팅</strong>: ① 간선×국지 T자는 신호 대신 부도로에 정지 표지판 ② 횡단보도 제거로 우회전 지연 축소(단, 보행자가 우회할 대체 횡단로 확보 후) ③ 차선 단위 회전 지정이 더 필요하면 무료 모드 "Traffic"(Paradox Mods)이 사실상 표준</li>
 <li><strong>신호를 없애는 것이 항상 이득은 아닙니다</strong> — 보행자 횡단이 많은 곳은 신호가 차량·보행 상충을 정리해 줍니다.</li>
 </ul>
+
+<div class="dgrid c3">
+<figure class="diagram good">
+<div class="dg-title"><span class="pill">케이스 A</span>간선 × 국지 T자</div>
+<svg viewBox="0 0 240 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="간선과 국지도로 T자 교차로에 정지 표지판 적용">
+  <rect x="0" y="0" width="240" height="190" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="70" x2="240" y2="70" stroke="var(--accent)" stroke-width="17"/>
+  <text x="6" y="52" class="svg-ts" fill="var(--accent-text)">간선 — 흐름 유지</text>
+  <line x1="120" y1="79" x2="120" y2="180" stroke="var(--svg-line)" stroke-width="9" opacity=".55"/>
+  <polygon points="120,92 128,100 120,108 112,100" fill="var(--red)"/>
+  <text x="136" y="106" class="svg-ts" fill="var(--red)">STOP 표지</text>
+  <text x="120" y="176" class="svg-ts" fill="var(--svg-line)" text-anchor="middle">국지도로</text>
+</svg>
+<div class="dcap"><b>신호 대신 부도로에 정지 표지판.</b> 간선은 멈추지 않고 흐르고, 국지도로 차량만 틈을 봐서 진입합니다. 신호를 달면 간선 전체가 국지도로 몇 대 때문에 멈춥니다.</div>
+</figure>
+<figure class="diagram good">
+<div class="dg-title"><span class="pill">케이스 B</span>우회전 지연 해소</div>
+<svg viewBox="0 0 240 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="횡단보도 제거로 우회전 지연 축소">
+  <rect x="0" y="0" width="240" height="190" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="80" x2="240" y2="80" stroke="var(--svg-line)" stroke-width="15" opacity=".45"/>
+  <line x1="120" y1="0" x2="120" y2="190" stroke="var(--svg-line)" stroke-width="15" opacity=".45"/>
+  <!-- 제거된 횡단보도 -->
+  <g stroke="var(--red)" stroke-width="2.5" opacity=".55"><line x1="150" y1="70" x2="150" y2="90"/><line x1="157" y1="70" x2="157" y2="90"/><line x1="164" y1="70" x2="164" y2="90"/></g>
+  <line x1="140" y1="62" x2="176" y2="98" stroke="var(--red)" stroke-width="3.5"/>
+  <text x="182" y="60" class="svg-ts" fill="var(--red)">제거</text>
+  <!-- 대체 횡단로 -->
+  <g stroke="var(--green)" stroke-width="2.5"><line x1="52" y1="70" x2="52" y2="90"/><line x1="59" y1="70" x2="59" y2="90"/><line x1="66" y1="70" x2="66" y2="90"/></g>
+  <text x="30" y="112" class="svg-ts" fill="var(--green)">대체 횡단로 확보</text>
+  <path d="M120 140 Q120 96 168 88" stroke="var(--green)" stroke-width="4" fill="none"/>
+  <text x="120" y="180" class="svg-ts" fill="var(--green)" text-anchor="middle">우회전 대기 사라짐</text>
+</svg>
+<div class="dcap">횡단보도가 있으면 우회전 차량이 보행자를 기다리며 <b>직진 차선까지 막습니다.</b> 단, <b>반드시 대체 횡단로를 먼저 확보</b>한 뒤 제거하세요.</div>
+</figure>
+<figure class="diagram bad">
+<div class="dg-title"><span class="pill" style="background:var(--red-soft);color:var(--red)">케이스 C</span>신호를 없애면 안 되는 곳</div>
+<svg viewBox="0 0 240 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="보행자가 많은 교차로는 신호를 유지해야 함">
+  <rect x="0" y="0" width="240" height="190" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="80" x2="240" y2="80" stroke="var(--svg-line)" stroke-width="15" opacity=".45"/>
+  <line x1="120" y1="0" x2="120" y2="190" stroke="var(--svg-line)" stroke-width="15" opacity=".45"/>
+  <g fill="var(--purple)" opacity=".8">
+    <circle cx="86" cy="72" r="4"/><circle cx="96" cy="86" r="4"/><circle cx="76" cy="88" r="4"/>
+    <circle cx="150" cy="70" r="4"/><circle cx="162" cy="86" r="4"/><circle cx="142" cy="92" r="4"/>
+    <circle cx="112" cy="44" r="4"/><circle cx="128" cy="118" r="4"/>
+  </g>
+  <circle cx="120" cy="80" r="11" fill="var(--green)"/>
+  <text x="120" y="20" class="svg-ts" fill="var(--purple)" text-anchor="middle">보행자 다수 (상업지구·학교 앞)</text>
+  <text x="120" y="176" class="svg-ts" fill="var(--green)" text-anchor="middle">● 신호 유지가 정답</text>
+</svg>
+<div class="dcap">보행 통행이 많으면 신호가 <b>차량·보행 상충을 시간으로 분리</b>해 줍니다. 신호를 없애면 차가 계속 보행자에게 양보하다 오히려 더 막힙니다.</div>
+</figure>
+</div>
 <h4>도로 정비창(Road Maintenance Depot)</h4>
 <p>도로는 통행량·날씨로 마모되고, 상태 악화는 <strong>주행속도 저하 + 사고 확률 증가</strong>로 이어집니다. 사고는 차선을 막아 정체를 만듭니다.</p>
 <ul>
@@ -794,9 +1080,421 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </ol>
 </div>
 </section>
-<!-- ══════════ 5. 대중교통 ══════════ -->
+<!-- ══════════ 5. 확장 로드맵 ══════════ -->
+<section class="chapter" id="growth">
+<h2><span class="num">5</span>도시 확장 로드맵 &amp; 산업지구 설계</h2>
+
+<p class="lede">"6→4→2차선 위계는 알겠는데, <strong>마을을 키워나가면서 도로를 어떻게 늘려야 할지</strong> 모르겠다" — CS2에서 가장 많이 막히는 지점입니다. 핵심은 <strong>도로를 나중에 넓히는 게 아니라, 처음부터 넓힐 자리를 비워두고 좁게 까는 것</strong>입니다.</p>
+
+<h3>5-1. 확장의 대원칙 3가지</h3>
+<div class="cards">
+  <div class="card">
+    <div class="cv">골격 먼저, 살은 나중에</div>
+    <div class="cl">원칙 1</div>
+    <div class="cd">간선이 <strong>지나갈 자리</strong>를 처음부터 정해두고, 실제로는 2차선으로 깝니다. 인구가 차면 그 자리에서 <strong>업그레이드 도구로 승격</strong>합니다. 자리를 안 비워두면 나중에 건물을 부숴야 합니다.</div>
+  </div>
+  <div class="card">
+    <div class="cv">블록 치수를 표준화</div>
+    <div class="cl">원칙 2</div>
+    <div class="cd">콜렉터 간격을 <strong>일정하게</strong> 유지하면 확장이 "복사·붙여넣기"가 됩니다. 매번 즉흥적으로 그리면 교차로 간격이 들쭉날쭉해져 병목이 생깁니다.</div>
+  </div>
+  <div class="card">
+    <div class="cv">기존 도로를 연장하지 않는다</div>
+    <div class="cl">원칙 3</div>
+    <div class="cd">새 동네는 <strong>기존 콜렉터에 새로 붙이는</strong> 것이지, 국지도로 끝을 계속 이어붙이는 게 아닙니다. 후자는 한 도로에 모든 교통이 실리는 "지네 도시"를 만듭니다.</div>
+  </div>
+</div>
+
+<div class="callout danger">
+<div class="ct">가장 비싼 실수: 도로에 바짝 붙여 구획하기</div>
+<p>CS2에서 <strong>도로를 더 넓은 등급으로 업그레이드하면 자리를 침범하는 건물이 철거</strong>됩니다. 2차선 옆에 바로 건물을 채워두면, 나중에 그 도로를 6차선 간선으로 올릴 때 <strong>양쪽 건물이 통째로 날아갑니다</strong>(주민 퇴거 → 수요·노숙 지표 요동).</p>
+<p><strong>처방</strong>: 간선이 될 축은 처음부터 <strong>중앙분리 4차선 이상으로 깔거나</strong>, 아니면 그 축 양옆 1~2칸을 <strong>공원·나무로 비워두고</strong> 구획하지 마세요. 그 자리가 미래의 차선입니다.</p>
+</div>
+
+<h3>5-2. 단계별 도로망 성장 — 인구 500 → 10만</h3>
+<p>같은 도시가 어떻게 자라는지 5단계로 그렸습니다. <strong>주목할 점: 1단계에서 그은 골격이 5단계까지 그대로 남습니다.</strong> 새로 그리는 게 아니라 살을 붙여 나가는 것입니다.</p>
+
+<div class="legend" style="margin-bottom:14px">
+  <span><i style="background:#7c3aed"></i>고속도로</span>
+  <span><i style="background:#2563eb"></i>간선</span>
+  <span><i style="background:#0d9488"></i>콜렉터</span>
+  <span><i style="background:#8a93a5"></i>국지도로</span>
+  <span><i style="background:#16a34a"></i>주거</span>
+  <span><i style="background:#d97706"></i>상업</span>
+  <span><i style="background:#dc2626"></i>산업</span>
+</div>
+
+<div class="dgrid c3">
+
+<figure class="diagram">
+<div class="dg-title"><span class="pill">1단계</span>인구 ~1,000</div>
+<svg viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="1단계 도로망: 진입로와 T자 골격">
+  <rect x="0" y="0" width="250" height="250" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="26" x2="250" y2="26" stroke="#7c3aed" stroke-width="13"/>
+  <path d="M100 33 Q100 50 100 62" stroke="#7c3aed" stroke-width="6" fill="none"/>
+  <!-- 미래 간선 자리(점선) -->
+  <line x1="100" y1="62" x2="100" y2="230" stroke="#2563eb" stroke-width="9" stroke-dasharray="9 6" opacity=".45"/>
+  <text x="108" y="222" class="svg-ts" fill="#2563eb">미래 간선 자리</text>
+  <!-- 실제 2차선 -->
+  <line x1="100" y1="62" x2="100" y2="180" stroke="#8a93a5" stroke-width="6"/>
+  <line x1="40" y1="110" x2="100" y2="110" stroke="#8a93a5" stroke-width="6"/>
+  <line x1="100" y1="150" x2="180" y2="150" stroke="#8a93a5" stroke-width="6"/>
+  <rect x="40" y="76" width="52" height="26" fill="#16a34a" opacity=".5" rx="3"/>
+  <rect x="40" y="118" width="52" height="26" fill="#16a34a" opacity=".5" rx="3"/>
+  <rect x="112" y="118" width="46" height="24" fill="#d97706" opacity=".5" rx="3"/>
+  <rect x="112" y="158" width="68" height="30" fill="#dc2626" opacity=".45" rx="3"/>
+  <text x="146" y="177" class="svg-ts" fill="#dc2626" text-anchor="middle">산업</text>
+</svg>
+<div class="dcap"><b>2차선만 사용.</b> 고속도로에서 축 하나를 내리고 좌우로 가지를 칩니다. 이때 <b>중앙 세로축은 미래 간선</b>이므로 양옆을 바짝 채우지 않습니다.</div>
+</figure>
+
+<figure class="diagram">
+<div class="dg-title"><span class="pill">2단계</span>인구 1,000~5,000</div>
+<svg viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="2단계 도로망: 첫 콜렉터 루프 형성">
+  <rect x="0" y="0" width="250" height="250" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="26" x2="250" y2="26" stroke="#7c3aed" stroke-width="13"/>
+  <path d="M100 33 Q100 50 100 62" stroke="#7c3aed" stroke-width="6" fill="none"/>
+  <line x1="100" y1="62" x2="100" y2="230" stroke="#0d9488" stroke-width="8"/>
+  <!-- 콜렉터 가로 2개 -->
+  <line x1="34" y1="110" x2="210" y2="110" stroke="#0d9488" stroke-width="8"/>
+  <line x1="34" y1="182" x2="210" y2="182" stroke="#0d9488" stroke-width="8"/>
+  <line x1="34" y1="110" x2="34" y2="182" stroke="#0d9488" stroke-width="8"/>
+  <line x1="210" y1="110" x2="210" y2="182" stroke="#0d9488" stroke-width="8"/>
+  <!-- 국지 -->
+  <g stroke="#8a93a5" stroke-width="4" opacity=".8">
+    <line x1="58" y1="110" x2="58" y2="182"/><line x1="78" y1="110" x2="78" y2="182"/>
+    <line x1="130" y1="110" x2="130" y2="182"/><line x1="152" y1="110" x2="152" y2="182"/><line x1="176" y1="110" x2="176" y2="182"/>
+    <line x1="34" y1="146" x2="210" y2="146"/>
+  </g>
+  <rect x="38" y="76" width="56" height="26" fill="#16a34a" opacity=".5" rx="3"/>
+  <rect x="110" y="76" width="56" height="26" fill="#d97706" opacity=".5" rx="3"/>
+  <rect x="108" y="192" width="102" height="34" fill="#dc2626" opacity=".45" rx="3"/>
+  <text x="159" y="213" class="svg-ts" fill="#dc2626" text-anchor="middle">산업 (바람 하류)</text>
+  <text x="122" y="242" class="svg-ts" fill="#0d9488">━ 콜렉터 폐루프 완성</text>
+</svg>
+<div class="dcap">세로축을 <b>콜렉터로 승격</b>하고, 그 주위로 <b>닫힌 루프</b>를 만듭니다. 루프 안쪽만 국지도로로 채웁니다. 이 시점에 버스 1노선이 이 루프를 그대로 돕니다.</div>
+</figure>
+
+<figure class="diagram">
+<div class="dg-title"><span class="pill">3단계</span>인구 5,000~20,000</div>
+<svg viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3단계 도로망: 간선 승격과 지구 분화">
+  <rect x="0" y="0" width="250" height="250" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="22" x2="250" y2="22" stroke="#7c3aed" stroke-width="13"/>
+  <path d="M100 29 Q100 44 100 56" stroke="#7c3aed" stroke-width="6" fill="none"/>
+  <!-- 간선 승격 -->
+  <line x1="100" y1="56" x2="100" y2="236" stroke="#2563eb" stroke-width="11"/>
+  <line x1="24" y1="104" x2="228" y2="104" stroke="#2563eb" stroke-width="11"/>
+  <!-- 콜렉터 -->
+  <g stroke="#0d9488" stroke-width="7">
+    <line x1="24" y1="168" x2="228" y2="168"/>
+    <line x1="52" y1="56" x2="52" y2="236"/><line x1="164" y1="56" x2="164" y2="236"/>
+  </g>
+  <!-- 국지 -->
+  <g stroke="#8a93a5" stroke-width="3.5" opacity=".75">
+    <line x1="76" y1="56" x2="76" y2="236"/><line x1="132" y1="56" x2="132" y2="236"/><line x1="198" y1="56" x2="198" y2="236"/>
+    <line x1="24" y1="70" x2="228" y2="70"/><line x1="24" y1="136" x2="228" y2="136"/><line x1="24" y1="202" x2="228" y2="202"/>
+  </g>
+  <rect x="28" y="110" width="20" height="52" fill="#16a34a" opacity=".45" rx="2"/>
+  <rect x="106" y="76" width="22" height="24" fill="#d97706" opacity=".5" rx="2"/>
+  <rect x="170" y="206" width="54" height="28" fill="#dc2626" opacity=".45" rx="2"/>
+  <circle cx="100" cy="104" r="9" fill="none" stroke="var(--amber)" stroke-width="3"/>
+  <text x="12" y="248" class="svg-ts" fill="#2563eb">간선 십자 + 콜렉터 격자</text>
+</svg>
+<div class="dcap"><b>1단계의 축이 그대로 간선이 됐습니다.</b> 여기서 간선 십자를 완성하고, 콜렉터를 <b>일정 간격</b>으로 평행 배치합니다. 간선 교차점(○)이 도시의 중심 상업지가 됩니다.</div>
+</figure>
+
+<figure class="diagram">
+<div class="dg-title"><span class="pill">4단계</span>인구 20,000~50,000</div>
+<svg viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="4단계 도로망: 두 번째 IC와 우회 간선">
+  <rect x="0" y="0" width="250" height="250" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="20" x2="250" y2="20" stroke="#7c3aed" stroke-width="13"/>
+  <path d="M100 27 Q100 40 100 50" stroke="#7c3aed" stroke-width="6" fill="none"/>
+  <path d="M196 27 Q196 40 196 60" stroke="#7c3aed" stroke-width="6" fill="none"/>
+  <text x="204" y="44" class="svg-ts" fill="#7c3aed">2번째 IC</text>
+  <!-- 간선 격자 -->
+  <g stroke="#2563eb" stroke-width="10">
+    <line x1="100" y1="50" x2="100" y2="238"/><line x1="196" y1="60" x2="196" y2="238"/>
+    <line x1="20" y1="98" x2="232" y2="98"/><line x1="20" y1="186" x2="232" y2="186"/>
+  </g>
+  <!-- 콜렉터 -->
+  <g stroke="#0d9488" stroke-width="6">
+    <line x1="52" y1="50" x2="52" y2="238"/><line x1="148" y1="50" x2="148" y2="238"/>
+    <line x1="20" y1="142" x2="232" y2="142"/><line x1="20" y1="222" x2="232" y2="222"/>
+  </g>
+  <g stroke="#8a93a5" stroke-width="3" opacity=".65">
+    <line x1="76" y1="50" x2="76" y2="238"/><line x1="124" y1="50" x2="124" y2="238"/><line x1="172" y1="50" x2="172" y2="238"/><line x1="216" y1="60" x2="216" y2="238"/>
+    <line x1="20" y1="66" x2="232" y2="66"/><line x1="20" y1="120" x2="232" y2="120"/><line x1="20" y1="164" x2="232" y2="164"/><line x1="20" y1="204" x2="232" y2="204"/>
+  </g>
+  <rect x="160" y="192" width="68" height="42" fill="#dc2626" opacity=".4" rx="3"/>
+  <text x="194" y="216" class="svg-ts" fill="#dc2626" text-anchor="middle">산업 전용 IC</text>
+  <path d="M196 186 L196 238" stroke="var(--amber)" stroke-width="3" stroke-dasharray="5 4"/>
+</svg>
+<div class="dcap"><b>두 번째 IC를 뚫습니다.</b> 하나의 IC에 도시 전체가 매달리면 반드시 막힙니다. 특히 <b>산업 화물은 전용 IC로 분리</b>해 통근 교통과 섞이지 않게 합니다.</div>
+</figure>
+
+<figure class="diagram">
+<div class="dg-title"><span class="pill">5단계</span>인구 50,000+</div>
+<svg viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="5단계 도로망: 순환 간선과 지하철">
+  <rect x="0" y="0" width="250" height="250" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="18" x2="250" y2="18" stroke="#7c3aed" stroke-width="12"/>
+  <path d="M76 25 Q76 34 76 44" stroke="#7c3aed" stroke-width="5" fill="none"/>
+  <path d="M182 25 Q182 34 182 44" stroke="#7c3aed" stroke-width="5" fill="none"/>
+  <!-- 순환 간선 -->
+  <rect x="34" y="44" width="184" height="186" fill="none" stroke="#2563eb" stroke-width="10" rx="16"/>
+  <!-- 내부 간선 -->
+  <g stroke="#2563eb" stroke-width="9"><line x1="126" y1="44" x2="126" y2="230"/><line x1="34" y1="138" x2="218" y2="138"/></g>
+  <g stroke="#0d9488" stroke-width="5.5">
+    <line x1="80" y1="44" x2="80" y2="230"/><line x1="172" y1="44" x2="172" y2="230"/>
+    <line x1="34" y1="92" x2="218" y2="92"/><line x1="34" y1="186" x2="218" y2="186"/>
+  </g>
+  <!-- 지하철 -->
+  <g stroke="var(--purple)" stroke-width="3.5" stroke-dasharray="7 4" fill="none">
+    <line x1="126" y1="52" x2="126" y2="224"/><line x1="42" y1="138" x2="212" y2="138"/>
+  </g>
+  <g fill="var(--surface)" stroke="var(--purple)" stroke-width="2.5">
+    <circle cx="126" cy="138" r="7"/><circle cx="126" cy="92" r="5.5"/><circle cx="126" cy="186" r="5.5"/><circle cx="80" cy="138" r="5.5"/><circle cx="172" cy="138" r="5.5"/>
+  </g>
+  <text x="126" y="246" class="svg-ts" fill="var(--purple)" text-anchor="middle">┈ 지하철 방사 2선 + 순환 간선</text>
+</svg>
+<div class="dcap"><b>순환 간선(Ring)</b>이 도심 통과 교통을 걷어냅니다. 통과 차량은 링을 타고 우회하고, 도심 내부는 지하철이 담당합니다. 여전히 <b>1단계의 십자 골격이 중심</b>에 남아 있습니다.</div>
+</figure>
+
+<figure class="diagram bad">
+<div class="dg-title"><span class="pill" style="background:var(--red-soft);color:var(--red)">반면교사</span>"지네 도시"</div>
+<svg viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="국지도로를 계속 연장한 잘못된 확장 사례">
+  <rect x="0" y="0" width="250" height="250" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="24" x2="250" y2="24" stroke="#7c3aed" stroke-width="13"/>
+  <path d="M124 31 Q124 42 124 52" stroke="#7c3aed" stroke-width="6" fill="none"/>
+  <!-- 한 줄기 도로 -->
+  <path d="M124 52 L124 236" stroke="var(--red)" stroke-width="8" fill="none"/>
+  <g stroke="#8a93a5" stroke-width="4" opacity=".8">
+    <line x1="124" y1="72" x2="60" y2="72"/><line x1="124" y1="72" x2="188" y2="72"/>
+    <line x1="124" y1="106" x2="52" y2="106"/><line x1="124" y1="106" x2="196" y2="106"/>
+    <line x1="124" y1="140" x2="58" y2="140"/><line x1="124" y1="140" x2="190" y2="140"/>
+    <line x1="124" y1="174" x2="54" y2="174"/><line x1="124" y1="174" x2="194" y2="174"/>
+    <line x1="124" y1="208" x2="62" y2="208"/><line x1="124" y1="208" x2="186" y2="208"/>
+  </g>
+  <g fill="var(--red)" opacity=".8">
+    <rect x="117" y="86" width="14" height="9" rx="2"/><rect x="117" y="120" width="14" height="9" rx="2"/>
+    <rect x="117" y="154" width="14" height="9" rx="2"/><rect x="117" y="188" width="14" height="9" rx="2"/>
+  </g>
+  <text x="124" y="248" class="svg-ts" fill="var(--red)" text-anchor="middle">모든 교통이 한 축에 집중 → 영구 정체</text>
+</svg>
+<div class="dcap"><span class="vs-tag no">이렇게 하지 마세요</span> 국지도로 끝을 계속 이어붙이면 <b>대체 경로가 0</b>인 도시가 됩니다. 나중에 고치려면 도시를 갈아엎어야 합니다.</div>
+</figure>
+
+</div>
+
+<h3>5-3. 도로 승격 규칙 — 언제, 무엇을 올리나</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>신호</th><th>조치</th><th>주의</th></tr></thead>
+<tbody>
+<tr><td>콜렉터 교차로에 대기열이 <b>상시</b> 보임</td><td>그 콜렉터를 <b>4차선으로 승격</b></td><td>교차로부터 점검 — 대개 도로 폭이 아니라 신호가 원인</td></tr>
+<tr><td>간선 후보축의 통행량이 콜렉터를 압도</td><td><b>6차선(중앙분리)으로 승격</b> + 좌회전 봉쇄</td><td>양옆 건물 철거 여부를 미리 확인</td></tr>
+<tr><td>IC 진입로가 아침저녁 상시 정체</td><td><b>두 번째 IC 신설</b>(도로 확장 아님)</td><td>IC 간 간격은 교차로 간격 원칙과 동일</td></tr>
+<tr><td>산업지구 트럭이 주거 간선을 통과</td><td><b>산업 전용 진입로 분리</b> + 화물역</td><td>5-5절 참조</td></tr>
+<tr><td>도심 통과 차량이 많음</td><td><b>순환 간선(Ring) 신설</b></td><td>링이 도심보다 빨라야 AI가 우회합니다</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout tip">
+<div class="ct">승격은 "업그레이드 도구"로 제자리에서</div>
+<p>도로를 지우고 다시 깔 필요가 없습니다. 도로 도구에서 원하는 등급을 선택하고 <strong>기존 도로 위에 덧그리면 제자리 승격</strong>됩니다. 노선·정류장·지하 배관도 유지됩니다.</p>
+<p>다만 <strong>더 넓은 도로로 올릴 때는 침범 범위의 건물이 철거</strong>되므로, 승격 예정 축은 미리 여유를 두거나 처음부터 그 폭으로 까세요.</p>
+</div>
+
+<h3>5-4. 블록 치수 — 복사·붙여넣기가 되게 만들기</h3>
+<figure class="diagram">
+<div class="dg-title">표준 블록 치수 (게임 셀 1칸 = 8m)</div>
+<svg viewBox="0 0 732 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="표준 블록 치수와 구획 깊이">
+  <rect x="0" y="0" width="732" height="290" fill="var(--svg-fill)" rx="8"/>
+  <!-- 콜렉터 -->
+  <line x1="60" y1="60" x2="620" y2="60" stroke="#0d9488" stroke-width="10"/>
+  <line x1="60" y1="230" x2="620" y2="230" stroke="#0d9488" stroke-width="10"/>
+  <line x1="60" y1="60" x2="60" y2="230" stroke="#0d9488" stroke-width="10"/>
+  <line x1="620" y1="60" x2="620" y2="230" stroke="#0d9488" stroke-width="10"/>
+  <!-- 국지 -->
+  <g stroke="#8a93a5" stroke-width="6" opacity=".8">
+    <line x1="200" y1="60" x2="200" y2="230"/><line x1="340" y1="60" x2="340" y2="230"/><line x1="480" y1="60" x2="480" y2="230"/>
+    <line x1="60" y1="145" x2="620" y2="145"/>
+  </g>
+  <!-- 구획 -->
+  <g fill="#16a34a" opacity=".38">
+    <rect x="70" y="70" width="120" height="30" rx="2"/><rect x="70" y="105" width="120" height="30" rx="2"/>
+    <rect x="210" y="70" width="120" height="30" rx="2"/><rect x="210" y="105" width="120" height="30" rx="2"/>
+    <rect x="350" y="70" width="120" height="30" rx="2"/><rect x="350" y="105" width="120" height="30" rx="2"/>
+    <rect x="490" y="70" width="120" height="30" rx="2"/><rect x="490" y="105" width="120" height="30" rx="2"/>
+    <rect x="70" y="155" width="120" height="30" rx="2"/><rect x="210" y="155" width="120" height="30" rx="2"/>
+    <rect x="350" y="155" width="120" height="30" rx="2"/><rect x="490" y="155" width="120" height="30" rx="2"/>
+    <rect x="70" y="190" width="120" height="30" rx="2"/><rect x="210" y="190" width="120" height="30" rx="2"/>
+    <rect x="350" y="190" width="120" height="30" rx="2"/><rect x="490" y="190" width="120" height="30" rx="2"/>
+  </g>
+  <!-- 치수선 -->
+  <path d="M200 44 L340 44" stroke="var(--accent)" stroke-width="1.5"/>
+  <path d="M200 40 L200 48 M340 40 M340 48" stroke="var(--accent)" stroke-width="1.5"/>
+  <text x="270" y="36" class="svg-t" fill="var(--accent-text)" text-anchor="middle">국지도로 간격 ≈16~18셀</text>
+  <path d="M636 60 L636 230" stroke="var(--accent)" stroke-width="1.5"/>
+  <text x="644" y="150" class="svg-t" fill="var(--accent-text)">콜렉터 간격</text>
+  <text x="644" y="168" class="svg-t" fill="var(--accent-text)">≈20셀 (160m)</text>
+  <path d="M70 250 L190 250" stroke="var(--green)" stroke-width="1.5"/>
+  <text x="130" y="266" class="svg-ts" fill="var(--green)" text-anchor="middle">구획 깊이 최대 6칸(48m)</text>
+  <text x="360" y="266" class="svg-ts" fill="var(--text3)" text-anchor="middle">— 이 한 칸을 통째로 복사해서 옆에 붙이면 확장 끝 —</text>
+</svg>
+<figcaption>건물 부지는 도로에서 <b>최대 6칸(48m)</b>까지만 성장합니다. 그래서 도로 사이를 12칸(양쪽 6칸) 넘게 벌리면 <b>가운데가 죽은 땅</b>이 됩니다. 콜렉터 간격 ≈20셀은 신호 교차로 간격 150~200m 원칙과도 맞아떨어집니다.</figcaption>
+</figure>
+
+<h3>5-5. 산업지구 도로 설계 ★</h3>
+<p class="lede">산업지구는 주거지와 <strong>요구 조건이 완전히 다릅니다.</strong> 트럭은 크고, 느리고, 무겁고, 외부 연결로 나가야 합니다. 주거지 격자를 그대로 복사하면 반드시 막힙니다.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>산업지구가 요구하는 것</th><th>설계 반영</th></tr></thead>
+<tbody>
+<tr><td>① <b>외부 연결까지 최단 경로</b></td><td>고속도로 IC 또는 화물역/항구에 <b>직결</b>. 주거 간선을 통과하지 않게</td></tr>
+<tr><td>② <b>넓은 회차 반경</b></td><td>막다른 골목 금지. 트럭이 후진 못 하면 도로가 잠깁니다</td></tr>
+<tr><td>③ <b>통근 노동력 접근</b></td><td>주거지에서 버스 1노선이 닿아야 함 (하지만 승용차 동선은 화물과 분리)</td></tr>
+<tr><td>④ <b>Economy 2.0: 넓은 부지</b></td><td>산업 공간 배수가 1→<b>5</b>로 올라 같은 수요에 5배 넓은 땅이 필요합니다</td></tr>
+<tr><td>⑤ <b>오염 격리</b></td><td>바람 하류 + 물 하류 + 지하수 취수원 회피</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="dgrid c2">
+<figure class="diagram bad">
+<div class="dg-title"><span class="pill" style="background:var(--red-soft);color:var(--red)">✕ 나쁜 예</span>주거 격자를 그대로 복사</div>
+<svg viewBox="0 0 330 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="잘못된 산업지구 도로: 주거 격자 복사와 막다른 골목">
+  <rect x="0" y="0" width="330" height="260" fill="var(--svg-fill)" rx="8"/>
+  <!-- 주거 간선 통과 -->
+  <line x1="0" y1="40" x2="330" y2="40" stroke="#2563eb" stroke-width="11"/>
+  <text x="8" y="28" class="svg-ts" fill="#2563eb">주거 간선</text>
+  <g fill="#16a34a" opacity=".4"><rect x="20" y="10" width="60" height="18" rx="2"/><rect x="220" y="10" width="60" height="18" rx="2"/></g>
+  <!-- 산업 격자 (좁음) -->
+  <g stroke="#8a93a5" stroke-width="5" opacity=".8">
+    <line x1="60" y1="40" x2="60" y2="200"/><line x1="130" y1="40" x2="130" y2="200"/><line x1="200" y1="40" x2="200" y2="200"/>
+    <line x1="60" y1="120" x2="200" y2="120"/>
+  </g>
+  <!-- 막다른 골목 -->
+  <line x1="200" y1="200" x2="270" y2="200" stroke="#8a93a5" stroke-width="5" opacity=".8"/>
+  <circle cx="272" cy="200" r="9" fill="none" stroke="var(--red)" stroke-width="3"/>
+  <text x="234" y="222" class="svg-ts" fill="var(--red)" text-anchor="middle">막다른 골목 — 트럭 회차 불가</text>
+  <g fill="#dc2626" opacity=".38">
+    <rect x="70" y="52" width="50" height="56" rx="2"/><rect x="140" y="52" width="50" height="56" rx="2"/>
+    <rect x="70" y="132" width="50" height="56" rx="2"/><rect x="140" y="132" width="50" height="56" rx="2"/>
+  </g>
+  <!-- 트럭 행렬 -->
+  <g fill="var(--red)"><rect x="88" y="34" width="16" height="10" rx="2"/><rect x="112" y="34" width="16" height="10" rx="2"/><rect x="150" y="34" width="16" height="10" rx="2"/><rect x="176" y="34" width="16" height="10" rx="2"/></g>
+  <text x="165" y="248" class="svg-t" fill="var(--red)" text-anchor="middle">화물 트럭이 주거 간선으로 쏟아짐</text>
+</svg>
+<div class="dcap"><b>문제 3가지</b>: ① 트럭이 주거 간선을 통과해 통근 교통과 충돌 ② 막다른 골목에서 트럭이 회차 못 함 ③ 부지가 좁아 Economy 2.0의 넓은 산업 로트를 못 받습니다.</div>
+</figure>
+
+<figure class="diagram good">
+<div class="dg-title"><span class="pill">✓ 좋은 예</span>화물 전용 진입 + 순환 배치</div>
+<svg viewBox="0 0 330 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="올바른 산업지구 도로: 전용 진입로와 순환 루프">
+  <defs><marker id="trkA" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="var(--amber)"/></marker></defs>
+  <rect x="0" y="0" width="330" height="260" fill="var(--svg-fill)" rx="8"/>
+  <!-- 고속도로 -->
+  <line x1="0" y1="26" x2="330" y2="26" stroke="#7c3aed" stroke-width="12"/>
+  <text x="8" y="16" class="svg-ts" fill="#7c3aed">고속도로</text>
+  <!-- 전용 램프 -->
+  <path d="M250 32 Q250 48 250 62" stroke="var(--amber)" stroke-width="7" fill="none"/>
+  <text x="258" y="52" class="svg-ts" fill="var(--amber)">화물 전용 IC</text>
+  <!-- 산업 순환 루프 -->
+  <rect x="60" y="62" width="200" height="140" fill="none" stroke="var(--amber)" stroke-width="9" rx="14"/>
+  <line x1="160" y1="62" x2="160" y2="202" stroke="var(--amber)" stroke-width="7"/>
+  <!-- 산업 로트 (넓게) -->
+  <g fill="#dc2626" opacity=".38">
+    <rect x="74" y="76" width="72" height="50" rx="3"/><rect x="174" y="76" width="72" height="50" rx="3"/>
+    <rect x="74" y="140" width="72" height="48" rx="3"/><rect x="174" y="140" width="72" height="48" rx="3"/>
+  </g>
+  <!-- 화물역 -->
+  <rect x="60" y="212" width="200" height="26" fill="var(--teal-soft)" stroke="var(--teal)" stroke-width="2.5" rx="4"/>
+  <text x="160" y="230" class="svg-t" fill="var(--teal)" text-anchor="middle">🚂 화물 기차역 — 산업지구 바로 옆</text>
+  <line x1="160" y1="202" x2="160" y2="212" stroke="var(--amber)" stroke-width="6"/>
+  <!-- 통근 진입 (별도) -->
+  <path d="M20 132 L58 132" stroke="#0d9488" stroke-width="7"/>
+  <text x="4" y="122" class="svg-ts" fill="#0d9488">통근 콜렉터</text>
+  <text x="4" y="152" class="svg-ts" fill="#0d9488">(버스 노선)</text>
+  <path d="M250 62 L250 70" stroke="var(--amber)" stroke-width="4" marker-end="url(#trkA)"/>
+  <text x="165" y="254" class="svg-ts" fill="var(--green)" text-anchor="middle">화물 동선과 통근 동선이 만나지 않습니다</text>
+</svg>
+<div class="dcap"><b>핵심 4가지</b>: ① 화물은 <b>전용 IC로 직접</b> 들어오고 나갑니다 ② 지구 내부는 <b>폐루프</b>라 막다른 골목이 없습니다 ③ 화물역이 지구에 <b>붙어</b> 있습니다 ④ 통근 진입로는 반대편에 따로 둡니다.</div>
+</figure>
+</div>
+
+<h4>산업지구 도로 패턴 3종</h4>
+<div class="dgrid c3">
+<figure class="diagram">
+<div class="dg-title">루프형 (권장)</div>
+<svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="루프형 산업지구 도로 패턴">
+  <rect x="0" y="0" width="220" height="170" fill="var(--svg-fill)" rx="8"/>
+  <rect x="30" y="30" width="160" height="110" fill="none" stroke="var(--amber)" stroke-width="8" rx="12"/>
+  <g fill="#dc2626" opacity=".35"><rect x="44" y="44" width="60" height="36" rx="3"/><rect x="116" y="44" width="60" height="36" rx="3"/><rect x="44" y="92" width="60" height="34" rx="3"/><rect x="116" y="92" width="60" height="34" rx="3"/></g>
+  <path d="M110 30 L110 12" stroke="var(--amber)" stroke-width="7"/>
+  <text x="110" y="162" class="svg-ts" fill="var(--green)" text-anchor="middle">✓ 회차 자유 · 진입 1곳</text>
+</svg>
+<div class="dcap">가장 안전합니다. 트럭이 어디서든 한 바퀴 돌아 나갈 수 있어 <b>회차 문제가 원천적으로 없습니다.</b> 중소 규모에 최적.</div>
+</figure>
+<figure class="diagram">
+<div class="dg-title">빗살형 (대규모)</div>
+<svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="빗살형 산업지구 도로 패턴">
+  <rect x="0" y="0" width="220" height="170" fill="var(--svg-fill)" rx="8"/>
+  <line x1="20" y1="40" x2="200" y2="40" stroke="var(--amber)" stroke-width="9"/>
+  <line x1="20" y1="132" x2="200" y2="132" stroke="var(--amber)" stroke-width="9"/>
+  <g stroke="var(--amber)" stroke-width="6" opacity=".85">
+    <line x1="56" y1="40" x2="56" y2="132"/><line x1="110" y1="40" x2="110" y2="132"/><line x1="164" y1="40" x2="164" y2="132"/>
+  </g>
+  <g fill="#dc2626" opacity=".35"><rect x="26" y="52" width="24" height="68" rx="2"/><rect x="64" y="52" width="38" height="68" rx="2"/><rect x="118" y="52" width="38" height="68" rx="2"/><rect x="172" y="52" width="24" height="68" rx="2"/></g>
+  <text x="110" y="162" class="svg-ts" fill="var(--green)" text-anchor="middle">✓ 양단 관통 · 대용량</text>
+</svg>
+<div class="dcap">위아래 두 축이 모두 <b>관통</b>하므로 막다른 곳이 없습니다. 대규모 산업단지에서 로트를 촘촘히 넣을 때 씁니다.</div>
+</figure>
+<figure class="diagram bad">
+<div class="dg-title">막다른 골목형</div>
+<svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="막다른 골목형 산업지구 도로 패턴의 문제">
+  <rect x="0" y="0" width="220" height="170" fill="var(--svg-fill)" rx="8"/>
+  <line x1="20" y1="40" x2="200" y2="40" stroke="var(--amber)" stroke-width="9"/>
+  <g stroke="var(--amber)" stroke-width="6" opacity=".85">
+    <line x1="56" y1="40" x2="56" y2="118"/><line x1="110" y1="40" x2="110" y2="118"/><line x1="164" y1="40" x2="164" y2="118"/>
+  </g>
+  <g fill="none" stroke="var(--red)" stroke-width="3"><circle cx="56" cy="124" r="8"/><circle cx="110" cy="124" r="8"/><circle cx="164" cy="124" r="8"/></g>
+  <g fill="var(--red)"><rect x="49" y="86" width="14" height="10" rx="2"/><rect x="103" y="86" width="14" height="10" rx="2"/><rect x="103" y="70" width="14" height="10" rx="2"/></g>
+  <text x="110" y="152" class="svg-ts" fill="var(--red)" text-anchor="middle">✕ 트럭 회차 실패 → 골목 잠김</text>
+</svg>
+<div class="dcap"><span class="vs-tag no">피하세요</span> 트럭이 끝에서 돌지 못하면 그 골목 전체가 잠기고, 수거·배송이 연쇄로 실패합니다. 부득이하면 <b>끝에 회전교차로</b>를 두세요.</div>
+</figure>
+</div>
+
+<div class="callout money">
+<div class="ct">산업지구 배치 위치 — 체크리스트</div>
+<ol>
+<li><strong>바람 하류</strong>(대기오염) + <strong>물 하류</strong>(수질오염) + <strong>지하수 취수원 회피</strong>(토양오염)</li>
+<li><strong>외부 연결에 최대한 가깝게</strong> — 회사는 운송비로 입지를 평가하므로, 내륙 깊은 산업단지는 수익성이 떨어집니다</li>
+<li>주거지와의 사이에 <strong>사무·저밀 상업·공원 완충지대</strong>(사무는 토양오염 0)</li>
+<li>화물역/화물항을 <strong>지구에 붙여서</strong> — 멀면 회사가 트럭 직송을 택해 터미널이 놉니다</li>
+<li>Economy 2.0 이후 <strong>부지를 예전보다 크게</strong> 잡을 것(공간 배수 1→5)</li>
+</ol>
+</div>
+
+<h3>5-6. 확장할 때 저지르는 3대 실수</h3>
+<details class="acc"><summary>1. 수요 막대가 찼다고 한꺼번에 크게 구획한다</summary><div class="acc-body">
+<p>같은 연령대가 동시 입주해 <strong>사망파</strong>가 오고, 학교가 파도처럼 넘쳤다 비었다 반복하며, 서비스 수요가 한 번에 폭증해 재정이 흔들립니다.</p>
+<p><strong>처방</strong>: 블록 1~2개씩, 수요 막대가 다시 찰 때마다 추가. 5-4절의 표준 블록을 하나씩 복사하는 리듬이 가장 안전합니다.</p>
+</div></details>
+<details class="acc"><summary>2. 새 동네를 기존 국지도로 끝에 이어붙인다</summary><div class="acc-body">
+<p>5-2절의 "지네 도시"가 됩니다. 대체 경로가 없어 사고 하나에 도시 절반이 멈추고, 나중에 간선을 넣으려면 이미 지은 집을 부숴야 합니다.</p>
+<p><strong>처방</strong>: 새 동네는 <strong>콜렉터를 먼저 뽑고</strong> 그 안을 채웁니다. 콜렉터는 반드시 양 끝이 기존 간선/콜렉터에 물려 <strong>폐루프</strong>를 이뤄야 합니다.</p>
+</div></details>
+<details class="acc"><summary>3. 정체가 생기면 그 도로를 넓힌다</summary><div class="acc-body">
+<p>6차선으로 넓히면 <strong>교차로 신호주기가 길어져 오히려 악화</strong>되는 경우가 많습니다. 병목은 대개 구간이 아니라 교차로입니다.</p>
+<p><strong>처방</strong>: 4-10절의 진단 순서 → 위계 위반 확인 → 신호/회전교차로 선택 → 보행자 길·자전거·대중교통으로 수요 자체를 덜어내기. <strong>차선 증설은 마지막 수단</strong>입니다.</p>
+</div></details>
+</section>
+
+<!-- ══════════ 6. 대중교통 ══════════ -->
 <section class="chapter" id="transit">
-<h2><span class="num">5</span>대중교통 &amp; 화물 물류</h2>
+<h2><span class="num">6</span>대중교통 &amp; 화물 물류</h2>
 
 <p class="lede">대중교통은 <strong>수익 시설이 아니라 도로 정체 완화 + 지가·매력도 상승 장치</strong>로 회계 처리하세요. 유지비의 30~50%를 요금으로 회수하면 잘한 것입니다. 대신 도로 확장으로는 절대 얻을 수 없는 수송 밀도를 제공합니다.</p>
 
@@ -815,7 +1513,97 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </tbody>
 </table>
 </div>
-<p>초반 DP는 전기·수도·교육과 경쟁하므로, 교통 트리는 <strong>보통 인구 1만 이후부터 본격 투자</strong>합니다.</p>
+<figure class="diagram">
+<div class="dg-title">교통 개발 트리 — 지하철까지 가는 길</div>
+<svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="대중교통 개발 트리와 개발 포인트 누적">
+  <defs><marker id="dpA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="var(--svg-line)"/></marker></defs>
+  <rect x="0" y="0" width="700" height="250" fill="var(--svg-fill)" rx="8"/>
+  <!-- M4 -->
+  <rect x="18" y="86" width="112" height="62" fill="var(--green-soft)" stroke="var(--green)" stroke-width="2.5" rx="8"/>
+  <text x="74" y="108" class="svg-t" fill="var(--green)" text-anchor="middle">🚌 버스·택시</text>
+  <text x="74" y="126" class="svg-ts" fill="var(--green)" text-anchor="middle">M4 무료 해금</text>
+  <text x="74" y="141" class="svg-ts" fill="var(--green)" text-anchor="middle">0 DP</text>
+  <line x1="130" y1="117" x2="164" y2="117" stroke="var(--svg-line)" stroke-width="2.5" marker-end="url(#dpA)"/>
+  <!-- 기차 -->
+  <rect x="170" y="86" width="104" height="62" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5" rx="8"/>
+  <text x="222" y="108" class="svg-t" fill="var(--accent-text)" text-anchor="middle">🚂 기차</text>
+  <text x="222" y="126" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">1티어</text>
+  <text x="222" y="141" class="svg-tb" fill="var(--accent-text)" text-anchor="middle">1 DP</text>
+  <line x1="274" y1="117" x2="308" y2="117" stroke="var(--svg-line)" stroke-width="2.5" marker-end="url(#dpA)"/>
+  <!-- 트램 -->
+  <rect x="314" y="86" width="104" height="62" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5" rx="8"/>
+  <text x="366" y="108" class="svg-t" fill="var(--accent-text)" text-anchor="middle">🚋 트램</text>
+  <text x="366" y="126" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">2티어</text>
+  <text x="366" y="141" class="svg-tb" fill="var(--accent-text)" text-anchor="middle">2 DP</text>
+  <line x1="418" y1="117" x2="452" y2="117" stroke="var(--svg-line)" stroke-width="2.5" marker-end="url(#dpA)"/>
+  <!-- 지하철 -->
+  <rect x="458" y="80" width="120" height="74" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="3" rx="8"/>
+  <text x="518" y="104" class="svg-t" fill="var(--purple)" text-anchor="middle">🚇 지하철</text>
+  <text x="518" y="122" class="svg-ts" fill="var(--purple)" text-anchor="middle">3티어</text>
+  <text x="518" y="139" class="svg-tb" fill="var(--purple)" text-anchor="middle">4 DP</text>
+  <!-- 누적 -->
+  <rect x="596" y="88" width="86" height="58" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="2.5" rx="8"/>
+  <text x="639" y="110" class="svg-ts" fill="var(--amber)" text-anchor="middle">누적</text>
+  <text x="639" y="132" class="svg-tb" fill="var(--amber)" text-anchor="middle">7 DP</text>
+  <line x1="578" y1="117" x2="592" y2="117" stroke="var(--svg-line)" stroke-width="2.5"/>
+  <!-- 곁가지 -->
+  <rect x="314" y="182" width="104" height="48" fill="var(--teal-soft)" stroke="var(--teal)" stroke-width="2" rx="8"/>
+  <text x="366" y="202" class="svg-ts" fill="var(--teal)" text-anchor="middle">🚢 선박/수상</text>
+  <text x="366" y="220" class="svg-t" fill="var(--teal)" text-anchor="middle">2 DP · 2티어</text>
+  <line x1="366" y1="148" x2="366" y2="178" stroke="var(--svg-line)" stroke-width="2" stroke-dasharray="4 3"/>
+  <rect x="458" y="182" width="120" height="48" fill="var(--surface2)" stroke="var(--border2)" stroke-width="2" rx="8"/>
+  <text x="518" y="202" class="svg-ts" fill="var(--text3)" text-anchor="middle">✈️ 공항 4 DP</text>
+  <text x="518" y="220" class="svg-ts" fill="var(--text3)" text-anchor="middle">국제공항 8 DP</text>
+  <rect x="18" y="18" width="664" height="44" fill="var(--accent-soft)" rx="8"/>
+  <text x="350" y="38" class="svg-t" fill="var(--accent-text)" text-anchor="middle">지하철은 단독 구매가 안 됩니다 — 기차(1) → 트램(2) → 지하철(4) 순서로 선행 해금이 필요합니다.</text>
+  <text x="350" y="55" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">티어별 비용: 1티어=1DP · 2티어=2DP · 3티어=4DP · 4티어=8DP</text>
+</svg>
+<figcaption>초반 DP는 전기·수도·교육과 경쟁합니다. 교통 트리는 <b>보통 인구 1만 이후부터 본격 투자</b>하며, 그 전까지는 M4 무료 해금인 버스로 버팁니다.</figcaption>
+</figure>
+
+<h4>차고지·역 설치 실무 — 이것만 틀리면 차가 안 다닙니다</h4>
+<div class="dgrid c3">
+<figure class="diagram bad">
+<div class="dg-title"><span class="pill" style="background:var(--red-soft);color:var(--red)">✕</span>차고지 미연결</div>
+<svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="차고지가 노선망과 연결되지 않은 잘못된 사례">
+  <rect x="0" y="0" width="220" height="160" fill="var(--svg-fill)" rx="8"/>
+  <line x1="20" y1="60" x2="200" y2="60" stroke="var(--purple)" stroke-width="7" stroke-dasharray="8 5"/>
+  <text x="20" y="46" class="svg-ts" fill="var(--purple)">지하철 본선</text>
+  <rect x="76" y="102" width="72" height="34" fill="var(--surface2)" stroke="var(--red)" stroke-width="2.5" rx="5"/>
+  <text x="112" y="124" class="svg-ts" fill="var(--red)" text-anchor="middle">차량기지</text>
+  <line x1="112" y1="68" x2="112" y2="98" stroke="var(--red)" stroke-width="3" stroke-dasharray="4 4" opacity=".5"/>
+  <line x1="98" y1="76" x2="126" y2="90" stroke="var(--red)" stroke-width="3.5"/>
+  <text x="112" y="152" class="svg-ts" fill="var(--red)" text-anchor="middle">선로 미연결 → 차량 배차 0</text>
+</svg>
+<div class="dcap">가장 흔한 실수입니다. <b>지하철·철도 차량기지는 반드시 본선과 선로로</b> 이어야 합니다. 도로만 닿아 있으면 안 됩니다.</div>
+</figure>
+<figure class="diagram bad">
+<div class="dg-title"><span class="pill" style="background:var(--red-soft);color:var(--red)">✕</span>단선 왕복</div>
+<svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="단선 왕복 노선의 교행 대기 문제">
+  <rect x="0" y="0" width="220" height="160" fill="var(--svg-fill)" rx="8"/>
+  <line x1="20" y1="80" x2="200" y2="80" stroke="var(--red)" stroke-width="6"/>
+  <g fill="var(--red)"><rect x="60" y="72" width="22" height="14" rx="3"/><rect x="130" y="72" width="22" height="14" rx="3"/></g>
+  <path d="M84 66 L126 66" stroke="var(--red)" stroke-width="2.5" stroke-dasharray="4 3"/>
+  <text x="105" y="56" class="svg-ts" fill="var(--red)" text-anchor="middle">정면 교행 → 대기</text>
+  <text x="110" y="128" class="svg-ts" fill="var(--red)" text-anchor="middle">배차 간격 붕괴</text>
+</svg>
+<div class="dcap">일자 왕복 노선을 단선으로 깔면 열차가 서로를 기다리다 <b>몰려다닙니다.</b> 복선이 기본입니다(복선 ≈₡2,500/km).</div>
+</figure>
+<figure class="diagram good">
+<div class="dg-title"><span class="pill">✓</span>복선 + 기지 직결</div>
+<svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="복선과 차량기지 직결의 올바른 배치">
+  <rect x="0" y="0" width="220" height="160" fill="var(--svg-fill)" rx="8"/>
+  <line x1="20" y1="74" x2="200" y2="74" stroke="var(--green)" stroke-width="5"/>
+  <line x1="20" y1="88" x2="200" y2="88" stroke="var(--green)" stroke-width="5"/>
+  <g fill="var(--green)"><rect x="58" y="66" width="20" height="12" rx="3"/><rect x="132" y="84" width="20" height="12" rx="3"/></g>
+  <rect x="78" y="112" width="66" height="30" fill="var(--green-soft)" stroke="var(--green)" stroke-width="2.5" rx="5"/>
+  <text x="111" y="132" class="svg-ts" fill="var(--green)" text-anchor="middle">차량기지</text>
+  <path d="M111 112 Q111 100 105 93" stroke="var(--green)" stroke-width="4" fill="none"/>
+  <text x="110" y="156" class="svg-ts" fill="var(--green)" text-anchor="middle">선로로 직결 · 양방향 독립</text>
+</svg>
+<div class="dcap">복선이면 양방향이 서로를 막지 않습니다. 차량기지는 <b>인출입선으로 본선에 직결</b>하고, 노선망 가장자리에 둡니다.</div>
+</figure>
+</div>
 
 <h3>5-2. 시설 건설비·유지비 총람</h3>
 <div class="tablewrap">
@@ -900,6 +1688,53 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <li><strong>일자 왕복 노선은 복선(Double Track) 필수.</strong> 단선으로 만들면 교행 대기로 배차가 붕괴합니다.</li>
 </ul>
 
+<div class="dgrid c3">
+<figure class="diagram">
+<div class="dg-title">순환선 (Loop)</div>
+<svg viewBox="0 0 220 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="순환선 노선 형태">
+  <defs><marker id="lpA" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="var(--teal)"/></marker></defs>
+  <rect x="0" y="0" width="220" height="190" fill="var(--svg-fill)" rx="8"/>
+  <rect x="40" y="34" width="140" height="110" fill="none" stroke="var(--teal)" stroke-width="6" rx="24"/>
+  <path d="M110 34 L130 34" stroke="var(--teal)" stroke-width="6" marker-end="url(#lpA)"/>
+  <g fill="var(--surface)" stroke="var(--teal)" stroke-width="2.5">
+    <circle cx="70" cy="34" r="5"/><circle cx="150" cy="34" r="5"/><circle cx="180" cy="89" r="5"/>
+    <circle cx="150" cy="144" r="5"/><circle cx="70" cy="144" r="5"/><circle cx="40" cy="89" r="5"/>
+  </g>
+  <rect x="88" y="76" width="44" height="26" fill="var(--teal-soft)" stroke="var(--teal)" stroke-width="2" rx="4"/>
+  <text x="110" y="94" class="svg-ts" fill="var(--teal)" text-anchor="middle">차고지</text>
+  <text x="110" y="172" class="svg-ts" fill="var(--teal)" text-anchor="middle">버스·트램에 적합</text>
+</svg>
+<div class="dcap">모든 정류장을 지나 차고지로 돌아오는 <b>폐곡선</b>. 배차가 균등해집니다. 도심 외곽 지하철 순환선은 <b>도심 통과 수요를 분산</b>시킵니다.</div>
+</figure>
+<figure class="diagram">
+<div class="dg-title">방사선 (Radial)</div>
+<svg viewBox="0 0 220 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="방사선 노선 형태">
+  <rect x="0" y="0" width="220" height="190" fill="var(--svg-fill)" rx="8"/>
+  <g stroke="var(--purple)" stroke-width="5.5">
+    <line x1="110" y1="90" x2="30" y2="34"/><line x1="110" y1="90" x2="196" y2="40"/>
+    <line x1="110" y1="90" x2="40" y2="150"/><line x1="110" y1="90" x2="186" y2="146"/>
+  </g>
+  <g fill="var(--surface)" stroke="var(--purple)" stroke-width="2.5">
+    <circle cx="30" cy="34" r="5"/><circle cx="196" cy="40" r="5"/><circle cx="40" cy="150" r="5"/><circle cx="186" cy="146" r="5"/>
+    <circle cx="70" cy="62" r="4"/><circle cx="153" cy="65" r="4"/><circle cx="75" cy="120" r="4"/><circle cx="148" cy="118" r="4"/>
+  </g>
+  <circle cx="110" cy="90" r="11" fill="var(--purple)"/>
+  <text x="110" y="172" class="svg-ts" fill="var(--purple)" text-anchor="middle">지하철의 기본형</text>
+</svg>
+<div class="dcap">도심 허브에서 각 주거 지구로 뻗습니다. <b>방사선 2~3개 + 외곽 순환선 1개</b>가 10만 도시의 표준 조합입니다.</div>
+</figure>
+<figure class="diagram bad">
+<div class="dg-title">거대 일주 노선</div>
+<svg viewBox="0 0 220 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="지나치게 긴 일주 노선의 문제">
+  <rect x="0" y="0" width="220" height="190" fill="var(--svg-fill)" rx="8"/>
+  <path d="M30 40 Q60 20 96 44 Q130 70 172 40 Q200 60 186 100 Q166 140 120 128 Q76 116 56 148 Q28 130 30 40" stroke="var(--red)" stroke-width="5" fill="none"/>
+  <g fill="var(--red)"><rect x="88" y="36" width="16" height="11" rx="2"/><rect x="100" y="46" width="16" height="11" rx="2"/></g>
+  <text x="110" y="172" class="svg-ts" fill="var(--red)" text-anchor="middle">배차 간격 붕괴 · 차량 뭉침</text>
+</svg>
+<div class="dcap"><span class="vs-tag no">피하세요</span> 한 노선이 도시 전체를 휘감으면 배차 간격이 벌어지고 차량이 뭉칩니다. <b>정류장 12~20개</b>로 끊고 환승으로 잇는 것이 정답입니다.</div>
+</figure>
+</div>
+
 <h4>환승 설계 5원칙</h4>
 <ol class="steps">
 <li><span class="st">환승 지점은 도보 1~2블록 이내로 겹치기</span>지하철역 바로 위에 버스 정류장 2개(양방향)를 놓는 것이 기본기입니다.</li>
@@ -946,6 +1781,63 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </tbody>
 </table>
 </div>
+<figure class="diagram">
+<div class="dg-title">화물 동선 전체도 — 도로·철도·항만이 어떻게 물리는가</div>
+<svg viewBox="0 0 700 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="산업지구와 화물역, 화물항, 고속도로 연계 배치도">
+  <defs>
+    <marker id="cgA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="var(--amber)"/></marker>
+    <marker id="cgB" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="var(--teal)"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="330" fill="var(--svg-fill)" rx="8"/>
+  <!-- 외부연결 라벨 -->
+  <text x="14" y="20" class="svg-ts" fill="var(--text3)">맵 가장자리 = 외부 연결</text>
+  <!-- 고속도로 -->
+  <line x1="0" y1="46" x2="700" y2="46" stroke="#7c3aed" stroke-width="13"/>
+  <text x="600" y="36" class="svg-ts" fill="#7c3aed">고속도로</text>
+  <!-- 철도 -->
+  <line x1="0" y1="290" x2="700" y2="290" stroke="var(--teal)" stroke-width="7" stroke-dasharray="12 6"/>
+  <text x="600" y="310" class="svg-ts" fill="var(--teal)">화물 전용선</text>
+  <!-- 산업지구 -->
+  <rect x="196" y="96" width="300" height="152" fill="#dc2626" opacity=".12" rx="10"/>
+  <rect x="196" y="96" width="300" height="152" fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="6 4" rx="10"/>
+  <text x="346" y="118" class="svg-t" fill="#dc2626" text-anchor="middle">🏭 산업지구</text>
+  <!-- 산업 내부 루프 -->
+  <rect x="222" y="132" width="248" height="92" fill="none" stroke="var(--amber)" stroke-width="7" rx="12"/>
+  <line x1="346" y1="132" x2="346" y2="224" stroke="var(--amber)" stroke-width="5"/>
+  <g fill="#dc2626" opacity=".4">
+    <rect x="238" y="146" width="90" height="28" rx="3"/><rect x="364" y="146" width="90" height="28" rx="3"/>
+    <rect x="238" y="184" width="90" height="26" rx="3"/><rect x="364" y="184" width="90" height="26" rx="3"/>
+  </g>
+  <!-- 전용 램프 -->
+  <path d="M250 52 Q250 76 250 130" stroke="var(--amber)" stroke-width="8" fill="none" marker-end="url(#cgA)"/>
+  <text x="150" y="80" class="svg-t" fill="var(--amber)">화물 전용 IC</text>
+  <!-- 화물역 -->
+  <rect x="270" y="256" width="152" height="30" fill="var(--teal-soft)" stroke="var(--teal)" stroke-width="2.5" rx="5"/>
+  <text x="346" y="276" class="svg-t" fill="var(--teal)" text-anchor="middle">🚂 화물 기차역 ₡150,000</text>
+  <line x1="346" y1="224" x2="346" y2="254" stroke="var(--amber)" stroke-width="6"/>
+  <line x1="346" y1="286" x2="346" y2="290" stroke="var(--teal)" stroke-width="6"/>
+  <!-- 화물항 -->
+  <rect x="520" y="150" width="150" height="76" fill="#3b82f6" opacity=".16" rx="8"/>
+  <rect x="520" y="150" width="150" height="76" fill="none" stroke="#3b82f6" stroke-width="2" rx="8"/>
+  <text x="595" y="176" class="svg-t" fill="#3b82f6" text-anchor="middle">🚢 화물항</text>
+  <text x="595" y="194" class="svg-ts" fill="#3b82f6" text-anchor="middle">₡490,000 / 15,500t</text>
+  <text x="595" y="214" class="svg-ts" fill="#3b82f6" text-anchor="middle">철도 연결 업글 ₡80,000</text>
+  <line x1="496" y1="188" x2="518" y2="188" stroke="var(--amber)" stroke-width="6" marker-end="url(#cgA)"/>
+  <path d="M595 226 Q595 260 424 271" stroke="var(--teal)" stroke-width="4" fill="none" stroke-dasharray="7 4" marker-end="url(#cgB)"/>
+  <!-- 주거 (분리) -->
+  <rect x="20" y="150" width="150" height="98" fill="#16a34a" opacity=".16" rx="8"/>
+  <rect x="20" y="150" width="150" height="98" fill="none" stroke="#16a34a" stroke-width="2" rx="8"/>
+  <text x="95" y="176" class="svg-t" fill="#16a34a" text-anchor="middle">🏘️ 주거</text>
+  <text x="95" y="200" class="svg-ts" fill="#16a34a" text-anchor="middle">통근은 버스·콜렉터로</text>
+  <path d="M170 214 L220 214" stroke="#0d9488" stroke-width="6"/>
+  <text x="196" y="236" class="svg-ts" fill="#0d9488" text-anchor="middle">통근 전용</text>
+  <!-- 하단 결론 -->
+  <rect x="20" y="304" width="480" height="22" fill="var(--green-soft)" rx="5"/>
+  <text x="260" y="320" class="svg-ts" fill="var(--green)" text-anchor="middle">화물(주황) 동선과 통근(청록) 동선이 한 번도 겹치지 않습니다</text>
+</svg>
+<figcaption>화물역·화물항은 <b>산업지구에 붙어 있어야</b> 회사가 씁니다. 멀면 트럭 직송이 더 싸서 터미널이 놀게 됩니다. 화물항의 <b>철도 연결 업그레이드(₡80,000)</b>를 달면 "배 → 기차 → 내륙"이 한 번에 이어집니다.</figcaption>
+</figure>
+
 <p><strong>효과</strong>: 외부 연결 고속도로의 <strong>트럭 통행량을 흡수</strong>해 진입로 정체를 크게 줄입니다. 수출입 경로가 다양해질수록 회사의 물류비가 내려가 산업 수익성·세수에 간접 기여합니다.</p>
 <p><strong>우선순위</strong>: 화물 기차역(인구 ≈8천~1.5만) → 화물항(수변 도시, ≈3만) → 화물공항(≈8만+)</p>
 
@@ -957,12 +1849,56 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </div>
 <ol class="steps">
 <li><span class="st">주차를 불편하게 만들기</span>지구 정책으로 노상 주차 요금을 올리거나 노상 주차칸을 제거하면 자가용 효용이 급락합니다. <strong>요금 인하보다 강력한 경우가 많습니다.</strong></li>
-<li><span class="st">도보 접근성 확보</span>정류장 도보권에 고밀도 주거·상업이 있어야 합니다. 보행자 전용 도로로 접근 동선을 단축하세요.</li>
+<li><span class="st">도보 접근성 확보</span>정류장 도보권에 고밀도 주거·상업이 있어야 합니다. 보행자 전용 도로로 접근 동선을 단축하세요. <span style="color:var(--accent-text);font-weight:700">↓ 아래 배치 예시</span></li>
 <li><span class="st">직선·단순 노선</span>우회가 많은 노선은 시간 효용에서 자가용에 집니다.</li>
 <li><span class="st">배차 밀도 관리</span>만차로 정류장을 그냥 지나치면 대기 인원이 폭증합니다. 이용률 통계를 보고 증차하세요.</li>
 <li><span class="st">통근축 정조준</span>교통 정보 뷰에서 통근 흐름을 확인하고, 최다 유동 구간에 상위 수단(트램→지하철)을 얹습니다.</li>
 <li><span class="st">외부 연결로 관광객 유치</span>기차역·항구·공항은 관광객 유입 창구입니다. <strong>관광객은 차가 없어 대중교통 이용률을 끌어올립니다.</strong></li>
 </ol>
+
+<div class="dgrid c2">
+<figure class="diagram bad">
+<div class="dg-title"><span class="pill" style="background:var(--red-soft);color:var(--red)">✕</span>정류장은 있는데 아무도 안 탐</div>
+<svg viewBox="0 0 330 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="접근성이 나쁜 정류장 배치">
+  <rect x="0" y="0" width="330" height="230" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="46" x2="330" y2="46" stroke="#2563eb" stroke-width="13"/>
+  <circle cx="165" cy="46" r="8" fill="var(--red)"/>
+  <text x="178" y="36" class="svg-ts" fill="var(--red)">정류장</text>
+  <!-- 우회 동선 -->
+  <path d="M165 54 L165 78 L52 78 L52 178 L150 178" stroke="var(--red)" stroke-width="3.5" fill="none" stroke-dasharray="6 4"/>
+  <text x="100" y="200" class="svg-ts" fill="var(--red)" text-anchor="middle">실제 도보 경로 — 멀리 돌아감</text>
+  <g stroke="#8a93a5" stroke-width="6" opacity=".6">
+    <line x1="52" y1="78" x2="52" y2="190"/><line x1="52" y1="190" x2="290" y2="190"/><line x1="290" y1="78" x2="290" y2="190"/><line x1="52" y1="78" x2="290" y2="78"/>
+  </g>
+  <g fill="#16a34a" opacity=".4"><rect x="150" y="90" width="60" height="40" rx="3"/><rect x="222" y="90" width="56" height="40" rx="3"/><rect x="150" y="142" width="60" height="38" rx="3"/></g>
+  <text x="210" y="220" class="svg-ts" fill="var(--red)" text-anchor="middle">직선거리는 가까운데 도보로는 3배</text>
+</svg>
+<div class="dcap">CS2 시민은 <b>실제 보행 경로</b>로 판단합니다. 직선거리가 가까워도 빙 돌아야 하면 그냥 차를 몹니다.</div>
+</figure>
+<figure class="diagram good">
+<div class="dg-title"><span class="pill">✓</span>보행자 길로 직결</div>
+<svg viewBox="0 0 330 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="보행자 길로 정류장 접근성을 개선한 배치">
+  <rect x="0" y="0" width="330" height="230" fill="var(--svg-fill)" rx="8"/>
+  <line x1="0" y1="46" x2="330" y2="46" stroke="#2563eb" stroke-width="13"/>
+  <circle cx="165" cy="46" r="8" fill="var(--green)"/>
+  <text x="178" y="36" class="svg-ts" fill="var(--green)">정류장</text>
+  <!-- 도보권 원 -->
+  <circle cx="165" cy="46" r="96" fill="var(--green)" opacity=".08"/>
+  <circle cx="165" cy="46" r="96" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <!-- 보행자 길 -->
+  <g stroke="var(--green)" stroke-width="4" stroke-dasharray="7 4">
+    <line x1="165" y1="54" x2="165" y2="180"/><line x1="110" y1="120" x2="230" y2="120"/>
+  </g>
+  <g stroke="#8a93a5" stroke-width="6" opacity=".55">
+    <line x1="52" y1="86" x2="52" y2="190"/><line x1="52" y1="190" x2="290" y2="190"/><line x1="290" y1="86" x2="290" y2="190"/>
+  </g>
+  <g fill="#16a34a" opacity=".45"><rect x="96" y="70" width="56" height="38" rx="3"/><rect x="180" y="70" width="56" height="38" rx="3"/><rect x="96" y="132" width="56" height="38" rx="3"/><rect x="180" y="132" width="56" height="38" rx="3"/></g>
+  <text x="165" y="212" class="svg-ts" fill="var(--green)" text-anchor="middle">┈ 보행자 길(Pathway) — 건설비 거의 0</text>
+  <text x="165" y="226" class="svg-ts" fill="var(--green)" text-anchor="middle">도보권 안에 중·고밀 주거를 배치</text>
+</svg>
+<div class="dcap"><b>보행자 길은 가장 싼 교통 대책입니다.</b> 블록 한가운데를 관통시켜 정류장까지 직선으로 잇고, 그 도보권 안에 중·고밀을 배치하면 이용률이 급등합니다.</div>
+</figure>
+</div>
 
 <h3>5-8. 흔한 실수</h3>
 <ul>
@@ -974,11 +1910,77 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <li><strong>여객·화물 선로 공유</strong> — 화물열차가 여객 배차를 막습니다. 예산이 되면 전용선 분리.</li>
 <li><strong>버스 생략하고 지하철 직행</strong> — 피더 없는 지하철은 반쪽짜리입니다.</li>
 </ul>
+
+<h3>6-9. 완성형 예시 — 인구 10만 도시의 대중교통망</h3>
+<figure class="diagram">
+<div class="dg-title">방사선 2 + 순환선 1 + 피더 버스</div>
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="인구 10만 도시의 지하철 방사선 순환선 및 피더 버스 노선 예시">
+  <rect x="0" y="0" width="700" height="420" fill="var(--svg-fill)" rx="8"/>
+  <!-- 지구 배경 -->
+  <g opacity=".13">
+    <rect x="60" y="60" width="170" height="130" fill="#16a34a" rx="10"/>
+    <rect x="470" y="60" width="170" height="130" fill="#16a34a" rx="10"/>
+    <rect x="60" y="240" width="170" height="130" fill="#16a34a" rx="10"/>
+    <rect x="470" y="240" width="170" height="130" fill="#dc2626" rx="10"/>
+    <rect x="280" y="150" width="140" height="120" fill="#d97706" rx="10"/>
+  </g>
+  <text x="145" y="80" class="svg-ts" fill="#16a34a" text-anchor="middle">북서 주거</text>
+  <text x="555" y="80" class="svg-ts" fill="#16a34a" text-anchor="middle">북동 주거 · 대학</text>
+  <text x="145" y="260" class="svg-ts" fill="#16a34a" text-anchor="middle">남서 주거</text>
+  <text x="555" y="260" class="svg-ts" fill="#dc2626" text-anchor="middle">산업지구</text>
+  <text x="350" y="170" class="svg-t" fill="#d97706" text-anchor="middle">도심 상업·업무</text>
+
+  <!-- 순환선 -->
+  <rect x="150" y="120" width="400" height="180" fill="none" stroke="var(--teal)" stroke-width="7" rx="70"/>
+  <!-- 방사선 1 (NW-SE) -->
+  <line x1="120" y1="90" x2="596" y2="336" stroke="var(--purple)" stroke-width="7"/>
+  <!-- 방사선 2 (NE-SW) -->
+  <line x1="596" y1="90" x2="120" y2="336" stroke="var(--accent)" stroke-width="7"/>
+
+  <!-- 환승 중심역 -->
+  <circle cx="358" cy="213" r="14" fill="var(--surface)" stroke="var(--text)" stroke-width="3.5"/>
+  <text x="358" y="218" class="svg-ts" fill="var(--text)" text-anchor="middle">환승</text>
+
+  <!-- 역 -->
+  <g fill="var(--surface)" stroke="var(--purple)" stroke-width="3">
+    <circle cx="120" cy="90" r="7"/><circle cx="222" cy="143" r="6"/><circle cx="480" cy="276" r="6"/><circle cx="596" cy="336" r="7"/>
+  </g>
+  <g fill="var(--surface)" stroke="var(--accent)" stroke-width="3">
+    <circle cx="596" cy="90" r="7"/><circle cx="490" cy="145" r="6"/><circle cx="222" cy="280" r="6"/><circle cx="120" cy="336" r="7"/>
+  </g>
+  <g fill="var(--surface)" stroke="var(--teal)" stroke-width="2.5">
+    <circle cx="350" cy="120" r="5.5"/><circle cx="350" cy="300" r="5.5"/><circle cx="150" cy="210" r="5.5"/><circle cx="550" cy="210" r="5.5"/>
+  </g>
+
+  <!-- 피더 버스 -->
+  <g stroke="var(--green)" stroke-width="2.5" stroke-dasharray="5 4" fill="none">
+    <path d="M120 90 Q70 60 66 110 Q64 160 120 96"/>
+    <path d="M596 90 Q650 62 654 112 Q656 162 600 96"/>
+    <path d="M120 336 Q68 310 66 358 Q66 400 118 344"/>
+    <path d="M596 336 Q650 312 652 360 Q652 400 600 344"/>
+  </g>
+  <text x="66" y="392" class="svg-ts" fill="var(--green)">┈ 피더 버스</text>
+
+  <!-- 범례 -->
+  <rect x="240" y="376" width="420" height="34" fill="var(--surface)" stroke="var(--border)" stroke-width="1" rx="6"/>
+  <g stroke-width="5">
+    <line x1="256" y1="393" x2="284" y2="393" stroke="var(--purple)"/>
+    <line x1="368" y1="393" x2="396" y2="393" stroke="var(--accent)"/>
+    <line x1="480" y1="393" x2="508" y2="393" stroke="var(--teal)"/>
+  </g>
+  <text x="290" y="397" class="svg-ts" fill="var(--text2)">1호선(방사)</text>
+  <text x="402" y="397" class="svg-ts" fill="var(--text2)">2호선(방사)</text>
+  <text x="514" y="397" class="svg-ts" fill="var(--text2)">3호선(순환)</text>
+</svg>
+<figcaption>
+<b>왜 이 형태인가</b>: ① 방사선 2개가 도심에서 <b>한 점에서 교차</b>해 환승이 1회로 끝납니다 ② 순환선이 <b>도심을 지나지 않는 통행</b>(주거↔산업)을 걷어내 도심역 혼잡을 막습니다 ③ 각 종점에 <b>피더 버스 루프</b>가 붙어 "역까지 걸어갈 수 없는 시민"을 없앱니다 ④ 산업지구를 노선에 포함시켜 <b>통근 차량을 줄입니다.</b>
+</figcaption>
+</figure>
 </section>
 
 <!-- ══════════ 6. 전력 ══════════ -->
 <section class="chapter" id="power">
-<h2><span class="num">6</span>전력 인프라</h2>
+<h2><span class="num">7</span>전력 인프라</h2>
 
 <p class="lede">CS2에서는 <strong>거의 모든 도로에 저압 전선이 내장</strong>되어 있습니다(고속도로 제외). 발전소가 도로망에 접해 있으면 그 도로망에 연결된 모든 건물에 자동 송전됩니다. CS1처럼 전선을 촘촘히 깔 필요가 없습니다.</p>
 
@@ -989,6 +1991,67 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <li>전기 정보 뷰에서 <strong>파란색 = 고압, 노란색·주황색 = 저압</strong> 흐름이 표시됩니다. 총 발전량이 충분해도 <strong>특정 저압 구간에 과부하(병목)</strong>가 걸리면 그 구역만 정전됩니다.</li>
 <li>병목 해결책: 병렬 저압 케이블 추가, 병목 지점 근처에 변전소+고압선 신설, 발전소에서 나가는 도로 추가.</li>
 </ul>
+
+<figure class="diagram">
+<div class="dg-title">전력망 구조 — 무엇을 언제 연결해야 하는가</div>
+<svg viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="고압선 변전소 저압 도로망 전력 구조도">
+  <defs><marker id="pwA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#3b82f6"/></marker></defs>
+  <rect x="0" y="0" width="700" height="360" fill="var(--svg-fill)" rx="8"/>
+
+  <!-- 원거리 발전소 -->
+  <rect x="20" y="40" width="120" height="62" fill="var(--teal-soft)" stroke="var(--teal)" stroke-width="2.5" rx="7"/>
+  <text x="80" y="64" class="svg-t" fill="var(--teal)" text-anchor="middle">🌬️ 원거리 발전소</text>
+  <text x="80" y="82" class="svg-ts" fill="var(--teal)" text-anchor="middle">풍력단지·수력댐</text>
+  <text x="80" y="96" class="svg-ts" fill="var(--teal)" text-anchor="middle">(도로망에서 멂)</text>
+
+  <!-- 고압선 -->
+  <line x1="140" y1="71" x2="248" y2="71" stroke="#3b82f6" stroke-width="5" marker-end="url(#pwA)"/>
+  <text x="194" y="60" class="svg-ts" fill="#3b82f6" text-anchor="middle">고압선</text>
+
+  <!-- 변전소 -->
+  <rect x="252" y="42" width="112" height="58" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="2.5" rx="7"/>
+  <text x="308" y="66" class="svg-t" fill="var(--amber)" text-anchor="middle">⚡ 변전소</text>
+  <text x="308" y="84" class="svg-ts" fill="var(--amber)" text-anchor="middle">고압↔저압 변환</text>
+
+  <!-- 외부연결 -->
+  <rect x="560" y="42" width="122" height="58" fill="var(--surface2)" stroke="var(--border2)" stroke-width="2.5" rx="7"/>
+  <text x="621" y="64" class="svg-t" fill="var(--text2)" text-anchor="middle">🌐 외부 연결</text>
+  <text x="621" y="82" class="svg-ts" fill="var(--text2)" text-anchor="middle">수입 ≈₡9,000/MW</text>
+  <line x1="364" y1="71" x2="556" y2="71" stroke="#3b82f6" stroke-width="5"/>
+  <text x="460" y="60" class="svg-ts" fill="#3b82f6" text-anchor="middle">고압선 — 수입/수출</text>
+
+  <!-- 도로망 (저압) -->
+  <line x1="308" y1="100" x2="308" y2="150" stroke="var(--amber)" stroke-width="5"/>
+  <rect x="60" y="150" width="580" height="120" fill="none" stroke="var(--svg-line)" stroke-width="2" stroke-dasharray="5 4" rx="8"/>
+  <text x="74" y="168" class="svg-ts" fill="var(--text3)">도로망 = 저압 전선 내장 (별도 전선 불필요)</text>
+  <g stroke="#f59e0b" stroke-width="9" opacity=".7">
+    <line x1="80" y1="196" x2="620" y2="196"/>
+    <line x1="200" y1="196" x2="200" y2="252"/><line x1="380" y1="196" x2="380" y2="252"/><line x1="540" y1="196" x2="540" y2="252"/>
+  </g>
+  <g fill="#16a34a" opacity=".45">
+    <rect x="100" y="212" width="80" height="34" rx="3"/><rect x="230" y="212" width="80" height="34" rx="3"/>
+    <rect x="410" y="212" width="80" height="34" rx="3"/><rect x="560" y="212" width="60" height="34" rx="3"/>
+  </g>
+
+  <!-- 인접 발전소 -->
+  <rect x="20" y="286" width="150" height="54" fill="var(--green-soft)" stroke="var(--green)" stroke-width="2.5" rx="7"/>
+  <text x="95" y="308" class="svg-t" fill="var(--green)" text-anchor="middle">🏭 도로 접한 발전소</text>
+  <text x="95" y="326" class="svg-ts" fill="var(--green)" text-anchor="middle">고압선 불필요 — 자동 송전</text>
+  <line x1="95" y1="286" x2="95" y2="200" stroke="var(--green)" stroke-width="5"/>
+
+  <!-- 병목 -->
+  <circle cx="380" cy="196" r="15" fill="var(--red)" opacity=".28"/>
+  <text x="380" y="290" class="svg-t" fill="var(--red)" text-anchor="middle">⬤ 저압 병목 (주황 포화)</text>
+  <text x="380" y="308" class="svg-ts" fill="var(--red)" text-anchor="middle">총 발전량이 충분해도 이 구간만 정전</text>
+  <text x="380" y="324" class="svg-ts" fill="var(--red)" text-anchor="middle">→ 근처에 변전소+고압선 신설 또는 우회 도로 추가</text>
+
+  <!-- 고속도로 경고 -->
+  <rect x="500" y="286" width="182" height="54" fill="var(--red-soft)" stroke="var(--red)" stroke-width="2" rx="7"/>
+  <text x="591" y="308" class="svg-t" fill="var(--red)" text-anchor="middle">⚠ 고속도로는 예외</text>
+  <text x="591" y="326" class="svg-ts" fill="var(--red)" text-anchor="middle">저압 전선이 없습니다</text>
+</svg>
+<figcaption>기억할 것은 세 줄입니다. <b>① 도로에 접한 발전소는 전선이 필요 없다 ② 멀거나 외부와 거래할 때만 고압선+변전소 ③ 고속도로에는 전선이 없다.</b></figcaption>
+</figure>
 
 <h3>6-2. 발전소 전체 스펙 비교</h3>
 <div class="tablewrap">
@@ -1013,6 +2076,78 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <caption>Economy 2.0 이후 커뮤니티 실측(Steam 가이드 1.2 기준)의 교차 검증값. 두 소스가 갈리는 항목은 범위로 표기했습니다.</caption>
 </table>
 </div>
+
+<figure class="diagram">
+<div class="dg-title">발전소 선택 플로우차트 — "우리 맵에선 뭘 지어야 하나"</div>
+<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="지형과 인구에 따른 발전소 선택 흐름도">
+  <defs><marker id="fcA" markerWidth="7" markerHeight="7" refX="5.5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="var(--svg-line)"/></marker></defs>
+  <rect x="0" y="0" width="700" height="400" fill="var(--svg-fill)" rx="8"/>
+
+  <!-- 시작 -->
+  <rect x="270" y="14" width="160" height="38" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5" rx="19"/>
+  <text x="350" y="38" class="svg-t" fill="var(--accent-text)" text-anchor="middle">발전소가 필요하다</text>
+  <line x1="350" y1="52" x2="350" y2="72" stroke="var(--svg-line)" stroke-width="2" marker-end="url(#fcA)"/>
+
+  <!-- 초반 -->
+  <rect x="230" y="76" width="240" height="34" fill="var(--surface2)" stroke="var(--border2)" stroke-width="2" rx="6"/>
+  <text x="350" y="98" class="svg-t" fill="var(--text)" text-anchor="middle">인구 2,000 미만인가?</text>
+  <line x1="230" y1="93" x2="150" y2="93" stroke="var(--svg-line)" stroke-width="2" marker-end="url(#fcA)"/>
+  <text x="188" y="86" class="svg-ts" fill="var(--green)" text-anchor="middle">예</text>
+  <rect x="14" y="72" width="130" height="60" fill="var(--green-soft)" stroke="var(--green)" stroke-width="2.5" rx="7"/>
+  <text x="79" y="94" class="svg-t" fill="var(--green)" text-anchor="middle">🌬️ 풍력 2~4기</text>
+  <text x="79" y="112" class="svg-ts" fill="var(--green)" text-anchor="middle">4.5MW+ 지점만</text>
+  <text x="79" y="126" class="svg-ts" fill="var(--green)" text-anchor="middle">바람 약하면 수입</text>
+  <line x1="350" y1="110" x2="350" y2="132" stroke="var(--svg-line)" stroke-width="2" marker-end="url(#fcA)"/>
+  <text x="364" y="126" class="svg-ts" fill="var(--red)">아니오</text>
+
+  <!-- 수력 -->
+  <rect x="230" y="136" width="240" height="34" fill="var(--surface2)" stroke="var(--border2)" stroke-width="2" rx="6"/>
+  <text x="350" y="158" class="svg-t" fill="var(--text)" text-anchor="middle">유량 강한 협곡이 있나?</text>
+  <line x1="470" y1="153" x2="550" y2="153" stroke="var(--svg-line)" stroke-width="2" marker-end="url(#fcA)"/>
+  <text x="510" y="146" class="svg-ts" fill="var(--green)" text-anchor="middle">예</text>
+  <rect x="556" y="126" width="132" height="60" fill="var(--green-soft)" stroke="var(--green)" stroke-width="3" rx="7"/>
+  <text x="622" y="148" class="svg-t" fill="var(--green)" text-anchor="middle">💧 수력댐 2DP</text>
+  <text x="622" y="165" class="svg-ts" fill="var(--green)" text-anchor="middle">MW당 ₡58~370</text>
+  <text x="622" y="180" class="svg-ts" fill="var(--green)" text-anchor="middle">최대한 크게!</text>
+  <line x1="350" y1="170" x2="350" y2="192" stroke="var(--svg-line)" stroke-width="2" marker-end="url(#fcA)"/>
+
+  <!-- 지열 -->
+  <rect x="230" y="196" width="240" height="34" fill="var(--surface2)" stroke="var(--border2)" stroke-width="2" rx="6"/>
+  <text x="350" y="218" class="svg-t" fill="var(--text)" text-anchor="middle">지하수 지대가 있나?</text>
+  <line x1="470" y1="213" x2="550" y2="213" stroke="var(--svg-line)" stroke-width="2" marker-end="url(#fcA)"/>
+  <text x="510" y="206" class="svg-ts" fill="var(--green)" text-anchor="middle">예</text>
+  <rect x="556" y="192" width="132" height="60" fill="var(--green-soft)" stroke="var(--green)" stroke-width="3" rx="7"/>
+  <text x="622" y="214" class="svg-t" fill="var(--green)" text-anchor="middle">🌋 지열 2DP</text>
+  <text x="622" y="231" class="svg-ts" fill="var(--green)" text-anchor="middle">풀업글 300MW</text>
+  <text x="622" y="246" class="svg-ts" fill="var(--green)" text-anchor="middle">중반 최고 가성비</text>
+  <line x1="350" y1="230" x2="350" y2="252" stroke="var(--svg-line)" stroke-width="2" marker-end="url(#fcA)"/>
+
+  <!-- 인구 2만 -->
+  <rect x="230" y="256" width="240" height="34" fill="var(--surface2)" stroke="var(--border2)" stroke-width="2" rx="6"/>
+  <text x="350" y="278" class="svg-t" fill="var(--text)" text-anchor="middle">인구 2만 + 대학이 있나?</text>
+  <line x1="230" y1="273" x2="150" y2="273" stroke="var(--svg-line)" stroke-width="2" marker-end="url(#fcA)"/>
+  <text x="188" y="266" class="svg-ts" fill="var(--green)" text-anchor="middle">예</text>
+  <rect x="14" y="248" width="130" height="66" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="2.5" rx="7"/>
+  <text x="79" y="270" class="svg-t" fill="var(--purple)" text-anchor="middle">☢️ 원자력 8DP</text>
+  <text x="79" y="287" class="svg-ts" fill="var(--purple)" text-anchor="middle">750MW 단일</text>
+  <text x="79" y="302" class="svg-ts" fill="var(--purple)" text-anchor="middle">물 40만·고학력 75</text>
+  <line x1="350" y1="290" x2="350" y2="312" stroke="var(--svg-line)" stroke-width="2" marker-end="url(#fcA)"/>
+
+  <!-- 가스 -->
+  <rect x="248" y="316" width="204" height="56" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="2.5" rx="7"/>
+  <text x="350" y="338" class="svg-t" fill="var(--amber)" text-anchor="middle">🔥 가스 발전소 2DP</text>
+  <text x="350" y="356" class="svg-ts" fill="var(--amber)" text-anchor="middle">250MW · 화석연료 중 오염 최소</text>
+
+  <!-- 금지 -->
+  <rect x="480" y="316" width="206" height="56" fill="var(--red-soft)" stroke="var(--red)" stroke-width="2.5" rx="7"/>
+  <text x="583" y="336" class="svg-t" fill="var(--red)" text-anchor="middle">✕ 석탄은 어느 분기에도 없음</text>
+  <text x="583" y="354" class="svg-ts" fill="var(--red)" text-anchor="middle">소형=효율 최악 / 대형=오염 100,000×3</text>
+
+  <text x="79" y="352" class="svg-ts" fill="var(--text3)" text-anchor="middle">태양광은 "무오염 보조"로만</text>
+  <text x="79" y="368" class="svg-ts" fill="var(--text3)" text-anchor="middle">— 반드시 배터리와 세트</text>
+</svg>
+<figcaption>지형이 발전소를 결정합니다. <b>수력 &gt; 지열 &gt; 원자력</b> 순으로 찾아보고, 아무것도 없으면 가스로 갑니다. 석탄은 어느 경로에도 등장하지 않습니다.</figcaption>
+</figure>
 
 <div class="callout money">
 <div class="ct">MW당 유지비 서열 (외우면 선택이 쉬워집니다)</div>
@@ -1118,7 +2253,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </section>
 <!-- ══════════ 7. 상하수도 ══════════ -->
 <section class="chapter" id="water">
-<h2><span class="num">7</span>상수도·하수도</h2>
+<h2><span class="num">8</span>상수도·하수도</h2>
 
 <p class="lede">도시는 소비한 물과 <strong>거의 같은 양의 하수를 배출</strong>합니다. 상수 용량을 늘리면 하수 처리 용량도 같이 늘려야 합니다. 그리고 이 장의 배치 실수 하나가 도시 전체를 병들게 만듭니다.</p>
 
@@ -1155,6 +2290,62 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </svg>
 <figcaption>강 맵의 정석 배치: <b>취수장은 도시 기준 최상류</b>, <b>배출구는 최하류·물이 맵 밖으로 빠져나가는 가장자리 직전</b>. 이러면 오염이 생기자마자 쓸려 나가 사실상 무공해 운영이 됩니다.</figcaption>
 </figure>
+
+<div class="callout info">
+<div class="ct">자주 묻는 것: 취수장과 배출구를 파이프로 직접 이어야 하나요?</div>
+<p><strong>아니요.</strong> 둘을 서로 잇는 게 아니라, <strong>각자 가장 가까운 도로에만 닿으면 끝</strong>입니다. 도로에 상하수 배관이 내장되어 있어서, 도로망에 물린 순간 두 시설은 같은 수도망의 일부가 됩니다.</p>
+</div>
+
+<div class="dgrid c2">
+<figure class="diagram bad">
+<div class="dg-title"><span class="pill" style="background:var(--red-soft);color:var(--red)">✕ 불필요</span>CS1 습관 — 전 구역 배관</div>
+<svg viewBox="0 0 330 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="불필요하게 전 구역에 파이프를 매설한 잘못된 예">
+  <rect x="0" y="0" width="330" height="220" fill="var(--svg-fill)" rx="8"/>
+  <path d="M0 40 Q120 26 330 44" stroke="#3b82f6" stroke-width="20" fill="none" opacity=".25"/>
+  <rect x="24" y="52" width="56" height="24" fill="var(--green-soft)" stroke="var(--green)" stroke-width="2" rx="4"/>
+  <text x="52" y="68" class="svg-ts" fill="var(--green)" text-anchor="middle">취수장</text>
+  <rect x="248" y="52" width="58" height="24" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="2" rx="4"/>
+  <text x="277" y="68" class="svg-ts" fill="var(--amber)" text-anchor="middle">배출구</text>
+  <!-- 도로 -->
+  <g stroke="#8a93a5" stroke-width="8" opacity=".5">
+    <line x1="40" y1="110" x2="290" y2="110"/><line x1="40" y1="170" x2="290" y2="170"/>
+    <line x1="100" y1="110" x2="100" y2="170"/><line x1="200" y1="110" x2="200" y2="170"/>
+  </g>
+  <!-- 중복 파이프 -->
+  <g stroke="var(--red)" stroke-width="3" stroke-dasharray="5 3">
+    <line x1="52" y1="76" x2="52" y2="196"/><line x1="52" y1="196" x2="277" y2="196"/><line x1="277" y1="196" x2="277" y2="76"/>
+    <line x1="40" y1="118" x2="290" y2="118"/><line x1="40" y1="162" x2="290" y2="162"/>
+    <line x1="108" y1="110" x2="108" y2="170"/><line x1="208" y1="110" x2="208" y2="170"/>
+  </g>
+  <text x="165" y="214" class="svg-ts" fill="var(--red)" text-anchor="middle">돈·시간 낭비 (도로에 이미 배관이 있음)</text>
+</svg>
+<div class="dcap">CS1에서는 배관 그물을 깔아야 했지만 <b>CS2에서는 전부 불필요</b>합니다. 도로가 곧 배관입니다.</div>
+</figure>
+<figure class="diagram good">
+<div class="dg-title"><span class="pill">✓ 정답</span>각자 도로까지만</div>
+<svg viewBox="0 0 330 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="취수장과 배출구를 각각 가까운 도로에만 연결한 올바른 예">
+  <rect x="0" y="0" width="330" height="220" fill="var(--svg-fill)" rx="8"/>
+  <path d="M0 40 Q120 26 330 44" stroke="#3b82f6" stroke-width="20" fill="none" opacity=".25"/>
+  <rect x="24" y="52" width="56" height="24" fill="var(--green-soft)" stroke="var(--green)" stroke-width="2" rx="4"/>
+  <text x="52" y="68" class="svg-ts" fill="var(--green)" text-anchor="middle">취수장</text>
+  <rect x="248" y="52" width="58" height="24" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="2" rx="4"/>
+  <text x="277" y="68" class="svg-ts" fill="var(--amber)" text-anchor="middle">배출구</text>
+  <!-- 짧은 파이프 -->
+  <line x1="52" y1="76" x2="52" y2="104" stroke="var(--green)" stroke-width="5"/>
+  <line x1="277" y1="76" x2="277" y2="104" stroke="var(--amber)" stroke-width="5"/>
+  <text x="52" y="96" class="svg-ts" fill="var(--green)" text-anchor="end" transform="rotate(-90 46 96)"> </text>
+  <!-- 도로망 -->
+  <g stroke="#8a93a5" stroke-width="9" opacity=".6">
+    <line x1="40" y1="110" x2="290" y2="110"/><line x1="40" y1="170" x2="290" y2="170"/>
+    <line x1="100" y1="110" x2="100" y2="170"/><line x1="200" y1="110" x2="200" y2="170"/>
+  </g>
+  <g fill="#16a34a" opacity=".4"><rect x="112" y="120" width="76" height="18" rx="2"/><rect x="112" y="144" width="76" height="18" rx="2"/><rect x="212" y="120" width="70" height="42" rx="2"/></g>
+  <text x="165" y="196" class="svg-t" fill="var(--green)" text-anchor="middle">도로망이 둘을 자동으로 연결</text>
+  <text x="165" y="213" class="svg-ts" fill="var(--green)" text-anchor="middle">파이프는 시설↔가장 가까운 도로 구간만</text>
+</svg>
+<div class="dcap">시설이 이미 도로에 접해 있으면 <b>파이프조차 필요 없습니다.</b> 수변에 떨어져 있을 때만 짧게 한 줄 그으세요.</div>
+</figure>
+</div>
 
 <h3>7-1. 취수 시설 비교</h3>
 <div class="tablewrap">
@@ -1290,7 +2481,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 
 <!-- ══════════ 8. 쓰레기·의료·장묘 ══════════ -->
 <section class="chapter" id="garbage">
-<h2><span class="num">8</span>쓰레기 · 의료 · 장묘</h2>
+<h2><span class="num">9</span>쓰레기 · 의료 · 장묘</h2>
 
 <p class="lede">이 세 서비스의 공통점은 <strong>전부 도로 차량으로 작동한다</strong>는 것입니다. 즉 <strong>교통 정체 = 수거 실패 = 서비스 붕괴</strong>입니다. 시설이 충분한데 문제가 생긴다면 시설이 아니라 도로를 의심하세요.</p>
 
@@ -1350,15 +2541,15 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <h3>8-2. 의료 — 복지가 아니라 경제 인프라</h3>
 <div class="tablewrap">
 <table>
-<thead><tr><th>항목</th><th>진료소(Medical Clinic)</th><th>종합병원(Hospital)</th></tr></thead>
+<thead><tr><th>항목</th><th class="ctr">진료소(Medical Clinic)</th><th class="ctr">종합병원(Hospital)</th></tr></thead>
 <tbody>
-<tr><td>해금</td><td>M1 (기본 제공)</td><td>개발 트리 "의료 및 장묘" 노드</td></tr>
-<tr><td class="num">건설비</td><td class="num">₡30,000<span style="color:var(--text3)">(소형)</span> / ₡60,000<span style="color:var(--text3)">(일반)</span></td><td class="num">≈₡1,880,000</td></tr>
-<tr><td class="num">월 유지비</td><td class="num">≈₡10,000~60,000</td><td class="num">≈₡450,000</td></tr>
-<tr><td class="num">구급차</td><td class="num">5대</td><td class="num">30대</td></tr>
-<tr><td class="num">환자 수용</td><td class="num">≈25~100명</td><td class="num">500명</td></tr>
-<tr><td>서비스 범위</td><td>근거리</td><td>매우 넓음 (표기 ≈7,500 / 용량 ≈50,000)</td></tr>
-<tr><td class="num">일자리</td><td class="num">소수</td><td class="num">≈60명</td></tr>
+<tr><td><b>해금</b></td><td class="ctr">M1 (기본 제공)</td><td class="ctr">개발 트리 "의료 및 장묘" 노드</td></tr>
+<tr><td><b>건설비</b></td><td class="ctr">₡30,000<span style="color:var(--text3)">(소형)</span> / ₡60,000<span style="color:var(--text3)">(일반)</span></td><td class="ctr">≈₡1,880,000</td></tr>
+<tr><td><b>월 유지비</b></td><td class="ctr">≈₡10,000~60,000</td><td class="ctr">≈₡450,000</td></tr>
+<tr><td><b>구급차</b></td><td class="ctr">5대</td><td class="ctr">30대</td></tr>
+<tr><td><b>환자 수용</b></td><td class="ctr">≈25~100명</td><td class="ctr">500명</td></tr>
+<tr><td><b>서비스 범위</b></td><td class="ctr">근거리</td><td class="ctr">매우 넓음<br><span style="color:var(--text3)">표기 ≈7,500 / 용량 ≈50,000</span></td></tr>
+<tr><td><b>일자리</b></td><td class="ctr">소수</td><td class="ctr">≈60명</td></tr>
 </tbody>
 </table>
 </div>
@@ -1386,7 +2577,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <h4>질병 메커니즘 — 아픈 시민은 출근하지 못합니다</h4>
 <ul>
 <li>시민 개개인이 <strong>건강(Health) 수치</strong>를 가집니다. 결정 요인: 식료품 소비 충족도, 의료 접근성, <strong>각종 오염(대기·지반·소음)</strong>, <strong>수거 안 된 쓰레기</strong>, 과거 병력.</li>
-<li><strong>최대 리스크는 오염된 식수</strong>입니다(7장 참조). 특정 동네만 집단 발병하면 물부터 의심하세요.</li>
+<li><strong>최대 리스크는 오염된 식수</strong>입니다(8장 참조). 특정 동네만 집단 발병하면 물부터 의심하세요.</li>
 <li>아픈 시민은 출근하지 못해 <strong>기업 효율이 하락</strong>합니다(공식 위키 명시). 의료는 복지가 아니라 경제 인프라입니다.</li>
 <li>의료 시설이 없으면 시민이 <strong>외부 연결로 원정 치료</strong>를 가고, 서비스 수입 비용이 발생합니다(≈₡25/시민).</li>
 </ul>
@@ -1394,14 +2585,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <h3>8-3. 장묘 — 묘지와 화장장의 역할 분담</h3>
 <div class="tablewrap">
 <table>
-<thead><tr><th>항목</th><th>묘지(Cemetery)</th><th>화장장(Crematorium)</th></tr></thead>
+<thead><tr><th>항목</th><th class="ctr">묘지(Cemetery)</th><th class="ctr">화장장(Crematorium)</th></tr></thead>
 <tbody>
-<tr><td>해금</td><td>M1 (기본 제공)</td><td>개발 트리 1DP (실질 해금은 중반)</td></tr>
-<tr><td class="num">건설비</td><td class="num">≈₡114,000</td><td class="num">≈₡240,000</td></tr>
-<tr><td class="num">월 유지비</td><td class="num">≈₡55,000</td><td class="num">≈₡45,000</td></tr>
-<tr><td class="num">영구차</td><td class="num"><b>15대</b></td><td class="num">10대</td></tr>
-<tr><td>수용/처리</td><td><b>5,000구 저장</b> — 가득 차면 기능 정지</td><td><b>저장 한계 없음</b> — 연속 소각 처리</td></tr>
-<tr><td>확장</td><td>사원(₡25,000/월 ₡11,000), 납골당(수용 +1,000, ₡75,000/월 ₡18,000), 영묘</td><td>추가 소각로(₡51,000/월 ₡25,000), 영구차 차고(+5대, ₡30,000/월 ₡10,000)</td></tr>
+<tr><td><b>해금</b></td><td class="ctr">M1 (기본 제공)</td><td class="ctr">개발 트리 1DP (실질 해금은 중반)</td></tr>
+<tr><td><b>건설비</b></td><td class="ctr">≈₡114,000</td><td class="ctr">≈₡240,000</td></tr>
+<tr><td><b>월 유지비</b></td><td class="ctr">≈₡55,000</td><td class="ctr">≈₡45,000</td></tr>
+<tr><td><b>영구차</b></td><td class="ctr"><b>15대</b></td><td class="ctr">10대</td></tr>
+<tr><td><b>수용/처리</b></td><td class="ctr"><b>5,000구 저장</b><br><span style="color:var(--text3)">가득 차면 기능 정지</span></td><td class="ctr"><b>저장 한계 없음</b><br><span style="color:var(--text3)">연속 소각 처리</span></td></tr>
+<tr><td><b>확장</b></td><td>사원(₡25,000/월 ₡11,000), 납골당(수용 +1,000, ₡75,000/월 ₡18,000), 영묘</td><td>추가 소각로(₡51,000/월 ₡25,000), 영구차 차고(+5대, ₡30,000/월 ₡10,000)</td></tr>
 </tbody>
 </table>
 </div>
@@ -1437,7 +2628,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 
 <!-- ══════════ 9. 치안·소방·우편·복지 ══════════ -->
 <section class="chapter" id="safety">
-<h2><span class="num">9</span>치안 · 소방 · 우편 · 복지</h2>
+<h2><span class="num">10</span>치안 · 소방 · 우편 · 복지</h2>
 
 <div class="callout warn">
 <div class="ct">2024년까지의 공략은 이 장에서 틀립니다</div>
@@ -1473,14 +2664,15 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <h3>9-2. 치안 — 파출소 vs 본부</h3>
 <div class="tablewrap">
 <table>
-<thead><tr><th>항목</th><th>파출소</th><th>경찰 본부</th><th>교도소</th><th>중앙정보국(CIB)</th></tr></thead>
+<thead><tr><th>항목</th><th class="ctr">파출소</th><th class="ctr">경찰 본부</th><th class="ctr">교도소</th><th class="ctr">중앙정보국(CIB)</th></tr></thead>
 <tbody>
-<tr><td class="num">건설비</td><td class="num">₡160,000</td><td class="num">₡2,100,000</td><td class="num">₡650,000</td><td class="num">₡3,200,000</td></tr>
-<tr><td class="num">월 유지비</td><td class="num">₡19,000</td><td class="num">₡155,000</td><td class="num">₡100,000</td><td class="num">₡160,000</td></tr>
-<tr><td class="num">부지</td><td class="num">12×7</td><td class="num">18×20</td><td class="num">26×24</td><td class="num">34×34</td></tr>
-<tr><td class="num">순찰차</td><td class="num">6대</td><td class="num">20대</td><td class="num">호송차 10대</td><td class="num">25대</td></tr>
-<tr><td class="num">유치장/수감</td><td class="num">25명</td><td class="num">100명</td><td class="num"><b>500명</b></td><td class="num">—</td></tr>
-<tr><td>범위/효과</td><td>5,000</td><td>10,000</td><td>반경 800m 범죄율 -5%</td><td><b>도시 전체 범죄율 -8%</b>, 즉응률 +8</td></tr>
+<tr><td><b>건설비</b></td><td class="ctr">₡160,000</td><td class="ctr">₡2,100,000</td><td class="ctr">₡650,000</td><td class="ctr">₡3,200,000</td></tr>
+<tr><td><b>월 유지비</b></td><td class="ctr">₡19,000</td><td class="ctr">₡155,000</td><td class="ctr">₡100,000</td><td class="ctr">₡160,000</td></tr>
+<tr><td><b>부지</b></td><td class="ctr">12×7</td><td class="ctr">18×20</td><td class="ctr">26×24</td><td class="ctr">34×34</td></tr>
+<tr><td><b>순찰차</b></td><td class="ctr">6대</td><td class="ctr">20대</td><td class="ctr">호송차 10대</td><td class="ctr">25대</td></tr>
+<tr><td><b>유치장/수감</b></td><td class="ctr">25명</td><td class="ctr">100명</td><td class="ctr"><b>500명</b></td><td class="ctr">—</td></tr>
+<tr><td><b>서비스 범위</b></td><td class="ctr">5,000</td><td class="ctr">10,000</td><td class="ctr">—</td><td class="ctr">—</td></tr>
+<tr><td><b>특수 효과</b></td><td class="ctr">—</td><td class="ctr">—</td><td class="ctr">반경 800m<br>범죄율 -5%</td><td class="ctr"><b>도시 전체 -8%</b><br>즉응률 +8</td></tr>
 </tbody>
 </table>
 </div>
@@ -1510,7 +2702,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <h4>범죄율 낮추기 체크리스트</h4>
 <ul>
 <li>실업률을 <strong>5% 이하</strong>로: 일자리-교육 매칭이 최우선.</li>
-<li><strong>복지 사무소</strong>로 저행복 가구 웰빙 보전 (9-5절).</li>
+<li><strong>복지 사무소</strong>로 저행복 가구 웰빙 보전 (10-5절).</li>
 <li>파출소는 <strong>간선도로변 중앙 배치</strong> — 순찰차가 많은 도로를 커버하도록 교차로 접근성 좋은 곳에.</li>
 <li>인구 5만~10만부터 유치장 가득 참 경고가 뜨면 <strong>교도소 1곳(정원 500)</strong>으로 장기 해결.</li>
 <li><strong>구역(District)을 그려 파출소를 특정 구역에 할당</strong>하면 순찰이 분산되지 않습니다 — 1.2.5f1 이후 사실상 필수 테크닉.</li>
@@ -1520,13 +2712,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <h3>9-3. 소방</h3>
 <div class="tablewrap">
 <table>
-<thead><tr><th>항목</th><th>소방서(Fire House)</th><th>소방 본부(Fire Station)</th><th>산불 감시탑</th><th>소방 헬기 기지</th></tr></thead>
+<thead><tr><th>항목</th><th class="ctr">소방서(Fire House)</th><th class="ctr">소방 본부(Fire Station)</th><th class="ctr">산불 감시탑</th><th class="ctr">소방 헬기 기지</th></tr></thead>
 <tbody>
-<tr><td class="num">건설비</td><td class="num">₡120,000</td><td class="num">₡2,150,000</td><td class="num">₡46,000</td><td class="num">₡1,224,000</td></tr>
-<tr><td class="num">월 유지비</td><td class="num">₡10,000</td><td class="num">₡117,500</td><td class="num">₡12,500</td><td class="num">₡72,500</td></tr>
-<tr><td class="num">부지</td><td class="num">5×5</td><td class="num">14×18</td><td class="num">2×2</td><td class="num">11×16</td></tr>
-<tr><td class="num">차량</td><td class="num">소방차 4대</td><td class="num">소방차 10대</td><td class="num">—</td><td class="num">헬기 5대</td></tr>
-<tr><td>범위</td><td>≈5,000 (용량 25,000)</td><td>≈10,000 (용량 100,000)</td><td>반경 1km<br>산불 대응시간 -80%<br>산불 위험 -10%</td><td>도시 전역(비행)</td></tr>
+<tr><td><b>건설비</b></td><td class="ctr">₡120,000</td><td class="ctr">₡2,150,000</td><td class="ctr">₡46,000</td><td class="ctr">₡1,224,000</td></tr>
+<tr><td><b>월 유지비</b></td><td class="ctr">₡10,000</td><td class="ctr">₡117,500</td><td class="ctr">₡12,500</td><td class="ctr">₡72,500</td></tr>
+<tr><td><b>부지</b></td><td class="ctr">5×5</td><td class="ctr">14×18</td><td class="ctr">2×2</td><td class="ctr">11×16</td></tr>
+<tr><td><b>차량</b></td><td class="ctr">소방차 4대</td><td class="ctr">소방차 10대</td><td class="ctr">—</td><td class="ctr">헬기 5대</td></tr>
+<tr><td><b>서비스 범위</b></td><td class="ctr">≈5,000<br><span style="color:var(--text3)">용량 25,000</span></td><td class="ctr">≈10,000<br><span style="color:var(--text3)">용량 100,000</span></td><td class="ctr">반경 1km<br><span style="color:var(--text3)">대응시간 -80%<br>산불 위험 -10%</span></td><td class="ctr">도시 전역<br><span style="color:var(--text3)">(비행)</span></td></tr>
 </tbody>
 </table>
 </div>
@@ -1550,14 +2742,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <h3>9-4. 우편</h3>
 <div class="tablewrap">
 <table>
-<thead><tr><th>항목</th><th>우체국</th><th>우편 분류 시설</th></tr></thead>
+<thead><tr><th>항목</th><th class="ctr">우체국</th><th class="ctr">우편 분류 시설</th></tr></thead>
 <tbody>
-<tr><td class="num">건설비</td><td class="num">₡250,000</td><td class="num">₡650,000</td></tr>
-<tr><td class="num">월 유지비</td><td class="num">₡22,500</td><td class="num">₡40,000</td></tr>
-<tr><td class="num">부지</td><td class="num">10×8</td><td class="num">28×28</td></tr>
-<tr><td class="num">차량</td><td class="num">우편 밴 20대</td><td class="num">우편 트럭 5대</td></tr>
-<tr><td class="num">보관량</td><td class="num">100,000</td><td class="num">500,000</td></tr>
-<tr><td>범위</td><td>2,000 <span class="tag a">짧음</span></td><td>도시 전역 (분류 속도 월 50,000)</td></tr>
+<tr><td><b>건설비</b></td><td class="ctr">₡250,000</td><td class="ctr">₡650,000</td></tr>
+<tr><td><b>월 유지비</b></td><td class="ctr">₡22,500</td><td class="ctr">₡40,000</td></tr>
+<tr><td><b>부지</b></td><td class="ctr">10×8</td><td class="ctr">28×28</td></tr>
+<tr><td><b>차량</b></td><td class="ctr">우편 밴 20대</td><td class="ctr">우편 트럭 5대</td></tr>
+<tr><td><b>보관량</b></td><td class="ctr">100,000</td><td class="ctr">500,000</td></tr>
+<tr><td><b>서비스 범위</b></td><td class="ctr">2,000 <span class="tag a">짧음</span></td><td class="ctr">도시 전역<br><span style="color:var(--text3)">분류 속도 월 50,000</span></td></tr>
 </tbody>
 </table>
 </div>
@@ -1601,7 +2793,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </section>
 <!-- ══════════ 10. 교육 ══════════ -->
 <section class="chapter" id="education">
-<h2><span class="num">10</span>교육 &amp; 시민 생애주기</h2>
+<h2><span class="num">11</span>교육 &amp; 시민 생애주기</h2>
 
 <p class="lede">CS2에는 <strong>CS1식 "커버리지 반경"이 없습니다.</strong> 교육은 도시 전역 서비스이고, 학생이 실제로 <strong>통학 경로를 찾아 다닙니다</strong>. 따라서 계산 기준은 반경이 아니라 <strong>정원 vs 해당 연령 인구</strong>이고, "정원은 남는데 등록률이 낮다"면 십중팔구 접근성 문제입니다.</p>
 
@@ -1765,7 +2957,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 
 <!-- ══════════ 11. 구역 ══════════ -->
 <section class="chapter" id="zoning">
-<h2><span class="num">11</span>구역 · 수요 · 지가 · 임대료</h2>
+<h2><span class="num">12</span>구역 · 수요 · 지가 · 임대료</h2>
 
 <p class="lede">구역 셀 크기는 <strong>8×8m</strong>, 건물 부지는 도로에서 <strong>최대 6칸(48m) 깊이</strong>까지 성장합니다. 구역을 칠하는 것 자체는 <strong>무료</strong>이며(성장형 건물이므로 건설비 없음), 건물은 수요가 있을 때만 자연 성장합니다.</p>
 
@@ -1789,6 +2981,65 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <caption>건물 레벨은 1~5. 레벨이 오르면 전기·수도 소비가 단위당 감소하고, 중·고밀 주거는 <b>레벨 3과 5에서 세대 수가 추가</b>됩니다. 유럽/북미 테마는 외형 차이일 뿐 게임플레이 차이가 없습니다.</caption>
 </table>
 </div>
+
+<h4>구역별로 어떤 도로에 붙여야 하나</h4>
+<p>구역과 도로 등급을 잘못 짝지으면 <strong>지가는 안 오르고 교통만 터집니다.</strong> 아래가 짝짓기 표입니다.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>구역</th><th class="ctr">접해야 할 도로</th><th class="ctr">붙이면 안 되는 도로</th><th>이유</th></tr></thead>
+<tbody>
+<tr><td><b>저밀 주거</b></td><td class="ctr">국지도로<br><span style="color:var(--text3)">2차선·골목</span></td><td class="ctr">간선·고속도로</td><td>가족 선호 구역. 소음이 크면 지가·수요가 함께 떨어집니다</td></tr>
+<tr><td><b>중밀 연립</b></td><td class="ctr">국지도로<br><span style="color:var(--text3)">폭 1칸도 가능</span></td><td class="ctr">간선</td><td>자투리 땅 채우기용. 콜렉터 뒤편 골목에 최적</td></tr>
+<tr><td><b>중밀·고밀 주거</b></td><td class="ctr">콜렉터<br><span style="color:var(--text3)">4차선</span></td><td class="ctr">2차선 단독</td><td><b>좁은 2차선에 고밀은 교통 붕괴의 지름길.</b> 정류장 도보권이면 더 좋습니다</td></tr>
+<tr><td><b>저밀 상업</b></td><td class="ctr">국지도로·콜렉터</td><td class="ctr">—</td><td>고객 도보권이 핵심. 주거 사이사이에 끼워 넣습니다</td></tr>
+<tr><td><b>고밀 상업</b></td><td class="ctr">간선 대로변<br><span style="color:var(--text3)">+ 주차 빌딩 필수</span></td><td class="ctr">국지도로</td><td>방문객이 많아 접근성과 주차가 동시에 필요합니다</td></tr>
+<tr><td><b>사무</b></td><td class="ctr">콜렉터·간선</td><td class="ctr">—</td><td>오염이 없어 <b>주거와 산업 사이 완충</b>으로 최적</td></tr>
+<tr><td><b>산업</b></td><td class="ctr">산업 전용 루프<br><span style="color:var(--text3)">→ 화물 IC 직결</span></td><td class="ctr"><b>주거 간선</b></td><td>트럭이 통근 동선과 섞이면 양쪽 다 막힙니다 (5-5절)</td></tr>
+</tbody>
+</table>
+</div>
+
+<figure class="diagram">
+<div class="dg-title">한 블록 안에서의 배치 예시</div>
+<svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="도로 등급별 구역 배치 예시">
+  <rect x="0" y="0" width="700" height="300" fill="var(--svg-fill)" rx="8"/>
+  <!-- 간선 -->
+  <line x1="0" y1="52" x2="700" y2="52" stroke="#2563eb" stroke-width="16"/>
+  <text x="10" y="34" class="svg-t" fill="#2563eb">간선 (6차선)</text>
+  <!-- 고밀 상업 -->
+  <g fill="#d97706" opacity=".5"><rect x="60" y="66" width="90" height="46" rx="3"/><rect x="160" y="66" width="90" height="46" rx="3"/><rect x="450" y="66" width="90" height="46" rx="3"/></g>
+  <text x="155" y="94" class="svg-t" fill="#8a5a00" text-anchor="middle">고밀 상업 — 대로변</text>
+  <rect x="290" y="62" width="120" height="54" fill="var(--surface2)" stroke="var(--text3)" stroke-width="2" rx="4"/>
+  <text x="350" y="94" class="svg-t" fill="var(--text2)" text-anchor="middle">🅿 주차 빌딩</text>
+  <!-- 콜렉터 -->
+  <line x1="30" y1="140" x2="670" y2="140" stroke="#0d9488" stroke-width="11"/>
+  <text x="10" y="132" class="svg-ts" fill="#0d9488">콜렉터 (4차선)</text>
+  <!-- 고밀 주거 -->
+  <g fill="#16a34a" opacity=".5"><rect x="60" y="152" width="80" height="44" rx="3"/><rect x="150" y="152" width="80" height="44" rx="3"/></g>
+  <text x="145" y="180" class="svg-t" fill="#0b6b2c" text-anchor="middle">고밀 주거</text>
+  <!-- 사무 (완충) -->
+  <g fill="#2563eb" opacity=".4"><rect x="290" y="152" width="120" height="44" rx="3"/></g>
+  <text x="350" y="180" class="svg-t" fill="#1d4ed8" text-anchor="middle">사무 (완충)</text>
+  <!-- 산업 -->
+  <g fill="#dc2626" opacity=".4"><rect x="470" y="152" width="190" height="44" rx="3"/></g>
+  <text x="565" y="180" class="svg-t" fill="#a01818" text-anchor="middle">산업 → 전용 IC로</text>
+  <!-- 국지 -->
+  <g stroke="#8a93a5" stroke-width="7" opacity=".6">
+    <line x1="30" y1="226" x2="420" y2="226"/>
+    <line x1="90" y1="196" x2="90" y2="272"/><line x1="180" y1="196" x2="180" y2="272"/><line x1="270" y1="196" x2="270" y2="272"/><line x1="360" y1="196" x2="360" y2="272"/>
+  </g>
+  <text x="10" y="220" class="svg-ts" fill="#8a93a5">국지도로</text>
+  <g fill="#16a34a" opacity=".38">
+    <rect x="40" y="238" width="42" height="28" rx="2"/><rect x="98" y="238" width="74" height="28" rx="2"/>
+    <rect x="188" y="238" width="74" height="28" rx="2"/><rect x="278" y="238" width="74" height="28" rx="2"/>
+  </g>
+  <text x="200" y="290" class="svg-ts" fill="#0b6b2c" text-anchor="middle">저밀 주거 — 조용한 안쪽</text>
+  <g fill="#d97706" opacity=".45"><rect x="40" y="202" width="42" height="20" rx="2"/><rect x="278" y="202" width="42" height="20" rx="2"/></g>
+  <text x="500" y="248" class="svg-ts" fill="var(--text3)">저밀 상업(주황)은 주거 도보권 안에 점점이</text>
+  <text x="500" y="268" class="svg-ts" fill="var(--text3)">— 큰 길가에 몰아넣지 않습니다</text>
+</svg>
+<figcaption>바깥(간선)에서 안쪽(국지)으로 갈수록 <b>밀도와 소음이 낮아지는</b> 배치입니다. 이 순서를 지키면 지가·수요·교통이 동시에 안정됩니다.</figcaption>
+</figure>
 
 <h3>11-2. 수요 막대 해석법 — 막대는 "건물"이 아니라 "가구" 단위</h3>
 <div class="callout info">
@@ -1951,7 +3202,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </section>
 <!-- ══════════ 12. 경제 ══════════ -->
 <section class="chapter" id="economy">
-<h2><span class="num">12</span>경제 · 세금 · 특화 산업</h2>
+<h2><span class="num">13</span>경제 · 세금 · 특화 산업</h2>
 
 <p class="lede">Economy 2.0에서 <strong>정부 보조금이 완전히 삭제</strong>되어 초반부터 세수·수수료만으로 버텨야 합니다. 지출 측에는 서비스 건물 유지비 외에 <strong>서비스 직원 임금이 시 재정에서 직접 지급</strong>되고, 추가 구매한 타일에 <strong>타일 유지비</strong>가 붙습니다.</p>
 
@@ -2050,7 +3301,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <div class="callout warn">
 <div class="ct">유한 자원 vs 재생 자원</div>
 <p><strong>석유·광석은 유한</strong>해서 채굴할수록 고갈됩니다. 고갈 후엔 수입 기반 가공업으로 전환할 계획을 미리 세우세요. <strong>비옥지·숲은 재생</strong>되지만 토양 오염에 취약합니다.</p>
-<p>참고: <strong>지질연구센터(₡2,500,000)</strong>가 광석·석유 매장량을 <strong>+200%</strong> 늘려줍니다(10-2절).</p>
+<p>참고: <strong>지질연구센터(₡2,500,000)</strong>가 광석·석유 매장량을 <strong>+200%</strong> 늘려줍니다(11-2절).</p>
 </div>
 
 <h4>배치 규칙 4가지</h4>
@@ -2088,7 +3339,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <div class="callout danger">
 <div class="ct">가장 흔한 오해: "수출하면 돈을 번다"</div>
 <p><strong>일반 상품의 수출 대금은 시 예산에 직접 들어오지 않습니다.</strong> 돈을 버는 것은 회사이고, 시는 그 이익에 대한 <strong>법인세로 간접 회수</strong>합니다.</p>
-<p>시 예산에 직접 잡히는 수출 수입은 <strong>전기·물 같은 유틸리티 수출뿐</strong>입니다. 그래서 6장에서 잉여 전력 수출(₡2,500/MW·월)을 "인구 성장과 무관한 안정 재원"이라고 부른 것입니다.</p>
+<p>시 예산에 직접 잡히는 수출 수입은 <strong>전기·물 같은 유틸리티 수출뿐</strong>입니다. 그래서 7장에서 잉여 전력 수출(₡2,500/MW·월)을 "인구 성장과 무관한 안정 재원"이라고 부른 것입니다.</p>
 </div>
 
 <h3>12-4. Economy 2.0(1.1.5f1) 주요 변경점 요약</h3>
@@ -2137,7 +3388,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 
 <!-- ══════════ 13. 미관 ══════════ -->
 <section class="chapter" id="beauty">
-<h2><span class="num">13</span>재해 · 계절 · 공원 · 미관</h2>
+<h2><span class="num">14</span>재해 · 계절 · 공원 · 미관</h2>
 
 <h3>13-1. 자연재해 3종과 대비 시설</h3>
 <p>새 게임 생성 시 <strong>자연재해 ON/OFF 선택</strong>이 가능합니다. 기본 게임의 재해는 3종입니다.</p>
@@ -2204,7 +3455,74 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <div class="ct">공원 유지관리소(Park Maintenance Depot) — 잊기 쉬운 필수 시설</div>
 <p>7×10칸, <strong>건설 ₡90,000 / 월 ₡20,000</strong>, 유지관리 차량 10대. <strong>잘 관리된 공원만 최대 여가 효과를 냅니다.</strong> 공원이 10개를 넘기 시작하면 반드시 1개소 설치하고, 대도시는 권역별로 증설하세요. 관리 안 된 공원은 <strong>유지비만 새는 장식</strong>이 됩니다.</p>
 </div>
-<p><strong>배치 팁</strong>: 소형 공원은 주거 블록 사이 자투리(1×1~2×2)에 촘촘히 깔아 지가·웰빙을 <strong>면 단위로 커버</strong>합니다. 고액 시설(광장·워터파크·전망탑)은 <strong>관광 클러스터</strong>(호텔 상업지구 + 대중교통역 인접)에 모아 어트랙티브니스 시너지를 냅니다.</p>
+<h4>배치 전략 — 공원은 두 가지 용도로 나눠 씁니다</h4>
+<div class="dgrid c2">
+<figure class="diagram good">
+<div class="dg-title"><span class="pill">용도 A</span>소형 공원을 면 단위로 흩뿌리기</div>
+<svg viewBox="0 0 330 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="주거지에 소형 공원을 촘촘히 배치한 예">
+  <rect x="0" y="0" width="330" height="240" fill="var(--svg-fill)" rx="8"/>
+  <g stroke="#8a93a5" stroke-width="7" opacity=".55">
+    <line x1="20" y1="40" x2="310" y2="40"/><line x1="20" y1="120" x2="310" y2="120"/><line x1="20" y1="200" x2="310" y2="200"/>
+    <line x1="100" y1="40" x2="100" y2="200"/><line x1="215" y1="40" x2="215" y2="200"/>
+  </g>
+  <g fill="#16a34a" opacity=".35">
+    <rect x="28" y="50" width="62" height="26" rx="2"/><rect x="110" y="50" width="96" height="26" rx="2"/><rect x="226" y="50" width="76" height="26" rx="2"/>
+    <rect x="28" y="86" width="62" height="24" rx="2"/><rect x="110" y="86" width="96" height="24" rx="2"/><rect x="226" y="86" width="76" height="24" rx="2"/>
+    <rect x="28" y="130" width="62" height="26" rx="2"/><rect x="110" y="130" width="96" height="26" rx="2"/><rect x="226" y="130" width="76" height="26" rx="2"/>
+    <rect x="28" y="166" width="62" height="24" rx="2"/><rect x="226" y="166" width="76" height="24" rx="2"/>
+  </g>
+  <!-- 소형 공원 -->
+  <g fill="var(--green)" opacity=".85">
+    <rect x="92" y="80" width="16" height="16" rx="3"/><rect x="207" y="80" width="16" height="16" rx="3"/>
+    <rect x="92" y="160" width="16" height="16" rx="3"/><rect x="207" y="160" width="16" height="16" rx="3"/>
+    <rect x="52" y="112" width="16" height="16" rx="3"/><rect x="264" y="112" width="16" height="16" rx="3"/>
+  </g>
+  <rect x="110" y="166" width="96" height="24" fill="var(--green)" opacity=".55" rx="3"/>
+  <text x="158" y="182" class="svg-ts" fill="#0b4a20" text-anchor="middle">대형 도시공원</text>
+  <!-- 커버리지 -->
+  <g fill="var(--green)" opacity=".08">
+    <circle cx="100" cy="88" r="52"/><circle cx="215" cy="88" r="52"/><circle cx="100" cy="168" r="52"/><circle cx="215" cy="168" r="52"/>
+  </g>
+  <text x="165" y="228" class="svg-t" fill="var(--green)" text-anchor="middle">₡1,500짜리 초소형 공원 6개 &gt; ₡42,000짜리 대형 1개</text>
+</svg>
+<div class="dcap"><b>목적: 지가·웰빙</b>. 초소형 공원(1×1, ₡1,500)을 블록 사이 자투리에 촘촘히 깔면 커버리지가 <b>면으로</b> 이어집니다. 큰 공원 하나보다 작은 것 여러 개가 효율적입니다.</div>
+</figure>
+<figure class="diagram good">
+<div class="dg-title"><span class="pill">용도 B</span>고액 시설은 관광 클러스터로</div>
+<svg viewBox="0 0 330 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="관광 클러스터에 고액 시설을 모아 배치한 예">
+  <rect x="0" y="0" width="330" height="240" fill="var(--svg-fill)" rx="8"/>
+  <!-- 어트랙티브니스 시너지 원 -->
+  <circle cx="165" cy="118" r="98" fill="var(--purple)" opacity=".09"/>
+  <circle cx="165" cy="118" r="98" fill="none" stroke="var(--purple)" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <!-- 교통 -->
+  <line x1="0" y1="40" x2="330" y2="40" stroke="#2563eb" stroke-width="12"/>
+  <circle cx="165" cy="40" r="9" fill="var(--purple)"/>
+  <text x="180" y="30" class="svg-ts" fill="var(--purple)">지하철역</text>
+  <!-- 시설들 -->
+  <rect x="56" y="70" width="86" height="40" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="2" rx="5"/>
+  <text x="99" y="88" class="svg-ts" fill="var(--purple)" text-anchor="middle">🎢 워터파크</text>
+  <text x="99" y="103" class="svg-ts" fill="var(--purple)" text-anchor="middle">어트랙티브 +75</text>
+  <rect x="186" y="70" width="86" height="40" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="2" rx="5"/>
+  <text x="229" y="88" class="svg-ts" fill="var(--purple)" text-anchor="middle">🗼 전망탑</text>
+  <text x="229" y="103" class="svg-ts" fill="var(--purple)" text-anchor="middle">+40 / 실내 +75</text>
+  <rect x="56" y="126" width="86" height="40" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="2" rx="5"/>
+  <text x="99" y="144" class="svg-ts" fill="var(--amber)" text-anchor="middle">🏨 호텔</text>
+  <text x="99" y="159" class="svg-ts" fill="var(--amber)" text-anchor="middle">고밀 상업</text>
+  <rect x="186" y="126" width="86" height="40" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="2" rx="5"/>
+  <text x="229" y="144" class="svg-ts" fill="var(--amber)" text-anchor="middle">🏛️ 랜드마크</text>
+  <text x="229" y="159" class="svg-ts" fill="var(--amber)" text-anchor="middle">노트르담 175</text>
+  <rect x="110" y="182" width="110" height="30" fill="var(--green-soft)" stroke="var(--green)" stroke-width="2" rx="5"/>
+  <text x="165" y="202" class="svg-ts" fill="var(--green)" text-anchor="middle">🌳 비즈니스 광장 +25</text>
+  <text x="165" y="232" class="svg-t" fill="var(--purple)" text-anchor="middle">관광객 동선이 짧아져 교통 부하도 줄어듭니다</text>
+</svg>
+<div class="dcap"><b>목적: 관광 수입</b>. 어트랙티브니스는 도시 총합에 합산되므로 위치는 자유롭지만, <b>역·호텔과 붙여 모으면</b> 관광객이 흩어지지 않아 교통이 편해집니다.</div>
+</figure>
+</div>
+
+<div class="callout warn">
+<div class="ct">공원 유지관리소를 잊지 마세요</div>
+<p>공원이 10개를 넘으면 <strong>공원 유지관리소(₡90,000 / 월 ₡20,000, 차량 10대)</strong>가 필요합니다. 관리되지 않은 공원은 여가 효과가 떨어져 <strong>유지비만 새는 장식</strong>이 됩니다. 위 A안처럼 소형 공원을 많이 깔 때 특히 중요합니다.</p>
+</div>
 
 <h3>13-4. 시그니처 건물</h3>
 <p>시그니처 건물은 <strong>특정 조건 달성 시 해금 → 도시당 1회 배치</strong>하는 특수 건물로, 배치 시 XP를 주고 광역 버프를 제공합니다.</p>
@@ -2223,9 +3541,56 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <caption>기본 게임에만 주거 30여 종·상업 20여 종·산업 20여 종·오피스 20여 종이 있습니다. DLC/에셋 팩 전용도 다수 존재합니다.</caption>
 </table>
 </div>
+<div class="dgrid c2">
+<figure class="diagram bad">
+<div class="dg-title"><span class="pill" style="background:var(--red-soft);color:var(--red)">✕</span>해금하자마자 빈 땅에</div>
+<svg viewBox="0 0 330 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="시그니처 건물을 외곽 빈 땅에 배치한 잘못된 예">
+  <rect x="0" y="0" width="330" height="250" fill="var(--svg-fill)" rx="8"/>
+  <!-- 주거 밀집지 -->
+  <g fill="#16a34a" opacity=".45">
+    <rect x="30" y="40" width="34" height="34" rx="3"/><rect x="70" y="40" width="34" height="34" rx="3"/><rect x="110" y="40" width="34" height="34" rx="3"/>
+    <rect x="30" y="80" width="34" height="34" rx="3"/><rect x="70" y="80" width="34" height="34" rx="3"/><rect x="110" y="80" width="34" height="34" rx="3"/>
+    <rect x="30" y="120" width="34" height="34" rx="3"/><rect x="70" y="120" width="34" height="34" rx="3"/><rect x="110" y="120" width="34" height="34" rx="3"/>
+  </g>
+  <text x="87" y="172" class="svg-t" fill="#0b6b2c" text-anchor="middle">고밀 주거 밀집지</text>
+  <text x="87" y="190" class="svg-ts" fill="var(--red)" text-anchor="middle">버프를 못 받음</text>
+  <!-- 시그니처 (외곽) -->
+  <circle cx="262" cy="200" r="56" fill="var(--purple)" opacity=".12"/>
+  <circle cx="262" cy="200" r="56" fill="none" stroke="var(--purple)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <rect x="242" y="184" width="40" height="32" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="2.5" rx="4"/>
+  <text x="262" y="204" class="svg-ts" fill="var(--purple)" text-anchor="middle">🏰</text>
+  <text x="262" y="240" class="svg-ts" fill="var(--red)" text-anchor="middle">반경 안이 전부 빈 땅</text>
+</svg>
+<div class="dcap">Century Castle의 <b>반경 2.5km 웰빙 +10</b>이 아무에게도 닿지 않습니다. 조건 달성 보상으로 받은 XP만 챙기고 효과는 버리는 셈입니다.</div>
+</figure>
+<figure class="diagram good">
+<div class="dg-title"><span class="pill">✓</span>버프 대상 한가운데</div>
+<svg viewBox="0 0 330 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="시그니처 건물을 주거 밀집지 중심에 배치한 올바른 예">
+  <rect x="0" y="0" width="330" height="250" fill="var(--svg-fill)" rx="8"/>
+  <circle cx="165" cy="120" r="105" fill="var(--purple)" opacity=".13"/>
+  <circle cx="165" cy="120" r="105" fill="none" stroke="var(--purple)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <g fill="#16a34a" opacity=".5">
+    <rect x="72" y="46" width="32" height="32" rx="3"/><rect x="110" y="42" width="32" height="32" rx="3"/><rect x="188" y="42" width="32" height="32" rx="3"/><rect x="226" y="46" width="32" height="32" rx="3"/>
+    <rect x="60" y="100" width="32" height="32" rx="3"/><rect x="238" y="100" width="32" height="32" rx="3"/>
+    <rect x="72" y="156" width="32" height="32" rx="3"/><rect x="110" y="164" width="32" height="32" rx="3"/><rect x="188" y="164" width="32" height="32" rx="3"/><rect x="226" y="156" width="32" height="32" rx="3"/>
+  </g>
+  <rect x="142" y="102" width="46" height="38" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="3" rx="5"/>
+  <text x="165" y="126" class="svg-t" fill="var(--purple)" text-anchor="middle">🏰</text>
+  <text x="165" y="236" class="svg-t" fill="var(--purple)" text-anchor="middle">반경 2.5km 안이 전부 고밀 주거</text>
+</svg>
+<div class="dcap">같은 건물, 같은 비용인데 <b>수천 세대가 웰빙 +10</b>을 받습니다. 웰빙 상승 → 지가 상승 → 레벨업 → 다음 시그니처 해금의 선순환이 돕니다.</div>
+</figure>
+</div>
+
 <div class="callout info">
-<div class="ct">시그니처 운영 팁</div>
-<p>효과 반경이 크므로 <strong>해금 즉시 아무 데나 두지 말고 버프 대상(주거 밀집지·산업단지) 중심</strong>에 배치하세요. 레벨 5 조건형은 <strong>지가·서비스 커버리지를 끌어올린 "부촌"을 의도적으로 조성</strong>하면 빠르게 달성됩니다.</p>
+<div class="ct">레벨 5 조건형을 빨리 여는 법</div>
+<p>Century Castle(레벨 5 건물 100채) 같은 조건은 <strong>운이 아니라 설계</strong>로 달성합니다. 건물 레벨은 지가와 서비스 커버리지가 올리므로:</p>
+<ol>
+<li>고밀 주거 <strong>한 구역을 정해</strong> 공원·학교·대중교통을 집중 투입</li>
+<li>그 구역만 <strong>주거세를 낮춰</strong> 레벨업을 가속</li>
+<li>레벨 5가 무더기로 뜨면 조건이 한 번에 충족됩니다</li>
+</ol>
+<p>도시 전체를 골고루 올리려 하면 아무 데도 레벨 5에 닿지 못합니다. <strong>의도적인 "부촌" 하나를 만드는 것</strong>이 요령입니다.</p>
 </div>
 
 <h3>13-5. 랜드마크</h3>
@@ -2269,7 +3634,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </section>
 <!-- ══════════ 14. 체크리스트 ══════════ -->
 <section class="chapter" id="checklist">
-<h2><span class="num">14</span>인구 단계별 체크리스트</h2>
+<h2><span class="num">15</span>인구 단계별 체크리스트</h2>
 
 <p class="lede">각 구간에서 "지금 뭘 해야 하나"를 한 장으로 정리했습니다. 인쇄하거나 다른 모니터에 띄워두고 쓰세요.</p>
 
@@ -2310,7 +3675,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <table>
 <thead><tr><th>분야</th><th>해야 할 일</th><th>체크 포인트</th></tr></thead>
 <tbody>
-<tr><td>⚡ 전력</td><td><b>지열(지하수 지대) / 수력(협곡) / 가스</b> 중 지형에 맞게</td><td>MW당 유지비 서열 확인(6-2절)</td></tr>
+<tr><td>⚡ 전력</td><td><b>지열(지하수 지대) / 수력(협곡) / 가스</b> 중 지형에 맞게</td><td>MW당 유지비 서열 확인(7-2절)</td></tr>
 <tr><td>🗑️ 쓰레기</td><td><b>소각장 + 외부 송전 연결</b>(잉여 전력 수출로 풀가동)</td><td>매립지는 70~80%에서 비우기</td></tr>
 <tr><td>🏥 의료</td><td>인구 10,000 전후 종합병원 1개 (진료소는 유지)</td><td>진료소 철거 금지</td></tr>
 <tr><td>🎓 교육</td><td>전문대학(1DP, ₡750,000). 오피스와 동시에 키우기</td><td>대학만 먼저 = 고학력 실업</td></tr>
@@ -2356,7 +3721,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 
 <!-- ══════════ 15. 트러블슈팅 ══════════ -->
 <section class="chapter" id="troubleshoot">
-<h2><span class="num">15</span>증상별 트러블슈팅</h2>
+<h2><span class="num">16</span>증상별 트러블슈팅</h2>
 
 <p class="lede">증상을 클릭해 펼치면 원인과 처방이 나옵니다. <strong>대부분의 CS2 문제는 "보이는 증상"과 "실제 원인"이 다른 곳에 있습니다.</strong></p>
 
@@ -2364,7 +3729,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <details class="acc"><summary>돈이 계속 마이너스인데 뭘 줄여야 할지 모르겠다</summary><div class="acc-body">
 <ol>
 <li><strong>서비스 예산 슬라이더를 전부 50%로</strong> 내리고 민원이 뜨는 것만 올립니다. 효율은 비선형이라 손실이 크지 않습니다.</li>
-<li><strong>특화 산업 세율을 20~25%로</strong> 올립니다(12-1절). 이것 하나로 소도시는 대개 흑자가 됩니다.</li>
+<li><strong>특화 산업 세율을 20~25%로</strong> 올립니다(13-1절). 이것 하나로 소도시는 대개 흑자가 됩니다.</li>
 <li>불필요하게 산 <strong>타일</strong>이 있는지 확인합니다 — 유지비가 소급 적용됩니다.</li>
 <li><strong>화장장·대형 병원·재활용 센터</strong> 같은 조기 건설 예산 블랙홀이 있는지 확인합니다.</li>
 <li>전기·수도 <strong>서비스 요금을 ≈110%</strong>로 올립니다.</li>
@@ -2409,7 +3774,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 
 <h3>🏚️ 주거·수요</h3>
 <details class="acc"><summary>"임대료가 너무 높음" 경고가 계속 뜬다</summary><div class="acc-body">
-<p>11-4절의 8단계 체크리스트를 순서대로 실행하세요. 요약하면:</p>
+<p>12-4절의 8단계 체크리스트를 순서대로 실행하세요. 요약하면:</p>
 <ol>
 <li>건물을 클릭해 <strong>소득 문제인지 지가 문제인지</strong> 먼저 판별.</li>
 <li><strong>저임대·중밀·고밀 공급</strong>으로 탈출구 만들기(여러 가구가 임대료 분담).</li>
@@ -2436,7 +3801,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <details class="acc"><summary>한 동네만 시민들이 집단으로 아프다</summary><div class="acc-body">
 <p><strong>십중팔구 물이 원인입니다.</strong></p>
 <ol>
-<li>하수 배출구가 취수장 <strong>상류</strong>에 있지 않은지 확인(7장 다이어그램).</li>
+<li>하수 배출구가 취수장 <strong>상류</strong>에 있지 않은지 확인(8장 다이어그램).</li>
 <li>둘이 하류 관계여도 <strong>너무 가까우면 펌프 흡입력이 흐름을 역전</strong>시킵니다.</li>
 <li>지하수 펌프라면 <strong>지면 오염(매립지·오염 산업)과 겹치는지</strong> 확인. 겹쳤다면 고급 여과 시스템(₡22,000)으로 급한 불을 끄고 오염원을 이전.</li>
 <li>고인 호수에 방류 중이라면 <strong>하수 처리장으로 전환</strong>.</li>
