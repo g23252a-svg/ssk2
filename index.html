@@ -59,9 +59,32 @@ header.topbar{
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:12px;padding:0 18px;height:58px;
 }
-.topbar .logo{font-weight:800;font-size:16.5px;letter-spacing:-.02em;display:flex;align-items:center;gap:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .logo{font-weight:800;font-size:16.5px;letter-spacing:-.02em;display:flex;align-items:center;gap:9px;white-space:nowrap;flex-shrink:0}
 .topbar .logo .badge{background:linear-gradient(135deg,var(--accent),var(--teal));color:#fff;border-radius:7px;padding:2px 8px;font-size:11.5px;font-weight:700;flex-shrink:0}
 .topbar .spacer{flex:1}
+/* ── 검색 ── */
+.searchwrap{position:relative;flex:1;max-width:430px;margin:0 4px;min-width:0}
+#q{width:100%;padding:8px 32px 8px 32px;border:1px solid var(--border2);border-radius:9px;background:var(--surface2);color:var(--text);font:inherit;font-size:14px;-webkit-appearance:none}
+#q::placeholder{color:var(--text3)}
+#q:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--surface)}
+.searchwrap .sico{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12.5px;pointer-events:none;opacity:.55}
+.searchwrap .skey{position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:.45;font-size:11px;padding:1px 5px}
+#results{position:absolute;top:calc(100% + 7px);left:0;right:0;background:var(--surface);border:1px solid var(--border2);border-radius:12px;box-shadow:var(--shadow-lg);max-height:min(64vh,470px);overflow-y:auto;z-index:95;padding:6px}
+#results .rgroup{font-size:10.5px;font-weight:700;color:var(--text3);padding:9px 10px 4px;letter-spacing:.07em}
+#results a{display:block;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--text);font-size:14px;line-height:1.45}
+#results a:hover,#results a.sel{background:var(--accent-soft);color:var(--accent-text)}
+#results a .rsub{display:block;font-size:11.5px;color:var(--text3);margin-top:2px}
+#results a:hover .rsub,#results a.sel .rsub{color:var(--accent-text);opacity:.75}
+#results .empty{padding:16px 12px;color:var(--text3);font-size:13.5px;text-align:center;line-height:1.7}
+#results mark{background:var(--amber-soft);color:inherit;border-radius:3px;padding:0 2px;font-weight:700}
+.flashhit{animation:flashhit 1.8s ease both}
+@keyframes flashhit{0%{background:transparent}12%{background:var(--amber-soft)}100%{background:transparent}}
+@media (max-width:760px){
+  .topbar .logo .lt{display:none}
+  .topbar a.gh{display:none}
+  .searchwrap .skey{display:none}
+  #q{padding-right:12px}
+}
 .topbar a.gh{color:var(--text2);text-decoration:none;font-size:13px;padding:6px 12px;border:1px solid var(--border);border-radius:8px;white-space:nowrap}
 .topbar a.gh:hover{background:var(--surface2);color:var(--text)}
 #menuBtn{display:none;background:none;border:1px solid var(--border);border-radius:8px;width:36px;height:36px;font-size:17px;color:var(--text);cursor:pointer;flex-shrink:0}
@@ -232,8 +255,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <div id="progress"></div>
 <header class="topbar">
   <button id="menuBtn" aria-label="목차 열기">☰</button>
-  <div class="logo">🏙️ CS2 초정밀 공략집 <span class="badge">v1.0</span></div>
-  <div class="spacer"></div>
+  <div class="logo">🏙️ <span class="lt">CS2 초정밀 공략집</span> <span class="badge">v1.0</span></div>
+  <div class="searchwrap">
+    <span class="sico">🔍</span>
+    <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="검색 — 매립지, 회전교차로, 임대료…" aria-label="공략집 검색">
+    <kbd class="skey">/</kbd>
+    <div id="results" hidden role="listbox"></div>
+  </div>
   <a class="gh" href="https://github.com/g23252a-svg/ssk2" target="_blank" rel="noopener">GitHub ↗</a>
 </header>
 <div id="scrim" hidden></div>
@@ -1328,37 +1356,46 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
   <line x1="8" y1="42" x2="40" y2="42" stroke="#0d9488" stroke-width="2.5" marker-end="url(#w3)"/>
   <text x="44" y="46" class="svg-ts" fill="#0d9488">바람</text>
   <!-- 간선 십자 -->
-  <line x1="76" y1="50" x2="76" y2="240" stroke="#2563eb" stroke-width="11"/>
-  <line x1="18" y1="106" x2="240" y2="106" stroke="#2563eb" stroke-width="11"/>
-  <!-- 콜렉터 -->
+  <line x1="76" y1="50" x2="76" y2="246" stroke="#2563eb" stroke-width="11"/>
+  <line x1="16" y1="106" x2="246" y2="106" stroke="#2563eb" stroke-width="11"/>
+  <!-- 콜렉터 (간선과 만나는 지점만 교차로) -->
   <g stroke="#0d9488" stroke-width="7">
-    <line x1="18" y1="180" x2="150" y2="180"/>
-    <line x1="40" y1="50" x2="40" y2="240"/><line x1="126" y1="50" x2="126" y2="240"/>
+    <line x1="44" y1="56" x2="44" y2="238"/><line x1="118" y1="56" x2="118" y2="238"/>
+    <line x1="44" y1="170" x2="76" y2="170"/><line x1="76" y1="212" x2="118" y2="212"/>
   </g>
-  <!-- 국지 -->
+  <!-- 국지: 간선을 관통하지 않음 -->
   <g stroke="#8a93a5" stroke-width="3.5" opacity=".7">
-    <line x1="58" y1="50" x2="58" y2="240"/><line x1="100" y1="50" x2="100" y2="240"/>
-    <line x1="18" y1="66" x2="150" y2="66"/><line x1="18" y1="144" x2="150" y2="144"/><line x1="18" y1="214" x2="150" y2="214"/>
+    <line x1="20" y1="78" x2="68" y2="78"/><line x1="84" y1="78" x2="114" y2="78"/>
+    <line x1="20" y1="140" x2="68" y2="140"/><line x1="84" y1="140" x2="114" y2="140"/>
+    <line x1="20" y1="200" x2="68" y2="200"/><line x1="84" y1="176" x2="114" y2="176"/>
+    <line x1="20" y1="232" x2="68" y2="232"/>
   </g>
+  <!-- 교차로 표시 -->
+  <g fill="var(--amber)">
+    <circle cx="44" cy="106" r="5"/><circle cx="118" cy="106" r="5"/>
+  </g>
+  <g fill="var(--green)">
+    <polygon points="76,164 82,170 76,176 70,170"/><polygon points="76,206 82,212 76,218 70,212"/>
+  </g>
+  <circle cx="76" cy="106" r="9" fill="none" stroke="var(--amber)" stroke-width="3"/>
   <!-- 주거 -->
   <g fill="#16a34a" opacity=".45">
-    <rect x="22" y="112" width="14" height="26" rx="2"/><rect x="44" y="112" width="10" height="26" rx="2"/>
-    <rect x="22" y="150" width="14" height="26" rx="2"/><rect x="44" y="150" width="10" height="26" rx="2"/>
-    <rect x="22" y="186" width="14" height="24" rx="2"/><rect x="44" y="186" width="10" height="24" rx="2"/>
-    <rect x="62" y="150" width="34" height="26" rx="2"/><rect x="62" y="186" width="34" height="24" rx="2"/>
+    <rect x="22" y="114" width="18" height="20" rx="2"/><rect x="48" y="114" width="18" height="20" rx="2"/>
+    <rect x="22" y="148" width="18" height="18" rx="2"/><rect x="48" y="148" width="18" height="18" rx="2"/>
+    <rect x="22" y="178" width="18" height="18" rx="2"/><rect x="48" y="178" width="18" height="18" rx="2"/>
+    <rect x="86" y="114" width="26" height="20" rx="2"/><rect x="86" y="148" width="26" height="20" rx="2"/>
   </g>
-  <text x="38" y="234" class="svg-ts" fill="#0b6b2c" text-anchor="middle">주거</text>
+  <text x="44" y="256" class="svg-ts" fill="#0b6b2c" text-anchor="middle">주거</text>
   <!-- 중심 상업 -->
-  <g fill="#d97706" opacity=".5"><rect x="84" y="72" width="34" height="28" rx="2"/><rect x="84" y="112" width="34" height="28" rx="2"/></g>
-  <circle cx="76" cy="106" r="9" fill="none" stroke="var(--amber)" stroke-width="3"/>
-  <text x="112" y="60" class="svg-ts" fill="#8a5a00" text-anchor="middle">중심 상업</text>
+  <g fill="#d97706" opacity=".5"><rect x="86" y="84" width="26" height="16" rx="2"/><rect x="22" y="84" width="26" height="16" rx="2"/></g>
+  <text x="120" y="70" class="svg-ts" fill="#8a5a00" text-anchor="end">중심 상업</text>
   <!-- 완충: 사무 -->
-  <rect x="156" y="50" width="42" height="190" fill="none" stroke="#64748b" stroke-width="1.8" stroke-dasharray="5 4" rx="6"/>
-  <text x="177" y="46" class="svg-ts" fill="#64748b" text-anchor="middle">완충·사무</text>
+  <rect x="152" y="56" width="40" height="182" fill="none" stroke="#64748b" stroke-width="1.8" stroke-dasharray="5 4" rx="6"/>
+  <text x="172" y="50" class="svg-ts" fill="#64748b" text-anchor="middle">완충·사무</text>
   <!-- 산업 -->
-  <rect x="206" y="118" width="38" height="112" fill="#dc2626" opacity=".45" rx="3"/>
-  <text x="225" y="176" class="svg-ts" fill="#a01818" text-anchor="middle">산업</text>
-  <text x="80" y="266" class="svg-ts" fill="#2563eb" text-anchor="middle">간선 십자 + 콜렉터 격자 완성</text>
+  <rect x="204" y="118" width="40" height="112" fill="#dc2626" opacity=".45" rx="3"/>
+  <text x="224" y="176" class="svg-ts" fill="#a01818" text-anchor="middle">산업</text>
+  <text x="124" y="268" class="svg-ts" fill="#2563eb" text-anchor="middle">간선 교차로 5개 (● 4지 3 · ◆ T자 2)</text>
 </svg>
 <div class="dcap"><b>1단계의 축이 그대로 간선이 됐습니다.</b> 간선 십자를 완성하고 콜렉터를 <b>일정 간격</b>으로 평행 배치합니다. 간선 교차점(○)이 중심 상업지가 되고, 비워둔 자리에는 <b>사무가 들어와 완충지대</b>가 됩니다.</div>
 </figure>
@@ -1376,27 +1413,39 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
   <text x="38" y="44" class="svg-ts" fill="#0d9488">바람</text>
   <!-- 간선 격자 -->
   <g stroke="#2563eb" stroke-width="10">
-    <line x1="64" y1="46" x2="64" y2="244"/><line x1="132" y1="56" x2="132" y2="244"/>
-    <line x1="16" y1="92" x2="160" y2="92"/><line x1="16" y1="188" x2="160" y2="188"/>
+    <line x1="62" y1="46" x2="62" y2="246"/>
+    <line x1="16" y1="96" x2="164" y2="96"/><line x1="16" y1="192" x2="164" y2="192"/>
   </g>
   <!-- 콜렉터 -->
   <g stroke="#0d9488" stroke-width="6">
-    <line x1="36" y1="46" x2="36" y2="244"/><line x1="100" y1="56" x2="100" y2="244"/>
-    <line x1="16" y1="140" x2="160" y2="140"/><line x1="16" y1="226" x2="160" y2="226"/>
+    <line x1="34" y1="52" x2="34" y2="240"/><line x1="110" y1="52" x2="110" y2="240"/>
+    <line x1="16" y1="144" x2="164" y2="144"/>
   </g>
+  <!-- 국지: 전부 가로 방향 — 간선을 관통하지 않음 -->
   <g stroke="#8a93a5" stroke-width="3" opacity=".6">
-    <line x1="50" y1="46" x2="50" y2="244"/><line x1="82" y1="56" x2="82" y2="244"/><line x1="116" y1="56" x2="116" y2="244"/><line x1="148" y1="56" x2="148" y2="244"/>
-    <line x1="16" y1="66" x2="160" y2="66"/><line x1="16" y1="116" x2="160" y2="116"/><line x1="16" y1="164" x2="160" y2="164"/><line x1="16" y1="208" x2="160" y2="208"/>
+    <line x1="18" y1="72" x2="56" y2="72"/><line x1="68" y1="72" x2="150" y2="72"/>
+    <line x1="18" y1="120" x2="56" y2="120"/><line x1="68" y1="120" x2="150" y2="120"/>
+    <line x1="18" y1="168" x2="56" y2="168"/><line x1="68" y1="168" x2="150" y2="168"/>
+    <line x1="18" y1="218" x2="56" y2="218"/><line x1="68" y1="218" x2="150" y2="218"/>
+  </g>
+  <!-- 교차로 표시 -->
+  <g fill="var(--amber)">
+    <circle cx="34" cy="96" r="4.5"/><circle cx="110" cy="96" r="4.5"/>
+    <circle cx="34" cy="192" r="4.5"/><circle cx="110" cy="192" r="4.5"/>
+    <circle cx="62" cy="96" r="5.5"/><circle cx="62" cy="192" r="5.5"/><circle cx="62" cy="144" r="4.5"/>
   </g>
   <!-- 주거 -->
   <g fill="#16a34a" opacity=".42">
-    <rect x="18" y="96" width="16" height="40" rx="2"/><rect x="40" y="96" width="8" height="40" rx="2"/>
-    <rect x="18" y="144" width="16" height="40" rx="2"/><rect x="40" y="144" width="8" height="40" rx="2"/>
-    <rect x="18" y="192" width="16" height="30" rx="2"/><rect x="86" y="144" width="12" height="40" rx="2"/>
-    <rect x="86" y="192" width="12" height="30" rx="2"/><rect x="118" y="144" width="12" height="40" rx="2"/>
+    <rect x="18" y="100" width="16" height="16" rx="2"/><rect x="38" y="100" width="16" height="16" rx="2"/>
+    <rect x="18" y="126" width="16" height="14" rx="2"/><rect x="38" y="126" width="16" height="14" rx="2"/>
+    <rect x="18" y="150" width="16" height="14" rx="2"/><rect x="38" y="150" width="16" height="14" rx="2"/>
+    <rect x="18" y="198" width="16" height="16" rx="2"/><rect x="38" y="198" width="16" height="16" rx="2"/>
+    <rect x="70" y="126" width="36" height="14" rx="2"/><rect x="114" y="126" width="24" height="14" rx="2"/>
+    <rect x="70" y="150" width="36" height="14" rx="2"/><rect x="114" y="150" width="24" height="14" rx="2"/>
+    <rect x="70" y="198" width="36" height="16" rx="2"/><rect x="114" y="198" width="24" height="16" rx="2"/>
   </g>
-  <text x="34" y="254" class="svg-ts" fill="#0b6b2c" text-anchor="middle">주거</text>
-  <g fill="#d97706" opacity=".5"><rect x="66" y="70" width="30" height="18" rx="2"/><rect x="102" y="70" width="26" height="18" rx="2"/></g>
+  <text x="34" y="256" class="svg-ts" fill="#0b6b2c" text-anchor="middle">주거</text>
+  <g fill="#d97706" opacity=".5"><rect x="70" y="76" width="36" height="16" rx="2"/><rect x="18" y="76" width="36" height="16" rx="2"/></g>
   <!-- 완충 -->
   <rect x="166" y="56" width="34" height="188" fill="none" stroke="#64748b" stroke-width="1.8" stroke-dasharray="5 4" rx="6"/>
   <text x="183" y="53" class="svg-ts" fill="#64748b" text-anchor="middle">완충·사무</text>
@@ -1406,9 +1455,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
     <rect x="206" y="80" width="38" height="46" rx="3"/><rect x="206" y="136" width="38" height="46" rx="3"/><rect x="206" y="192" width="38" height="42" rx="3"/>
   </g>
   <text x="225" y="254" class="svg-ts" fill="#a01818" text-anchor="middle">산업</text>
-  <text x="125" y="268" class="svg-ts" fill="var(--text3)" text-anchor="middle">화물은 도시에 들어오지 않고 전용 IC로 직행</text>
+  <text x="90" y="268" class="svg-ts" fill="var(--text3)" text-anchor="middle">간선 교차로 7개 · 국지도로는 간선에 안 닿음</text>
 </svg>
-<div class="dcap"><b>두 번째 IC를 뚫습니다.</b> 하나의 IC에 도시 전체가 매달리면 반드시 막힙니다. <b>산업 화물은 전용 IC로 완전히 분리</b>돼 통근 간선을 한 번도 통과하지 않습니다.</div>
+<div class="dcap"><b>두 번째 IC를 뚫습니다.</b> 하나의 IC에 도시 전체가 매달리면 반드시 막힙니다. <b>산업 화물은 전용 IC로 완전히 분리</b>돼 통근 간선을 한 번도 통과하지 않습니다. 국지도로(회색)는 <b>콜렉터에만 붙고 간선을 관통하지 않습니다.</b></div>
 </figure>
 
 <figure class="diagram">
@@ -1484,6 +1533,57 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 
 </div>
 
+<h4>교차로 수를 줄이는 법 — 관통 vs T자</h4>
+<p>위 도면들에서 <strong>국지도로가 간선을 관통하지 않는다</strong>는 점을 눈여겨보세요. 같은 수의 도로를 깔아도 이 차이 하나로 간선의 성능이 갈립니다.</p>
+<figure class="diagram">
+<div class="dg-title">국지도로를 간선에 어떻게 붙이나</div>
+<svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="국지도로가 간선을 관통할 때와 T자로 붙을 때의 교차로 수 비교">
+  <rect x="0" y="0" width="700" height="340" fill="var(--svg-fill)" rx="8"/>
+  <line x1="350" y1="16" x2="350" y2="292" stroke="var(--border2)" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+  <!-- 좌: 관통 -->
+  <text x="20" y="32" class="svg-tb" fill="var(--red)">✕ 관통 — 4지 교차로 4개</text>
+  <line x1="170" y1="48" x2="170" y2="264" stroke="#2563eb" stroke-width="13"/>
+  <g stroke="#8a93a5" stroke-width="5" opacity=".75">
+    <line x1="40" y1="86" x2="300" y2="86"/><line x1="40" y1="140" x2="300" y2="140"/>
+    <line x1="40" y1="194" x2="300" y2="194"/><line x1="40" y1="248" x2="300" y2="248"/>
+  </g>
+  <g fill="var(--red)">
+    <circle cx="170" cy="86" r="9"/><circle cx="170" cy="140" r="9"/><circle cx="170" cy="194" r="9"/><circle cx="170" cy="248" r="9"/>
+  </g>
+  <text x="196" y="70" class="svg-ts" fill="var(--red)">● 전부 신호 필요</text>
+  <text x="170" y="288" class="svg-ts" fill="var(--red)" text-anchor="middle">간선이 54단위마다 멈춤 → 흐름 붕괴</text>
+
+  <!-- 우: T자 -->
+  <text x="380" y="32" class="svg-tb" fill="var(--green)">✓ T자 + 엇갈림 — 3지 4개</text>
+  <line x1="530" y1="48" x2="530" y2="264" stroke="#2563eb" stroke-width="13"/>
+  <g stroke="#8a93a5" stroke-width="5" opacity=".75">
+    <line x1="400" y1="86" x2="524" y2="86"/><line x1="536" y1="140" x2="660" y2="140"/>
+    <line x1="400" y1="194" x2="524" y2="194"/><line x1="536" y1="248" x2="660" y2="248"/>
+  </g>
+  <g fill="var(--green)">
+    <polygon points="530,79 537,86 530,93 523,86"/><polygon points="530,133 537,140 530,147 523,140"/>
+    <polygon points="530,187 537,194 530,201 523,194"/><polygon points="530,241 537,248 530,255 523,248"/>
+  </g>
+  <text x="556" y="70" class="svg-ts" fill="var(--green)">◆ 정지 표지판으로 충분</text>
+  <text x="530" y="288" class="svg-ts" fill="var(--green)" text-anchor="middle">간선은 안 멈춤 · 좌우가 엇갈려 상충도 없음</text>
+
+  <rect x="20" y="304" width="660" height="26" fill="var(--accent-soft)" rx="6"/>
+  <text x="350" y="322" class="svg-t" fill="var(--accent-text)" text-anchor="middle">같은 접근성인데 간선 정지 횟수는 0 — 좌우 국지도로를 <tspan font-weight="800">일부러 어긋나게</tspan> 배치하는 것이 요령입니다</text>
+</svg>
+<figcaption>4지 교차로는 <b>4방향 상충</b>이 있어 신호가 필요하지만, T자(3지)는 <b>부도로에 정지 표지판</b>만 두면 간선이 멈추지 않습니다. 국지도로를 좌우로 엇갈리게 놓으면 4지가 아예 생기지 않습니다.</figcaption>
+</figure>
+
+<div class="callout tip">
+<div class="ct">내 도시 교차로 수가 적정한지 세는 법</div>
+<p>간선 한 축을 골라 <strong>끝에서 끝까지 신호 교차로만 세어 보세요.</strong></p>
+<ul>
+<li><strong>1km당 신호 5~6개 이하</strong>면 정상 (신호 간격 150~200m)</li>
+<li><strong>1km당 10개 이상</strong>이면 그 간선은 이미 간선이 아닙니다 — 콜렉터로 격하하고 진짜 간선을 따로 뚫으세요</li>
+</ul>
+<p>세어 보면 대개 <strong>국지도로가 간선을 관통하는 지점</strong>이 범인입니다. 관통을 T자로 바꾸거나, 아예 끊어서 콜렉터로 우회시키면 절반 이하로 줄어듭니다.</p>
+</div>
+
 <h3>5-3. 도로 승격 규칙 — 언제, 무엇을 올리나</h3>
 <div class="tablewrap">
 <table>
@@ -1506,41 +1606,104 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <h3>5-4. 블록 치수 — 복사·붙여넣기가 되게 만들기</h3>
 <figure class="diagram">
 <div class="dg-title">표준 블록 치수 (게임 셀 1칸 = 8m)</div>
-<svg viewBox="0 0 732 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="표준 블록 치수와 구획 깊이">
-  <rect x="0" y="0" width="732" height="290" fill="var(--svg-fill)" rx="8"/>
-  <!-- 콜렉터 -->
-  <line x1="60" y1="60" x2="620" y2="60" stroke="#0d9488" stroke-width="10"/>
-  <line x1="60" y1="230" x2="620" y2="230" stroke="#0d9488" stroke-width="10"/>
-  <line x1="60" y1="60" x2="60" y2="230" stroke="#0d9488" stroke-width="10"/>
-  <line x1="620" y1="60" x2="620" y2="230" stroke="#0d9488" stroke-width="10"/>
-  <!-- 국지 -->
-  <g stroke="#8a93a5" stroke-width="6" opacity=".8">
-    <line x1="200" y1="60" x2="200" y2="230"/><line x1="340" y1="60" x2="340" y2="230"/><line x1="480" y1="60" x2="480" y2="230"/>
-    <line x1="60" y1="145" x2="620" y2="145"/>
+<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="정확한 축척으로 그린 표준 블록 치수">
+  <defs>
+    <marker id="bdS" markerWidth="7" markerHeight="7" refX="1" refY="3" orient="auto"><path d="M6,0 L1,3 L6,6" fill="none" stroke="var(--accent)" stroke-width="1.4"/></marker>
+    <marker id="bdE" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M1,0 L6,3 L1,6" fill="none" stroke="var(--accent)" stroke-width="1.4"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="400" fill="var(--svg-fill)" rx="8"/>
+  <text x="690" y="26" class="svg-ts" fill="var(--text3)" text-anchor="end">축척 고정: 1셀(8m) = 12단위</text>
+
+  <!-- 콜렉터: 20셀(240단위) 간격 -->
+  <g stroke="#0d9488" stroke-width="9">
+    <line x1="60" y1="64" x2="540" y2="64"/><line x1="60" y1="304" x2="540" y2="304"/>
+    <line x1="60" y1="64" x2="60" y2="304"/><line x1="300" y1="64" x2="300" y2="304"/><line x1="540" y1="64" x2="540" y2="304"/>
   </g>
-  <!-- 구획 -->
+  <!-- 국지: 10셀(120단위) 간격 -->
+  <g stroke="#8a93a5" stroke-width="5.5" opacity=".8">
+    <line x1="180" y1="64" x2="180" y2="304"/><line x1="420" y1="64" x2="420" y2="304"/>
+    <line x1="60" y1="184" x2="540" y2="184"/>
+  </g>
+  <!-- 건물 -->
   <g fill="#16a34a" opacity=".38">
-    <rect x="70" y="70" width="120" height="30" rx="2"/><rect x="70" y="105" width="120" height="30" rx="2"/>
-    <rect x="210" y="70" width="120" height="30" rx="2"/><rect x="210" y="105" width="120" height="30" rx="2"/>
-    <rect x="350" y="70" width="120" height="30" rx="2"/><rect x="350" y="105" width="120" height="30" rx="2"/>
-    <rect x="490" y="70" width="120" height="30" rx="2"/><rect x="490" y="105" width="120" height="30" rx="2"/>
-    <rect x="70" y="155" width="120" height="30" rx="2"/><rect x="210" y="155" width="120" height="30" rx="2"/>
-    <rect x="350" y="155" width="120" height="30" rx="2"/><rect x="490" y="155" width="120" height="30" rx="2"/>
-    <rect x="70" y="190" width="120" height="30" rx="2"/><rect x="210" y="190" width="120" height="30" rx="2"/>
-    <rect x="350" y="190" width="120" height="30" rx="2"/><rect x="490" y="190" width="120" height="30" rx="2"/>
+    <rect x="68" y="78" width="48" height="38" rx="2"/><rect x="124" y="78" width="48" height="38" rx="2"/>
+    <rect x="68" y="130" width="48" height="38" rx="2"/><rect x="124" y="130" width="48" height="38" rx="2"/>
+    <rect x="188" y="78" width="48" height="38" rx="2"/><rect x="244" y="78" width="48" height="38" rx="2"/>
+    <rect x="188" y="130" width="48" height="38" rx="2"/><rect x="244" y="130" width="48" height="38" rx="2"/>
+    <rect x="68" y="198" width="48" height="38" rx="2"/><rect x="124" y="198" width="48" height="38" rx="2"/>
+    <rect x="68" y="250" width="48" height="38" rx="2"/><rect x="124" y="250" width="48" height="38" rx="2"/>
+    <rect x="188" y="198" width="48" height="38" rx="2"/><rect x="244" y="198" width="48" height="38" rx="2"/>
+    <rect x="188" y="250" width="48" height="38" rx="2"/><rect x="244" y="250" width="48" height="38" rx="2"/>
+    <rect x="308" y="78" width="48" height="38" rx="2"/><rect x="364" y="78" width="48" height="38" rx="2"/>
+    <rect x="308" y="130" width="48" height="38" rx="2"/><rect x="364" y="130" width="48" height="38" rx="2"/>
+    <rect x="428" y="78" width="48" height="38" rx="2"/><rect x="484" y="78" width="48" height="38" rx="2"/>
+    <rect x="428" y="130" width="48" height="38" rx="2"/><rect x="484" y="130" width="48" height="38" rx="2"/>
+    <rect x="308" y="198" width="48" height="38" rx="2"/><rect x="364" y="198" width="48" height="38" rx="2"/>
+    <rect x="308" y="250" width="48" height="38" rx="2"/><rect x="364" y="250" width="48" height="38" rx="2"/>
+    <rect x="428" y="198" width="48" height="38" rx="2"/><rect x="484" y="198" width="48" height="38" rx="2"/>
+    <rect x="428" y="250" width="48" height="38" rx="2"/><rect x="484" y="250" width="48" height="38" rx="2"/>
   </g>
-  <!-- 치수선 -->
-  <path d="M200 44 L340 44" stroke="var(--accent)" stroke-width="1.5"/>
-  <path d="M200 40 L200 48 M340 40 M340 48" stroke="var(--accent)" stroke-width="1.5"/>
-  <text x="270" y="36" class="svg-t" fill="var(--accent-text)" text-anchor="middle">국지도로 간격 ≤12셀 (96m)</text>
-  <path d="M636 60 L636 230" stroke="var(--accent)" stroke-width="1.5"/>
-  <text x="644" y="150" class="svg-t" fill="var(--accent-text)">콜렉터 간격</text>
-  <text x="644" y="168" class="svg-t" fill="var(--accent-text)">≈20셀 (160m)</text>
-  <path d="M70 250 L190 250" stroke="var(--green)" stroke-width="1.5"/>
-  <text x="130" y="266" class="svg-ts" fill="var(--green)" text-anchor="middle">구획 깊이 최대 6칸(48m)</text>
-  <text x="360" y="266" class="svg-ts" fill="var(--text3)" text-anchor="middle">— 이 한 칸을 통째로 복사해서 옆에 붙이면 확장 끝 —</text>
+  <!-- 치수: 콜렉터 가로 -->
+  <line x1="60" y1="48" x2="300" y2="48" stroke="var(--accent)" stroke-width="1.4" marker-start="url(#bdS)" marker-end="url(#bdE)"/>
+  <text x="180" y="42" class="svg-t" fill="var(--accent-text)" text-anchor="middle">콜렉터 간격 20셀 = 160m</text>
+  <!-- 치수: 국지 -->
+  <line x1="60" y1="322" x2="180" y2="322" stroke="var(--accent)" stroke-width="1.4" marker-start="url(#bdS)" marker-end="url(#bdE)"/>
+  <text x="120" y="340" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">국지 10셀 = 80m</text>
+  <line x1="180" y1="322" x2="300" y2="322" stroke="var(--accent)" stroke-width="1.4" marker-start="url(#bdS)" marker-end="url(#bdE)"/>
+  <text x="240" y="340" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">10셀 = 80m</text>
+  <!-- 치수: 콜렉터 세로 -->
+  <line x1="558" y1="64" x2="558" y2="304" stroke="var(--accent)" stroke-width="1.4" marker-start="url(#bdS)" marker-end="url(#bdE)"/>
+  <text x="568" y="178" class="svg-t" fill="var(--accent-text)">콜렉터</text>
+  <text x="568" y="196" class="svg-t" fill="var(--accent-text)">20셀</text>
+  <text x="568" y="214" class="svg-t" fill="var(--accent-text)">160m</text>
+  <!-- 복사 -->
+  <path d="M300 358 L536 358" stroke="var(--green)" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#bdE)"/>
+  <text x="418" y="380" class="svg-t" fill="var(--green)" text-anchor="middle">이 블록을 통째로 복사해 붙이면 확장 끝</text>
+  <text x="120" y="380" class="svg-t" fill="var(--text3)" text-anchor="middle">← 표준 블록 1개</text>
 </svg>
-<figcaption>건물 부지는 도로에서 <b>최대 6칸(48m)</b>까지만 성장합니다. 그래서 도로 사이를 12칸(양쪽 6칸) 넘게 벌리면 <b>가운데가 죽은 땅</b>이 됩니다. 콜렉터 간격 ≈20셀은 신호 교차로 간격 150~200m 원칙과도 맞아떨어집니다.</figcaption>
+<figcaption>모든 치수가 <b>1셀 = 12단위</b> 축척으로 그려져 있습니다. 콜렉터를 20셀 간격으로 두고 그 사이에 국지도로를 1개 넣으면 도로 간격이 10셀이 되어, 아래 설명대로 <b>죽은 땅 없이</b> 꽉 채워집니다.</figcaption>
+</figure>
+
+<figure class="diagram">
+<div class="dg-title">왜 도로 간격이 12셀을 넘으면 안 되나</div>
+<svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="구획 깊이 6칸과 도로 간격의 관계를 보여주는 세 가지 경우">
+  <defs>
+    <marker id="dpS" markerWidth="7" markerHeight="7" refX="1" refY="3" orient="auto"><path d="M6,0 L1,3 L6,6" fill="none" stroke="var(--text2)" stroke-width="1.4"/></marker>
+    <marker id="dpE" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M1,0 L6,3 L1,6" fill="none" stroke="var(--text2)" stroke-width="1.4"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="230" fill="var(--svg-fill)" rx="8"/>
+  <text x="690" y="24" class="svg-ts" fill="var(--text3)" text-anchor="end">동일 축척: 1셀 = 12단위</text>
+
+  <!-- A: 구획 깊이 -->
+  <text x="24" y="44" class="svg-t" fill="var(--green)">① 한 도로가 채우는 깊이</text>
+  <line x1="40" y1="60" x2="40" y2="160" stroke="#8a93a5" stroke-width="7"/>
+  <rect x="46" y="66" width="72" height="88" fill="#16a34a" opacity=".4" rx="3"/>
+  <line x1="40" y1="176" x2="112" y2="176" stroke="var(--text2)" stroke-width="1.4" marker-start="url(#dpS)" marker-end="url(#dpE)"/>
+  <text x="76" y="196" class="svg-ts" fill="var(--text2)" text-anchor="middle">6칸 = 48m</text>
+  <text x="76" y="214" class="svg-ts" fill="var(--text3)" text-anchor="middle">건물은 여기까지만</text>
+
+  <!-- B: 10셀 -->
+  <text x="212" y="44" class="svg-t" fill="var(--green)">② 도로 간격 10셀 — 꽉 참</text>
+  <line x1="228" y1="60" x2="228" y2="160" stroke="#8a93a5" stroke-width="7"/>
+  <line x1="348" y1="60" x2="348" y2="160" stroke="#8a93a5" stroke-width="7"/>
+  <rect x="234" y="66" width="108" height="88" fill="#16a34a" opacity=".4" rx="3"/>
+  <line x1="228" y1="176" x2="348" y2="176" stroke="var(--text2)" stroke-width="1.4" marker-start="url(#dpS)" marker-end="url(#dpE)"/>
+  <text x="288" y="196" class="svg-ts" fill="var(--text2)" text-anchor="middle">10셀 = 80m</text>
+  <text x="288" y="214" class="svg-ts" fill="var(--green)" text-anchor="middle">✓ 빈틈 없음</text>
+
+  <!-- C: 16셀 -->
+  <text x="446" y="44" class="svg-t" fill="var(--red)">③ 도로 간격 16셀 — 죽은 땅</text>
+  <line x1="462" y1="60" x2="462" y2="160" stroke="#8a93a5" stroke-width="7"/>
+  <line x1="654" y1="60" x2="654" y2="160" stroke="#8a93a5" stroke-width="7"/>
+  <rect x="468" y="66" width="72" height="88" fill="#16a34a" opacity=".4" rx="3"/>
+  <rect x="576" y="66" width="72" height="88" fill="#16a34a" opacity=".4" rx="3"/>
+  <rect x="540" y="66" width="36" height="88" fill="var(--red)" opacity=".3" rx="2"/>
+  <text x="558" y="116" class="svg-ts" fill="var(--red)" text-anchor="middle">✕</text>
+  <line x1="462" y1="176" x2="654" y2="176" stroke="var(--text2)" stroke-width="1.4" marker-start="url(#dpS)" marker-end="url(#dpE)"/>
+  <text x="558" y="196" class="svg-ts" fill="var(--text2)" text-anchor="middle">16셀 = 128m</text>
+  <text x="558" y="214" class="svg-ts" fill="var(--red)" text-anchor="middle">가운데 3칸이 영영 빈 땅</text>
+</svg>
+<figcaption>건물 부지는 도로에서 <b>최대 6칸(48m)</b>까지만 성장합니다. 양쪽에서 6칸씩이므로 <b>도로 간격 12칸(96m)이 상한</b>이고, 그 이상 벌리면 가운데가 아무것도 못 짓는 땅이 됩니다. 반대로 너무 촘촘하면 교차로만 늘어나므로 <b>10~12셀이 실용 구간</b>입니다.</figcaption>
 </figure>
 
 <h3>5-5. 산업지구 도로 설계 ★</h3>
@@ -1888,6 +2051,95 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </figure>
 </div>
 
+<h4>간선을 연장한 다음, 콜렉터를 어떻게 붙이나</h4>
+<p>연장한 간선 하나만으로는 지구가 만들어지지 않습니다. <strong>간선에 나란한 콜렉터를 양옆에 붙여 "사다리"를 만드는 것</strong>이 기본형입니다. 다만 그 지구가 <strong>상업 중심인지 주거 중심인지</strong>에 따라 간선이 지구를 관통할지 비껴갈지가 갈립니다.</p>
+
+<div class="dgrid c2">
+<figure class="diagram">
+<div class="dg-title"><span class="pill">A형</span>간선 관통 — 상업·업무 지구</div>
+<svg viewBox="0 0 330 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="간선이 지구를 관통하고 콜렉터가 나란히 붙는 배치">
+  <defs>
+    <marker id="laS" markerWidth="6" markerHeight="6" refX="1" refY="2.5" orient="auto"><path d="M5,0 L1,2.5 L5,5" fill="none" stroke="var(--accent)" stroke-width="1.2"/></marker>
+    <marker id="laE" markerWidth="6" markerHeight="6" refX="5" refY="2.5" orient="auto"><path d="M1,0 L5,2.5 L1,5" fill="none" stroke="var(--accent)" stroke-width="1.2"/></marker>
+  </defs>
+  <rect x="0" y="0" width="330" height="290" fill="var(--svg-fill)" rx="8"/>
+  <!-- 간선 -->
+  <line x1="8" y1="145" x2="322" y2="145" stroke="#2563eb" stroke-width="13"/>
+  <text x="12" y="136" class="svg-ts" fill="#2563eb">간선 6차선 (연장)</text>
+  <!-- 콜렉터 나란히 -->
+  <line x1="20" y1="65" x2="310" y2="65" stroke="#0d9488" stroke-width="8"/>
+  <line x1="20" y1="225" x2="310" y2="225" stroke="#0d9488" stroke-width="8"/>
+  <!-- 연결 콜렉터 (세로) -->
+  <line x1="86" y1="65" x2="86" y2="225" stroke="#0d9488" stroke-width="8"/>
+  <line x1="244" y1="65" x2="244" y2="225" stroke="#0d9488" stroke-width="8"/>
+  <circle cx="86" cy="145" r="7" fill="var(--amber)"/><circle cx="244" cy="145" r="7" fill="var(--amber)"/>
+  <!-- 상업 (간선 전면) -->
+  <g fill="#d97706" opacity=".5">
+    <rect x="24" y="106" width="56" height="30" rx="2"/><rect x="92" y="106" width="56" height="30" rx="2"/>
+    <rect x="156" y="106" width="56" height="30" rx="2"/><rect x="250" y="106" width="56" height="30" rx="2"/>
+    <rect x="24" y="154" width="56" height="30" rx="2"/><rect x="92" y="154" width="56" height="30" rx="2"/>
+    <rect x="156" y="154" width="56" height="30" rx="2"/><rect x="250" y="154" width="56" height="30" rx="2"/>
+  </g>
+  <!-- 주거 (콜렉터 바깥) -->
+  <g fill="#16a34a" opacity=".4">
+    <rect x="24" y="28" width="56" height="28" rx="2"/><rect x="92" y="28" width="56" height="28" rx="2"/>
+    <rect x="156" y="28" width="56" height="28" rx="2"/><rect x="250" y="28" width="56" height="28" rx="2"/>
+    <rect x="24" y="234" width="56" height="28" rx="2"/><rect x="92" y="234" width="56" height="28" rx="2"/>
+    <rect x="156" y="234" width="56" height="28" rx="2"/><rect x="250" y="234" width="56" height="28" rx="2"/>
+  </g>
+  <!-- 치수 -->
+  <line x1="318" y1="65" x2="318" y2="145" stroke="var(--accent)" stroke-width="1.2" marker-start="url(#laS)" marker-end="url(#laE)"/>
+  <text x="314" y="100" class="svg-ts" fill="var(--accent-text)" text-anchor="end">≈12셀</text>
+  <text x="165" y="282" class="svg-ts" fill="var(--text2)" text-anchor="middle">간선 교차로 2개 (● 콜렉터 접속점만)</text>
+</svg>
+<div class="dcap"><b>간선이 지구 한가운데를 지납니다.</b> 간선 전면은 <span class="tag a">상업·사무</span>가 차지하고, 콜렉터 바깥쪽에 <span class="tag g">주거</span>가 붙습니다. 간선↔콜렉터 거리는 <b>≈12셀(96m)</b> — 양쪽에서 6칸씩 채우면 딱 맞습니다.</div>
+</figure>
+
+<figure class="diagram">
+<div class="dg-title"><span class="pill">B형</span>간선 우회 — 주거 지구</div>
+<svg viewBox="0 0 330 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="간선이 지구를 비껴가고 콜렉터 루프가 걸리는 배치">
+  <rect x="0" y="0" width="330" height="290" fill="var(--svg-fill)" rx="8"/>
+  <!-- 간선 (가장자리) -->
+  <line x1="42" y1="16" x2="42" y2="274" stroke="#2563eb" stroke-width="13"/>
+  <text x="10" y="284" class="svg-ts" fill="#2563eb">간선</text>
+  <!-- 콜렉터 루프 -->
+  <line x1="42" y1="70" x2="286" y2="70" stroke="#0d9488" stroke-width="8"/>
+  <line x1="42" y1="222" x2="286" y2="222" stroke="#0d9488" stroke-width="8"/>
+  <line x1="286" y1="70" x2="286" y2="222" stroke="#0d9488" stroke-width="8"/>
+  <circle cx="42" cy="70" r="7" fill="var(--amber)"/><circle cx="42" cy="222" r="7" fill="var(--amber)"/>
+  <!-- 국지 -->
+  <g stroke="#8a93a5" stroke-width="5" opacity=".75">
+    <line x1="60" y1="146" x2="286" y2="146"/>
+    <line x1="120" y1="70" x2="120" y2="222"/><line x1="204" y1="70" x2="204" y2="222"/>
+  </g>
+  <!-- 주거 -->
+  <g fill="#16a34a" opacity=".42">
+    <rect x="62" y="82" width="50" height="24" rx="2"/><rect x="128" y="82" width="68" height="24" rx="2"/><rect x="212" y="82" width="66" height="24" rx="2"/>
+    <rect x="62" y="114" width="50" height="24" rx="2"/><rect x="128" y="114" width="68" height="24" rx="2"/><rect x="212" y="114" width="66" height="24" rx="2"/>
+    <rect x="62" y="154" width="50" height="26" rx="2"/><rect x="128" y="154" width="68" height="26" rx="2"/><rect x="212" y="154" width="66" height="26" rx="2"/>
+    <rect x="62" y="188" width="50" height="26" rx="2"/><rect x="128" y="188" width="68" height="26" rx="2"/><rect x="212" y="188" width="66" height="26" rx="2"/>
+  </g>
+  <text x="165" y="256" class="svg-ts" fill="var(--green)" text-anchor="middle">간선 교차로 2개 · 국지도로는 간선에 안 닿음</text>
+  <text x="180" y="278" class="svg-ts" fill="var(--text3)" text-anchor="middle">가장 조용한 주거 지구가 됩니다</text>
+</svg>
+<div class="dcap"><b>간선이 지구를 비껴갑니다.</b> 콜렉터 루프가 간선에 <b>두 곳에서만</b> 물리고, 국지도로는 간선에 닿지 않습니다. 통과 교통이 전혀 안 들어와 저밀 주거의 지가가 가장 잘 오릅니다.</div>
+</figure>
+</div>
+
+<div class="callout info">
+<div class="ct">"간선 + 나란한 콜렉터 2개" — 정확한 치수</div>
+<p>질문하신 그 형태가 맞습니다. 사다리 구조이며, 거리는 이렇게 잡습니다.</p>
+<div class="formula" style="margin:10px 0">
+간선 —<b>12셀(96m)</b>— 콜렉터 —<b>10~12셀(80~96m)</b>— 국지 —<b>10~12셀</b>— 국지 …
+</div>
+<ul>
+<li><strong>간선↔콜렉터 12셀</strong>: 간선 전면 6칸(상업) + 콜렉터 전면 6칸(주거)이 만나 빈 땅이 없습니다.</li>
+<li><strong>세로 연결 콜렉터는 20셀 간격</strong>으로 — 이게 곧 간선 신호 교차로 간격(150~200m)이 됩니다.</li>
+<li>지구가 크면 콜렉터를 한 겹 더 붙여 사다리를 넓히면 됩니다. <strong>간선은 계속 하나</strong>입니다.</li>
+</ul>
+<p><strong>A형과 B형 선택</strong>: 상업·사무를 키울 지구면 A형(간선 전면을 상업이 먹음), 조용한 주거 지구면 B형(간선이 비껴감). 실제 도시에서는 <strong>도심 방향은 A형, 외곽은 B형</strong>으로 섞어 씁니다.</p>
+</div>
+
 <div class="callout tip">
 <div class="ct">확장 방향을 고르는 기준</div>
 <ol>
@@ -1999,7 +2251,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
     <rect x="560" y="298" width="76" height="42" rx="3"/>
   </g>
   <g fill="#d97706" opacity=".45"><rect x="212" y="298" width="76" height="42" rx="3"/><rect x="472" y="298" width="76" height="42" rx="3"/></g>
-  <text x="350" y="358" class="svg-t" fill="#0b6b2c" text-anchor="middle">🏘️ 중밀·고밀 주거 + 저밀 상업 — 버스 정류장이 여기 있습니다</text>
+  <text x="350" y="358" class="svg-t" fill="#0b6b2c" text-anchor="middle">🏘️ 중밀·고밀 주거 + 저밀 상업 — 버스 노선·정류장이 여기 (국지도로 아님)</text>
 
   <!-- 국지 -->
   <line x1="0" y1="386" x2="700" y2="386" stroke="#8a93a5" stroke-width="8"/>
@@ -2029,6 +2281,70 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </table>
 </div>
 
+<h4>버스 정류장은 콜렉터(4차선)에 붙입니다</h4>
+<p>국지도로가 아닙니다. 이유는 <strong>정차한 버스가 차선을 막기 때문</strong>입니다.</p>
+<figure class="diagram">
+<div class="dg-title">정류장을 2차선에 두면 생기는 일</div>
+<svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="2차선 국지도로와 4차선 콜렉터에 버스 정류장을 두었을 때의 차이">
+  <defs><marker id="bsW" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="var(--green)"/></marker></defs>
+  <rect x="0" y="0" width="700" height="300" fill="var(--svg-fill)" rx="8"/>
+  <line x1="350" y1="16" x2="350" y2="284" stroke="var(--border2)" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+  <!-- 좌: 2차선 -->
+  <text x="20" y="34" class="svg-tb" fill="var(--red)">✕ 2차선 국지도로에 정류장</text>
+  <rect x="20" y="104" width="300" height="36" fill="var(--svg-line)" opacity=".35" rx="2"/>
+  <line x1="20" y1="122" x2="320" y2="122" stroke="var(--surface)" stroke-width="2" stroke-dasharray="9 7"/>
+  <!-- 버스 -->
+  <rect x="150" y="107" width="52" height="12" fill="var(--green)" rx="2"/>
+  <text x="176" y="99" class="svg-ts" fill="var(--green)" text-anchor="middle">🚌 정차</text>
+  <circle cx="212" cy="113" r="5" fill="var(--accent)"/>
+  <!-- 막힌 차량 -->
+  <g fill="var(--red)">
+    <rect x="112" y="108" width="30" height="10" rx="2"/><rect x="76" y="108" width="30" height="10" rx="2"/><rect x="40" y="108" width="30" height="10" rx="2"/>
+  </g>
+  <text x="170" y="166" class="svg-t" fill="var(--red)" text-anchor="middle">그 방향 유일 차선이 막힘</text>
+  <text x="170" y="186" class="svg-ts" fill="var(--red)" text-anchor="middle">추월할 차선이 없어 버스 뒤로 줄이 섭니다</text>
+  <text x="170" y="208" class="svg-ts" fill="var(--red)" text-anchor="middle">노선이 2개만 겹쳐도 동네가 잠깁니다</text>
+
+  <!-- 우: 4차선 -->
+  <text x="380" y="34" class="svg-tb" fill="var(--green)">✓ 4차선 콜렉터에 정류장</text>
+  <rect x="380" y="96" width="300" height="60" fill="var(--svg-line)" opacity=".35" rx="2"/>
+  <line x1="380" y1="126" x2="680" y2="126" stroke="var(--surface)" stroke-width="2.5"/>
+  <line x1="380" y1="111" x2="680" y2="111" stroke="var(--surface)" stroke-width="1.5" stroke-dasharray="8 6"/>
+  <line x1="380" y1="141" x2="680" y2="141" stroke="var(--surface)" stroke-width="1.5" stroke-dasharray="8 6"/>
+  <!-- 버스 (바깥 차선) -->
+  <rect x="500" y="99" width="52" height="10" fill="var(--green)" rx="2"/>
+  <text x="526" y="92" class="svg-ts" fill="var(--green)" text-anchor="middle">🚌 정차</text>
+  <circle cx="562" cy="104" r="5" fill="var(--accent)"/>
+  <!-- 추월 차량 (안쪽 차선) -->
+  <g fill="var(--accent)"><rect x="470" y="114" width="28" height="9" rx="2"/><rect x="512" y="114" width="28" height="9" rx="2"/></g>
+  <path d="M462 119 L556 119" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="620" y="122" class="svg-ts" fill="var(--accent-text)">추월 가능</text>
+  <!-- 국지도로에서 걸어옴 -->
+  <g stroke="#8a93a5" stroke-width="5" opacity=".6">
+    <line x1="440" y1="156" x2="440" y2="230"/><line x1="530" y1="156" x2="530" y2="230"/><line x1="620" y1="156" x2="620" y2="230"/>
+  </g>
+  <g fill="#16a34a" opacity=".4">
+    <rect x="392" y="170" width="42" height="24" rx="2"/><rect x="446" y="170" width="78" height="24" rx="2"/><rect x="536" y="170" width="78" height="24" rx="2"/>
+    <rect x="392" y="202" width="42" height="24" rx="2"/><rect x="446" y="202" width="78" height="24" rx="2"/><rect x="536" y="202" width="78" height="24" rx="2"/>
+  </g>
+  <path d="M470 186 Q500 160 546 112" stroke="var(--green)" stroke-width="2.5" fill="none" stroke-dasharray="5 4" marker-end="url(#bsW)"/>
+  <text x="530" y="252" class="svg-t" fill="var(--green)" text-anchor="middle">주민은 국지도로에서 걸어 나옵니다</text>
+  <text x="530" y="272" class="svg-ts" fill="var(--text3)" text-anchor="middle">도로 간격 10~12셀이면 도보 1분 이내</text>
+</svg>
+<figcaption>CS2에서 버스는 <b>차로 위에 정차</b>합니다. 2차선에서는 그 방향이 통째로 막히지만, 4차선에서는 안쪽 차선으로 추월할 수 있습니다. 그래서 <b>노선도 정류장도 콜렉터에</b> 두고, 주민은 국지도로에서 걸어 나오게 하는 것이 정석입니다.</figcaption>
+</figure>
+
+<div class="callout tip">
+<div class="ct">예외 — 국지도로에 정류장을 둬도 되는 경우</div>
+<ul>
+<li><strong>저밀 교외</strong>에서 콜렉터가 너무 멀 때: 통행량이 적어 버스가 막아도 피해가 작습니다. 대신 <strong>노선 1개만</strong> 지나가게 하세요.</li>
+<li><strong>보행자 전용 도로</strong>: 애초에 일반 차량이 없어 막힐 것이 없습니다. 트램+보행자 거리 조합이 상업 지구에 특히 강력합니다.</li>
+<li><strong>트램</strong>: 전용 궤도를 쓰면 차량 흐름과 분리되므로 배치가 자유롭습니다.</li>
+</ul>
+<p>반대로 <strong>간선(6차선)에 정류장을 두는 것도 피하세요.</strong> 정차·재진입이 간선 흐름을 끊고, 승객이 6차선을 건너야 합니다. <strong>간선은 지나가고, 정류장은 콜렉터에</strong>가 원칙입니다.</p>
+</div>
+
 <div class="callout warn">
 <div class="ct">고속도로변 처리 — 가장 자주 낭비되는 땅</div>
 <p>고속도로에는 <strong>구역을 칠할 수 없습니다.</strong> 그래서 초보자는 그 옆을 방치하는데, 이 띠는 이렇게 쓰면 됩니다:</p>
@@ -2041,6 +2357,31 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </div>
 
 <h3>6-4. 신시가지(위성 지구) 패턴 3종</h3>
+
+<div class="callout info">
+<div class="ct">먼저 — "지구"가 대체 얼마만 한 건가</div>
+<p><strong>타일과는 무관합니다.</strong> 지구는 타일 경계로 나뉘는 게 아니라 <strong>간선으로 둘러싸인 영역</strong>을 말합니다. 타일 하나에 지구가 여러 개 들어갈 수도, 지구 하나가 타일 몇 개에 걸칠 수도 있습니다.</p>
+<p>이 공략집에서 쓰는 규모 단위를 정리하면 이렇습니다. <strong>기준은 게임 셀 1칸 = 8m</strong> 하나뿐이고 나머지는 거기서 나옵니다.</p>
+</div>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>단위</th><th class="ctr">크기</th><th class="ctr">둘러싸는 도로</th><th class="ctr">인구(대략)</th></tr></thead>
+<tbody>
+<tr><td><b>구획(로트)</b></td><td class="ctr">도로에서 최대 6칸<br>= 48m 깊이</td><td class="ctr">국지도로</td><td class="ctr">1~수십 세대</td></tr>
+<tr><td><b>표준 블록</b></td><td class="ctr">20×20셀<br>≈ <b>160m × 160m</b></td><td class="ctr">콜렉터</td><td class="ctr">저밀 ≈100~300명<br>고밀 ≈1,000~3,000명</td></tr>
+<tr><td><b>지구(District)</b></td><td class="ctr">블록 3×3 ~ 5×5<br>≈ <b>500m ~ 800m</b> 각변</td><td class="ctr">간선</td><td class="ctr"><b>≈5,000 ~ 20,000명</b></td></tr>
+<tr><td><b>도시 전체</b></td><td class="ctr">지구 <b>8~15개</b></td><td class="ctr">순환 간선</td><td class="ctr">≈10만명</td></tr>
+</tbody>
+<caption>인구는 밀도 구성에 따라 크게 달라지므로 <b>감을 잡기 위한 어림치</b>입니다. 크기(m)는 셀 8m 기준으로 계산한 값이라 비교적 정확합니다. 아래 3종 패턴에서 사각형 하나가 <b>지구 1개(≈500~800m, 인구 5,000~20,000)</b>라고 보시면 됩니다.</caption>
+</table>
+</div>
+
+<div class="callout tip">
+<div class="ct">게임 안에서 규모를 확인하는 법</div>
+<p>도로 도구를 들고 직선을 그으면 <strong>길이(m)가 실시간으로 표시</strong>됩니다. 500m를 한 번 그어 보면 "지구 하나"가 화면에서 얼마만 한지 바로 감이 옵니다. 타일 크기도 타일 구매 화면에서 직접 확인하는 것이 가장 정확합니다.</p>
+</div>
+
 <div class="dgrid c3">
 <figure class="diagram bad">
 <div class="dg-title">직렬형</div>
@@ -2052,8 +2393,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
     <rect x="20" y="98" width="42" height="26" rx="3"/><rect x="76" y="98" width="42" height="26" rx="3"/><rect x="132" y="98" width="42" height="26" rx="3"/>
   </g>
   <g fill="var(--red)"><rect x="60" y="84" width="13" height="9" rx="2"/><rect x="78" y="84" width="13" height="9" rx="2"/><rect x="96" y="84" width="13" height="9" rx="2"/><rect x="114" y="84" width="13" height="9" rx="2"/></g>
-  <text x="110" y="156" class="svg-ts" fill="var(--red)" text-anchor="middle">모든 지구가 한 축을 공유</text>
-  <text x="110" y="176" class="svg-ts" fill="var(--red)" text-anchor="middle">끝 지구로 갈수록 통행 시간 폭증</text>
+  <line x1="20" y1="136" x2="62" y2="136" stroke="var(--text3)" stroke-width="1.5"/>
+  <path d="M20 132 L20 140 M62 132 L62 140" stroke="var(--text3)" stroke-width="1.5"/>
+  <text x="66" y="140" class="svg-ts" fill="var(--text3)">≈600m (지구 1개)</text>
+  <text x="110" y="164" class="svg-ts" fill="var(--red)" text-anchor="middle">모든 지구가 한 축을 공유</text>
+  <text x="110" y="184" class="svg-ts" fill="var(--red)" text-anchor="middle">끝 지구로 갈수록 통행 시간 폭증</text>
 </svg>
 <div class="dcap"><span class="vs-tag no">피하세요</span> 지구를 계속 옆으로 붙이면 끝쪽 주민이 도심까지 가는 데 모든 지구를 통과합니다. 5장의 "지네 도시"가 지구 단위로 재현된 형태입니다.</div>
 </figure>
@@ -2071,7 +2415,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
     <rect x="16" y="22" width="42" height="26" rx="3"/><rect x="162" y="22" width="42" height="26" rx="3"/>
     <rect x="20" y="140" width="42" height="26" rx="3"/><rect x="158" y="140" width="42" height="26" rx="3"/>
   </g>
-  <text x="110" y="186" class="svg-ts" fill="var(--green)" text-anchor="middle">각 지구가 도심까지 직통</text>
+  <line x1="16" y1="176" x2="58" y2="176" stroke="var(--text3)" stroke-width="1.5"/>
+  <path d="M16 172 L16 180 M58 172 L58 180" stroke="var(--text3)" stroke-width="1.5"/>
+  <text x="62" y="180" class="svg-ts" fill="var(--text3)">≈600m</text>
+  <text x="110" y="198" class="svg-ts" fill="var(--green)" text-anchor="middle">각 지구가 도심까지 직통</text>
 </svg>
 <div class="dcap"><span class="vs-tag ok">기본형</span> 모든 지구가 도심까지 <b>독립된 축</b>으로 이어집니다. 지하철 방사선과 그대로 겹쳐 놓으면 대중교통 설계도 같이 끝납니다.</div>
 </figure>
@@ -2089,7 +2436,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
     <rect x="88" y="24" width="44" height="20" rx="3"/><rect x="88" y="150" width="44" height="20" rx="3"/>
     <rect x="18" y="86" width="24" height="22" rx="3"/><rect x="178" y="86" width="24" height="22" rx="3"/>
   </g>
-  <text x="110" y="188" class="svg-ts" fill="var(--green)" text-anchor="middle">지구 ↔ 지구는 링으로 직접</text>
+  <line x1="48" y1="176" x2="172" y2="176" stroke="var(--text3)" stroke-width="1.5"/>
+  <path d="M48 172 L48 180 M172 172 L172 180" stroke="var(--text3)" stroke-width="1.5"/>
+  <text x="110" y="172" class="svg-ts" fill="var(--text3)" text-anchor="middle">링 지름 ≈2~3km</text>
+  <text x="110" y="192" class="svg-ts" fill="var(--green)" text-anchor="middle">지구 ↔ 지구는 링으로 직접</text>
 </svg>
 <div class="dcap"><span class="vs-tag ok">10만+</span> 방사형만 있으면 <b>지구 간 이동이 전부 도심을 통과</b>합니다. 링을 추가하면 도심을 거치지 않고 옆 지구로 갈 수 있어 도심 부하가 크게 줄어듭니다.</div>
 </figure>
@@ -2378,6 +2728,146 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 </svg>
 <figcaption><b>버스 없는 지하철은 반쪽짜리입니다.</b> 역까지 걸어갈 수 없는 시민은 그냥 차를 몹니다.</figcaption>
 </figure>
+
+<h4>트램 — 설치 방법과 놓을 자리</h4>
+<p>트램은 <strong>버스와 지하철 사이</strong>를 메웁니다. 버스보다 수송량이 크고, 지하철보다 훨씬 쌉니다(궤도 ≈₡1,250/km vs 지하철역 1개 ≈₡200,000). 다만 <strong>어디에 놓느냐로 성패가 갈립니다.</strong></p>
+
+<div class="dgrid c3">
+<figure class="diagram">
+<div class="dg-title"><span class="pill">방식 1</span>도로에 매설 (기본)</div>
+<svg viewBox="0 0 220 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="기존 도로를 업그레이드해 트램 궤도를 매설하는 방식">
+  <rect x="0" y="0" width="220" height="210" fill="var(--svg-fill)" rx="8"/>
+  <rect x="14" y="70" width="192" height="54" fill="var(--svg-line)" opacity=".35" rx="3"/>
+  <g stroke="var(--teal)" stroke-width="3.5">
+    <line x1="14" y1="90" x2="206" y2="90"/><line x1="14" y1="97" x2="206" y2="97"/>
+    <line x1="14" y1="104" x2="206" y2="104"/><line x1="14" y1="111" x2="206" y2="111"/>
+  </g>
+  <rect x="80" y="86" width="52" height="12" fill="var(--teal)" rx="2"/>
+  <text x="110" y="62" class="svg-ts" fill="var(--teal)" text-anchor="middle">🚋 중앙 궤도</text>
+  <g fill="var(--accent)" opacity=".7"><rect x="30" y="74" width="26" height="9" rx="2"/><rect x="150" y="112" width="26" height="9" rx="2"/></g>
+  <text x="110" y="150" class="svg-ts" fill="var(--text2)" text-anchor="middle">도로 업그레이드 도구로</text>
+  <text x="110" y="166" class="svg-ts" fill="var(--text2)" text-anchor="middle">"트램 궤도 포함" 도로 선택</text>
+  <text x="110" y="190" class="svg-ts" fill="var(--green)" text-anchor="middle">✓ 기존 도로 위에 덧그리면 끝</text>
+</svg>
+<div class="dcap"><b>가장 흔한 방식.</b> 기존 도로를 지우지 않고 <b>업그레이드 도구로 덧그리면</b> 궤도가 매설됩니다. 4차선 이상에 넣어야 차량과 트램이 서로 안 막습니다.</div>
+</figure>
+<figure class="diagram">
+<div class="dg-title"><span class="pill">방식 2</span>전용 궤도</div>
+<svg viewBox="0 0 220 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="차량과 분리된 트램 전용 궤도">
+  <rect x="0" y="0" width="220" height="210" fill="var(--svg-fill)" rx="8"/>
+  <rect x="14" y="60" width="192" height="30" fill="var(--svg-line)" opacity=".3" rx="3"/>
+  <text x="110" y="52" class="svg-ts" fill="var(--text3)" text-anchor="middle">차도</text>
+  <g stroke="var(--teal)" stroke-width="4">
+    <line x1="14" y1="112" x2="206" y2="112"/><line x1="14" y1="122" x2="206" y2="122"/>
+  </g>
+  <rect x="80" y="107" width="52" height="20" fill="var(--teal)" opacity=".8" rx="3"/>
+  <g fill="var(--green)" opacity=".35"><rect x="14" y="98" width="192" height="6" rx="2"/><rect x="14" y="130" width="192" height="6" rx="2"/></g>
+  <text x="110" y="156" class="svg-ts" fill="var(--teal)" text-anchor="middle">궤도가 차도와 완전 분리</text>
+  <text x="110" y="178" class="svg-ts" fill="var(--green)" text-anchor="middle">✓ 정체 무관 · 배차 안정</text>
+  <text x="110" y="196" class="svg-ts" fill="var(--text3)" text-anchor="middle">단 부지를 따로 먹습니다</text>
+</svg>
+<div class="dcap">차도와 분리된 궤도. <b>정체의 영향을 전혀 안 받아</b> 배차가 지하철처럼 안정적입니다. 녹지대·고속도로변 완충지처럼 <b>남는 띠</b>에 깔면 부지 낭비가 없습니다.</div>
+</figure>
+<figure class="diagram">
+<div class="dg-title"><span class="pill">방식 3</span>보행자 거리 겸용 <span class="tag t">최강</span></div>
+<svg viewBox="0 0 220 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="보행자 전용 도로에 트램을 함께 놓은 상업 가로">
+  <rect x="0" y="0" width="220" height="210" fill="var(--svg-fill)" rx="8"/>
+  <rect x="14" y="76" width="192" height="52" fill="var(--green)" opacity=".14" rx="4"/>
+  <g stroke="var(--teal)" stroke-width="3.5"><line x1="14" y1="96" x2="206" y2="96"/><line x1="14" y1="108" x2="206" y2="108"/></g>
+  <rect x="84" y="92" width="48" height="20" fill="var(--teal)" opacity=".85" rx="3"/>
+  <g fill="var(--purple)" opacity=".75">
+    <circle cx="36" cy="84" r="4"/><circle cx="52" cy="120" r="4"/><circle cx="152" cy="84" r="4"/><circle cx="176" cy="118" r="4"/><circle cx="68" cy="86" r="4"/>
+  </g>
+  <g fill="#d97706" opacity=".5"><rect x="14" y="46" width="192" height="22" rx="3"/><rect x="14" y="136" width="192" height="22" rx="3"/></g>
+  <text x="110" y="62" class="svg-ts" fill="#5c3a00" text-anchor="middle">상업</text>
+  <text x="110" y="152" class="svg-ts" fill="#5c3a00" text-anchor="middle">상업</text>
+  <text x="110" y="180" class="svg-ts" fill="var(--teal)" text-anchor="middle">일반 차량 0 · 배송 트럭만 진입</text>
+  <text x="110" y="198" class="svg-ts" fill="var(--green)" text-anchor="middle">✓ 상업 매출 + 이용률 동시 상승</text>
+</svg>
+<div class="dcap"><b>상업 지구의 결정타.</b> 보행자 전용 도로에는 일반 차량이 없어 트램이 절대 막히지 않고, 손님은 걸어서 상점에 닿습니다. 서비스·배송 차량은 진입 가능해 물류도 안 끊깁니다.</div>
+</figure>
+</div>
+
+<figure class="diagram">
+<div class="dg-title">트램을 어느 축에 놓나 — 고밀 회랑 찾기</div>
+<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="트램 노선을 고밀 회랑에 배치하고 버스를 피더로 재편한 예">
+  <defs><marker id="trA" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="var(--green)"/></marker></defs>
+  <rect x="0" y="0" width="700" height="400" fill="var(--svg-fill)" rx="8"/>
+
+  <!-- 간선 -->
+  <line x1="40" y1="200" x2="660" y2="200" stroke="#2563eb" stroke-width="15"/>
+  <!-- 트램 궤도 -->
+  <g stroke="var(--teal)" stroke-width="3.5">
+    <line x1="60" y1="195" x2="640" y2="195"/><line x1="60" y1="205" x2="640" y2="205"/>
+  </g>
+  <text x="46" y="180" class="svg-t" fill="var(--teal)">🚋 트램 (간선 중앙 궤도)</text>
+
+  <!-- 정류장 -->
+  <g fill="var(--surface)" stroke="var(--teal)" stroke-width="3">
+    <circle cx="130" cy="200" r="9"/><circle cx="250" cy="200" r="9"/><circle cx="370" cy="200" r="9"/><circle cx="490" cy="200" r="9"/><circle cx="610" cy="200" r="9"/>
+  </g>
+  <!-- 정류장 간격 -->
+  <path d="M130 232 L250 232" stroke="var(--accent)" stroke-width="1.4"/>
+  <path d="M130 228 L130 236 M250 228 L250 236" stroke="var(--accent)" stroke-width="1.4"/>
+  <text x="190" y="250" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">정류장 간격 2~3블록</text>
+
+  <!-- 고밀 주거/상업 (회랑) -->
+  <g fill="#16a34a" opacity=".45">
+    <rect x="96" y="126" width="68" height="52" rx="3"/><rect x="216" y="126" width="68" height="52" rx="3"/>
+    <rect x="456" y="126" width="68" height="52" rx="3"/><rect x="576" y="126" width="68" height="52" rx="3"/>
+  </g>
+  <g fill="#d97706" opacity=".5">
+    <rect x="336" y="126" width="68" height="52" rx="3"/><rect x="336" y="222" width="68" height="52" rx="3"/>
+  </g>
+  <g fill="#16a34a" opacity=".45">
+    <rect x="96" y="222" width="68" height="52" rx="3"/><rect x="216" y="222" width="68" height="52" rx="3"/>
+    <rect x="456" y="222" width="68" height="52" rx="3"/><rect x="576" y="222" width="68" height="52" rx="3"/>
+  </g>
+  <text x="130" y="118" class="svg-ts" fill="#0b6b2c" text-anchor="middle">고밀 주거</text>
+  <text x="370" y="118" class="svg-ts" fill="#5c3a00" text-anchor="middle">도심 상업</text>
+  <text x="610" y="118" class="svg-ts" fill="#0b6b2c" text-anchor="middle">대학·고밀</text>
+
+  <!-- 피더 버스 -->
+  <g stroke="var(--green)" stroke-width="2.5" stroke-dasharray="6 4" fill="none">
+    <path d="M130 209 Q70 300 130 340 Q190 300 130 209" marker-end="url(#trA)"/>
+    <path d="M490 209 Q430 300 490 340 Q550 300 490 209" marker-end="url(#trA)"/>
+  </g>
+  <text x="310" y="330" class="svg-ts" fill="var(--green)">┈ 피더 버스가 트램역으로 승객을 모읍니다</text>
+
+  <!-- 상단 판단 기준 -->
+  <rect x="40" y="20" width="620" height="66" fill="var(--accent-soft)" rx="8"/>
+  <text x="350" y="42" class="svg-t" fill="var(--accent-text)" text-anchor="middle">트램을 놓을 축 고르는 법: 교통 정보 뷰에서 <tspan font-weight="800">가장 굵은 통근 흐름</tspan> 하나를 찾으세요</text>
+  <text x="350" y="62" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">그 축의 버스 노선이 이용률 80%를 넘고 있다면 = 트램으로 승격할 때입니다</text>
+  <text x="350" y="80" class="svg-ts" fill="var(--accent-text)" text-anchor="middle">대개 "고밀 주거 → 도심 상업 → 대학/업무"를 잇는 한 줄입니다</text>
+
+  <text x="350" y="378" class="svg-ts" fill="var(--text3)" text-anchor="middle">트램 축 양옆은 <tspan font-weight="800">중·고밀로 재구획</tspan> — 저밀만 있으면 승객이 안 나옵니다</text>
+</svg>
+<figcaption>트램은 <b>선(線)이 아니라 회랑(回廊)</b>으로 생각하세요. 궤도만 깔면 소용없고, <b>양옆을 중·고밀로 채워야</b> 승객이 생깁니다.</figcaption>
+</figure>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>항목</th><th class="ctr">권장</th><th>이유</th></tr></thead>
+<tbody>
+<tr><td><b>도입 시점</b></td><td class="ctr">인구 <b>≈15,000~50,000</b><br>DP 2 (기차 선행)</td><td>버스망이 포화되고 지하철은 아직 유지비가 부담일 때의 중간 단계</td></tr>
+<tr><td><b>놓을 도로</b></td><td class="ctr"><b>4차선 콜렉터</b> 또는<br>6차선 간선 중앙</td><td>2차선에 넣으면 트램이 차량을 막고 차량이 트램을 막습니다</td></tr>
+<tr><td><b>인접 지구</b></td><td class="ctr">고밀 주거 ↔ 도심 상업<br>↔ 대학·업무</td><td>승객이 가장 많이 오가는 축. 저밀 교외는 버스로 충분합니다</td></tr>
+<tr><td><b>정류장 간격</b></td><td class="ctr">2~3블록<br>(≈300~500m)</td><td>지하철보다 촘촘, 버스보다 성김. 너무 촘촘하면 표정속도가 죽습니다</td></tr>
+<tr><td><b>차고지</b></td><td class="ctr">₡100,000 · 10대<br>+5대 증설 ₡42,000</td><td>노선망 <b>가장자리</b>에 두고 반드시 <b>궤도로 본선에 연결</b></td></tr>
+<tr><td><b>버스와의 관계</b></td><td class="ctr">버스는 <b>피더로 재편</b></td><td>같은 축에 버스와 트램을 나란히 두면 서로 승객을 뺏고 도로만 막습니다</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout warn">
+<div class="ct">트램 흔한 실수</div>
+<ul>
+<li><strong>궤도만 깔고 구역은 저밀 그대로</strong> — 승객이 안 나옵니다. 트램 축 양옆은 중·고밀로 재구획하세요.</li>
+<li><strong>2차선 도로에 매설</strong> — 트램이 정차할 때마다 뒤 차량이 전부 멈춥니다.</li>
+<li><strong>기존 버스 노선을 그대로 두고 트램 추가</strong> — 중복 노선은 양쪽 다 이용률이 떨어집니다. 겹치는 버스 구간은 잘라내고 피더로 바꾸세요.</li>
+<li><strong>차고지를 궤도로 연결하지 않음</strong> — 도로만 닿아 있으면 배차되지 않습니다(위 상세 도해 참조).</li>
+</ul>
+</div>
 
 <h4>순환선 vs 방사선</h4>
 <ul>
@@ -4981,6 +5471,87 @@ mb.addEventListener('click',()=>setDrawer(!sb.classList.contains('open')));
 scrim.addEventListener('click',()=>setDrawer(false));
 sb.addEventListener('click',e=>{if(e.target.closest('a'))setDrawer(false)});
 addEventListener('keydown',e=>{if(e.key==='Escape')setDrawer(false)});
+/* ── 키워드 검색 ── */
+(function(){
+  const q=document.getElementById('q'), box=document.getElementById('results');
+  const PRI={H2:0,H3:1,H4:2,SUMMARY:3,DIV:4,CAPTION:5};
+  const idx=[];
+  document.querySelectorAll('section.chapter').forEach(sec=>{
+    const h2=sec.querySelector('h2');
+    const num=h2?.querySelector('.num')?.textContent||'';
+    const chTitle=h2?(h2.textContent.replace(num,'').trim()):'';
+    const chLabel=num?`${num}장 ${chTitle}`:chTitle;
+    sec.querySelectorAll('h2,h3,h4,.callout .ct,figure.diagram .dg-title,details.acc summary,table caption,.card .cv,.steps > li > .st,.toc-mini .tm-t')
+      .forEach(el=>{
+        const t=(el===h2) ? chLabel : el.textContent.replace(/\s+/g,' ').trim();
+        if(t.length<2) return;
+        if(!el.id) el.id='sr'+idx.length;
+        idx.push({t,low:t.toLowerCase(),id:el.id,ch:chLabel,pri:PRI[el.tagName]??4});
+      });
+  });
+
+  let cur=-1, items=[];
+  const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const mark=(t,lq)=>{
+    const i=t.toLowerCase().indexOf(lq);
+    if(i<0) return esc(t);
+    return esc(t.slice(0,i))+'<mark>'+esc(t.slice(i,i+lq.length))+'</mark>'+esc(t.slice(i+lq.length));
+  };
+
+  function run(){
+    const raw=q.value.trim(), lq=raw.toLowerCase();
+    if(!lq){ box.hidden=true; box.innerHTML=''; items=[]; cur=-1; return; }
+    const hits=idx.filter(e=>e.low.includes(lq))
+      .sort((a,b)=> (a.low.startsWith(lq)?0:1)-(b.low.startsWith(lq)?0:1) || a.pri-b.pri || a.t.length-b.t.length)
+      .slice(0,24);
+    if(!hits.length){
+      box.innerHTML='<div class="empty">결과가 없습니다.<br>다른 낱말로 찾아보세요 — 예: 매립지, 램프, 사망파, 지가</div>';
+      box.hidden=false; items=[]; cur=-1; return;
+    }
+    let html='', lastCh=null;
+    hits.forEach(h=>{
+      if(h.ch!==lastCh){ html+=`<div class="rgroup">${esc(h.ch)}</div>`; lastCh=h.ch; }
+      html+=`<a href="#${h.id}" data-id="${h.id}">${mark(h.t,lq)}<span class="rsub">${esc(h.ch)}</span></a>`;
+    });
+    box.innerHTML=html; box.hidden=false;
+    items=[...box.querySelectorAll('a')]; cur=-1;
+  }
+
+  function go(a){
+    if(!a) return;
+    const el=document.getElementById(a.dataset.id);
+    if(!el) return;
+    box.hidden=true; q.blur();
+    el.scrollIntoView({block:'center',behavior:'smooth'});
+    const t=el.closest('figure.diagram,details.acc,.callout,table,.card,section.chapter')||el;
+    t.classList.remove('flashhit'); void t.offsetWidth; t.classList.add('flashhit');
+    if(el.tagName==='SUMMARY') el.parentElement.open=true;
+  }
+  function sel(n){
+    if(!items.length) return;
+    cur=(n+items.length)%items.length;
+    items.forEach((a,i)=>a.classList.toggle('sel',i===cur));
+    items[cur].scrollIntoView({block:'nearest'});
+  }
+
+  q.addEventListener('input',run);
+  q.addEventListener('focus',()=>{ if(q.value.trim()) run(); });
+  q.addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'){e.preventDefault();sel(cur+1)}
+    else if(e.key==='ArrowUp'){e.preventDefault();sel(cur-1)}
+    else if(e.key==='Enter'){e.preventDefault();go(items[cur>=0?cur:0])}
+    else if(e.key==='Escape'){q.value='';box.hidden=true;q.blur()}
+  });
+  box.addEventListener('click',e=>{ const a=e.target.closest('a'); if(a){e.preventDefault();go(a)} });
+  document.addEventListener('click',e=>{ if(!e.target.closest('.searchwrap')) box.hidden=true; });
+  addEventListener('keydown',e=>{
+    const typing=/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+    if((e.key==='/'&&!typing)||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k')){
+      e.preventDefault(); q.focus(); q.select();
+    }
+  });
+})();
+
 const links=[...document.querySelectorAll('#sidebar a[href^="#"]')];
 const spy=new IntersectionObserver(es=>{
   es.forEach(e=>{
