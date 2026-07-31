@@ -247,6 +247,27 @@ a.inline:hover{border-bottom-style:solid}
 .toc-mini a:hover{transform:translateY(-2px);border-color:var(--accent)}
 .toc-mini .tm-t{font-weight:800;color:var(--text);font-size:14.5px}
 .toc-mini .tm-d{font-size:12.5px;color:var(--text3);margin-top:3px;line-height:1.55}
+/* ── 맵 진단기 ── */
+.advisor{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);margin:18px 0}
+.adv-q{margin-bottom:15px}
+.adv-q > .aq{display:block;font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:8px}
+.adv-q > .aq .hint{font-weight:500;color:var(--text3);font-size:12.5px}
+.chips-in{display:flex;flex-wrap:wrap;gap:7px}
+.chips-in input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.chips-in label{display:inline-block;padding:6px 14px;border:1px solid var(--border2);border-radius:999px;font-size:13.5px;cursor:pointer;color:var(--text2);background:var(--surface2);user-select:none;transition:background .12s,color .12s}
+.chips-in label:hover{border-color:var(--accent)}
+.chips-in input:checked + label{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.chips-in input:focus-visible + label{outline:2px solid var(--accent);outline-offset:2px}
+#advOut{margin-top:18px;border-top:2px solid var(--border);padding-top:16px}
+#advOut .ao-h{font-size:15px;font-weight:800;color:var(--text);margin:16px 0 8px;display:flex;align-items:center;gap:7px}
+#advOut .ao-h:first-child{margin-top:0}
+#advOut ul{margin:0 0 0 20px;font-size:14.5px;color:var(--text2)}
+#advOut li{margin-bottom:6px}
+#advOut .ao-wait{color:var(--text3);font-size:14px;text-align:center;padding:10px}
+#advOut .ao-warn{background:var(--amber-soft);border-radius:9px;padding:11px 14px;margin:10px 0;font-size:14px;color:var(--amber);border:1px solid color-mix(in srgb,var(--amber) 30%,transparent)}
+#advOut .ao-ok{background:var(--green-soft);border-radius:9px;padding:11px 14px;margin:10px 0;font-size:14px;color:var(--green);border:1px solid color-mix(in srgb,var(--green) 30%,transparent)}
+#advOut b{color:var(--text)}
+#advOut .ao-warn b,#advOut .ao-ok b{color:inherit}
 footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align:center;color:var(--text3);font-size:13px;line-height:1.8}
 ::selection{background:var(--accent-soft);color:var(--text)}
 </style>
@@ -425,6 +446,79 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
 <li><span class="st">강의 유량과 방향은?</span>수력발전 가능 여부와 하수 배출 방향이 여기서 결정됩니다. 시작 타일에 <strong>흐르는 강</strong>이 걸쳐 있으면 상하수 운영이 훨씬 쉽습니다(9장 참조).</li>
 <li><span class="st">시작 9타일에 비옥토가 걸쳐 있는가?</span>있으면 3장 빌드오더에서 곧바로 농업 특화 산업으로 초반 흑자를 만들 수 있습니다. 이것이 Economy 2.0 이후 가장 확실한 초반 흑자 루트입니다.</li>
 </ol>
+
+<h3>1-4. 맵 시작 진단기 🧭</h3>
+<p class="lede">게임을 켜고 인포뷰 몇 개만 확인해서 아래에 입력하면, <strong>그 맵에 맞는 시작 계획</strong>이 바로 나옵니다. 주거·산업 방향, 취수·배수 위치, 추천 발전소, 초반 흑자 루트까지 이 공략집의 규칙을 그대로 적용해 계산합니다.</p>
+
+<div class="advisor">
+<form id="advForm">
+  <div class="adv-q">
+    <span class="aq">0. 맵 선택 <span class="hint">고르면 자원·외부연결·겨울기온이 자동 입력됩니다</span></span>
+    <select id="advMap" style="width:100%;max-width:360px;padding:9px 12px;border:1px solid var(--border2);border-radius:9px;background:var(--surface2);color:var(--text);font:inherit;font-size:14px">
+      <option value="">— 직접 입력 —</option>
+    </select>
+    <div id="advMapInfo" style="font-size:13px;color:var(--text3);margin-top:8px"></div>
+  </div>
+  <div class="adv-q">
+    <span class="aq">1. 바람이 <u>빠져나가는</u> 쪽은? <span class="hint">대기오염 인포뷰의 화살표가 향하는 방향 · 맵마다 달라 직접 확인 필요</span></span>
+    <div class="chips-in">
+      <input type="radio" name="wind" id="w-e" value="동"><label for="w-e">동쪽 →</label>
+      <input type="radio" name="wind" id="w-w" value="서"><label for="w-w">← 서쪽</label>
+      <input type="radio" name="wind" id="w-s" value="남"><label for="w-s">↓ 남쪽</label>
+      <input type="radio" name="wind" id="w-n" value="북"><label for="w-n">↑ 북쪽</label>
+    </div>
+  </div>
+  <div class="adv-q">
+    <span class="aq">2. 강물이 <u>흘러나가는</u> 쪽은? <span class="hint">물 인포뷰의 지표수 흐름 화살표</span></span>
+    <div class="chips-in">
+      <input type="radio" name="river" id="r-e" value="동"><label for="r-e">동쪽 →</label>
+      <input type="radio" name="river" id="r-w" value="서"><label for="r-w">← 서쪽</label>
+      <input type="radio" name="river" id="r-s" value="남"><label for="r-s">↓ 남쪽</label>
+      <input type="radio" name="river" id="r-n" value="북"><label for="r-n">↑ 북쪽</label>
+      <input type="radio" name="river" id="r-x" value="none"><label for="r-x">흐르는 강 없음 (호수·바다만)</label>
+    </div>
+  </div>
+  <div class="adv-q">
+    <span class="aq">3. 시작 지역에 지하수 지대가 있나요? <span class="hint">물 인포뷰의 파란 얼룩</span></span>
+    <div class="chips-in">
+      <input type="radio" name="gw" id="g-y" value="yes"><label for="g-y">있음</label>
+      <input type="radio" name="gw" id="g-n" value="no"><label for="g-n">없음 / 못 찾음</label>
+    </div>
+  </div>
+  <div class="adv-q">
+    <span class="aq">4. 유량이 센 협곡(좁고 깊은 골짜기)이 있나요? <span class="hint">수력댐 후보지</span></span>
+    <div class="chips-in">
+      <input type="radio" name="cy" id="c-y" value="yes"><label for="c-y">있음</label>
+      <input type="radio" name="cy" id="c-n" value="no"><label for="c-n">없음</label>
+    </div>
+  </div>
+  <div class="adv-q">
+    <span class="aq">5. 시작 타일 주변 자원 <span class="hint">복수 선택 · 천연자원 인포뷰</span></span>
+    <div class="chips-in">
+      <input type="checkbox" name="res" id="s-f" value="fertile"><label for="s-f">🌾 비옥지</label>
+      <input type="checkbox" name="res" id="s-t" value="forest"><label for="s-t">🌲 산림</label>
+      <input type="checkbox" name="res" id="s-o" value="ore"><label for="s-o">⛏️ 광석</label>
+      <input type="checkbox" name="res" id="s-p" value="oil"><label for="s-p">🛢️ 석유</label>
+    </div>
+  </div>
+  <div class="adv-q">
+    <span class="aq">6. 외부 연결 <span class="hint">복수 선택 · 도로는 항상 있으므로 제외</span></span>
+    <div class="chips-in">
+      <input type="checkbox" name="conn" id="n-r" value="rail"><label for="n-r">🚂 철도</label>
+      <input type="checkbox" name="conn" id="n-s" value="ship"><label for="n-s">🚢 선박</label>
+      <input type="checkbox" name="conn" id="n-a" value="air"><label for="n-a">✈️ 항공</label>
+    </div>
+  </div>
+  <div class="adv-q" style="margin-bottom:0">
+    <span class="aq">7. 겨울 최저기온 <span class="hint">맵 선택 화면의 기온 범위</span></span>
+    <div class="chips-in">
+      <input type="radio" name="win" id="t-s" value="sub"><label for="t-s">영하로 내려감</label>
+      <input type="radio" name="win" id="t-a" value="above"><label for="t-a">영상 유지</label>
+    </div>
+  </div>
+</form>
+<div id="advOut"></div>
+</div>
 </section>
 
 <!-- ══════════ 2. 마일스톤 ══════════ -->
@@ -5471,6 +5565,155 @@ mb.addEventListener('click',()=>setDrawer(!sb.classList.contains('open')));
 scrim.addEventListener('click',()=>setDrawer(false));
 sb.addEventListener('click',e=>{if(e.target.closest('a'))setDrawer(false)});
 addEventListener('keydown',e=>{if(e.key==='Escape')setDrawer(false)});
+/* ── 맵 시작 진단기 ── */
+(function(){
+  const form=document.getElementById('advForm'); if(!form) return;
+  const out=document.getElementById('advOut'), sel=document.getElementById('advMap'), info=document.getElementById('advMapInfo');
+  // 1장 표와 동일한 데이터: [건설가능%, 최저기온, 비옥토, 산림, 광석, 석유, 외부연결]
+  const MAPS={
+    'Archipelago Haven':[16,8,233,16,6.9,365,['rail','ship','air']],
+    'Barrier Island':[41,10,146,8.9,12.6,306,['rail','ship','air']],
+    'Corral Riches':[76,3,143,45.1,48.1,124,['rail','ship','air']],
+    'Great Highlands':[41,-3,141,16.1,8.1,141,['rail','ship','air']],
+    'Lakeland':[49,-15,403,13.3,4.7,191,['rail','air']],
+    'Mountain Village':[21,-12,263,7.7,11,8.9,['rail','air']],
+    'River Delta':[42,-4,270,12.9,4.3,88,['rail','ship','air']],
+    'Sunshine Peninsula':[60,11,218,56.1,55.6,121,['rail','ship','air']],
+    'Sweeping Plains':[31,-4,209,8,10.9,111,['rail','ship','air']],
+    'Twin Mountain':[39,-4,129,16.1,7.2,209,['ship','air']],
+    'Waterway Pass':[53,-5,236,12,10.2,12.1,['rail','ship','air']],
+    'Windy Fjords':[21,-6,334,12.2,5.2,189,['rail','ship','air']]
+  };
+  Object.keys(MAPS).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=k;sel.appendChild(o)});
+
+  const tier=(v,hi,mid)=> v>=hi?'풍부':(v>=mid?'보통':'부족');
+  const OPP={'동':'서','서':'동','남':'북','북':'남'};
+  const val=n=>form.querySelector('input[name="'+n+'"]:checked')?.value||null;
+  const vals=n=>[...form.querySelectorAll('input[name="'+n+'"]:checked')].map(i=>i.value);
+  const set=(n,v)=>{const el=form.querySelector('input[name="'+n+'"][value="'+v+'"]');if(el)el.checked=true};
+  const clear=n=>form.querySelectorAll('input[name="'+n+'"]').forEach(i=>i.checked=false);
+
+  let M=null;
+  sel.addEventListener('change',()=>{
+    const k=sel.value; M=k?MAPS[k]:null;
+    if(!M){ info.textContent=''; return; }
+    const [bd,tmin,fe,fo,or,oi,cn]=M;
+    clear('res'); clear('conn');
+    if(tier(fe,250,150)!=='부족') set('res','fertile');
+    if(tier(fo,40,12)!=='부족') set('res','forest');
+    if(tier(or,40,10)!=='부족') set('res','ore');
+    if(tier(oi,200,100)!=='부족') set('res','oil');
+    cn.forEach(c=>set('conn',c));
+    set('win', tmin<0?'sub':'above');
+    info.innerHTML='건설가능 <b>'+bd+'%</b> · 겨울 최저 <b>'+tmin+'°C</b> · 비옥토 '+tier(fe,250,150)+
+      ' · 산림 '+tier(fo,40,12)+' · 광석 '+tier(or,40,10)+' · 석유 '+tier(oi,200,100)+
+      '<br><span style="color:var(--amber)">↓ 바람·강 유향·지하수·협곡은 맵 안에서 직접 확인해 골라주세요</span>';
+    render();
+  });
+
+  const H=(t)=>'<div class="ao-h">'+t+'</div>';
+  const UL=(a)=>'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+
+  function render(){
+    const wind=val('wind'), river=val('river'), gw=val('gw'), cy=val('cy'), win=val('win');
+    const res=vals('res'), conn=vals('conn');
+    if(!wind||!river||!gw||!cy||!win){
+      out.innerHTML='<div class="ao-wait">1~7번을 모두 고르면 이 맵에 맞는 시작 계획이 나옵니다.</div>'; return;
+    }
+    const bd=M?M[0]:null;
+    let h='';
+
+    /* 방향 */
+    h+=H('🧭 도시 방향 잡기');
+    h+=UL([
+      '<b>산업·발전소·매립지·소각장 → 맵의 '+wind+'쪽 끝</b> (바람이 빠져나가는 쪽이라 오염이 도시를 통과하지 않습니다)',
+      '<b>주거 → '+OPP[wind]+'쪽</b> (풍상측, 깨끗한 공기와 높은 지가)',
+      '그 사이에 <b>완충지대</b> — 사무·저밀 상업·공원. 사무는 토양 오염이 0이라 완충으로 최적입니다',
+      '이 방향은 <b>1단계에서 정하면 끝까지 안 바뀝니다.</b> 토양 오염은 오래 남아 나중에 못 옮깁니다'
+    ]);
+
+    /* 도로 */
+    h+=H('🛣️ 도로 골격과 차선 계획');
+    const roadRows=[
+      '<b>0~15분 · 2차선만</b> (₡4,000/km, 40km/h) — 고속도로 IC에서 축 하나를 '+OPP[wind]+'쪽으로 내리고 좌우로 가지. 중앙 세로축은 <b>미래 간선 자리</b>이므로 양옆 1~2칸을 비워 두세요(나중에 승격할 때 건물이 안 철거됩니다)',
+      '<b>인구 1,000~5,000 · 중앙축을 4차선으로 승격</b> (₡5,500/km, 50km/h) — 그 주위로 <b>콜렉터 폐루프</b>를 만들고 루프 안쪽만 국지도로로 채웁니다. 버스 1노선이 이 루프를 그대로 돕니다',
+      '<b>인구 5,000~20,000 · 중앙축을 6차선 간선으로 승격</b> (₡7,000/km, 60km/h 중앙분리) — 간선 십자를 완성하고 콜렉터를 <b>20셀(160m) 간격</b>으로 평행 배치',
+      '<b>인구 20,000+ · 두 번째 IC</b> — 하나의 IC에 도시 전체가 매달리면 반드시 막힙니다',
+      '<b>산업 진입로는 4차선 이상 + 전용 IC</b> — 고속도로 상·하행 <b>4개 램프</b>를 모두 연결해야 반대 방향 트럭이 우회하지 않습니다'
+    ];
+    h+=UL(roadRows);
+    h+=UL([
+      '<b>간격 기준</b> — 국지도로 <b>≤12셀(96m)</b> · 콜렉터 <b>20셀(160m)</b> · 램프 종점~첫 신호 <b>≥20셀(160m)</b>',
+      '<b>국지도로는 간선을 관통시키지 마세요.</b> T자로 붙이고 좌우를 엇갈리게 두면 간선이 멈추지 않습니다',
+      '버스 정류장은 <b>4차선 콜렉터</b>에 — 2차선에 두면 정차한 버스가 그 방향을 통째로 막습니다'
+    ]);
+    if(bd!==null&&bd<=25) h+='<div class="ao-warn">⚠️ 건설 가능 면적이 <b>'+bd+'%</b>로 매우 좁습니다. 교량·터널(지상 대비 ≈8배) 비용이 크므로 <b>도로를 적게 깔고 고밀 위주</b>로 가세요. 터널보다 절토·성토 도구가 훨씬 쌉니다.</div>';
+    else if(bd!==null&&bd>=60) h+='<div class="ao-ok">✓ 건설 가능 면적 <b>'+bd+'%</b>로 넉넉합니다. 처음부터 간선 격자를 여유 있게 잡아도 됩니다.</div>';
+
+    /* 상하수 */
+    h+=H('💧 상하수 배치');
+    if(river!=='none'){
+      h+=UL([
+        '<b>취수장(₡25,000 / 100,000m³) → '+OPP[river]+'쪽(상류)</b>',
+        '<b>하수 배출구(₡25,000 / 100,000m³) → '+river+'쪽(하류), 물이 맵 밖으로 나가는 가장자리 직전</b>',
+        '두 시설은 <b>서로 잇는 게 아니라</b> 각자 가장 가까운 도로에만 닿으면 됩니다 (도로에 배관 내장)',
+        '둘 사이를 <b>최대한 멀리</b> — 가까우면 취수 펌프의 흡입력이 흐름을 국지적으로 역전시킵니다',
+        '이 배치면 오염이 생기자마자 맵 밖으로 쓸려 나가므로 <b>하수 처리장(₡400,000)은 중반까지 미뤄도 됩니다</b>'
+      ]);
+    } else {
+      h+='<div class="ao-warn">⚠️ <b>흐르는 강이 없습니다.</b> 고인 물(호수·바다)에 방류하면 오염이 그 자리에 축적되고 회복이 매우 느립니다. 배출구 대신 <b>하수 처리장(₡400,000 / 400,000m³)</b>을 일찍 준비하세요.</div>';
+      h+=UL([
+        gw==='yes'
+          ? '취수는 <b>지하수 펌프장(₡40,000 / 75,000m³)</b>으로 — 단 산업·매립지의 지반 오염에서 멀리 떨어뜨리세요'
+          : '취수는 호수·바다 <b>취수장</b>으로 하되, 배출 지점과 최대한 멀리 떨어뜨리세요',
+        '<b>급수탑은 피하세요</b> — 30,000 용량에 월 ≈₡30,000으로, 같은 유지비면 취수장 3개(300,000)를 돌립니다',
+        '초반엔 물 예산 슬라이더를 <b>60~70%</b>로 낮춰 유지비를 아끼세요'
+      ]);
+    }
+
+    /* 발전 */
+    h+=H('⚡ 발전 전략');
+    const pw=['<b>초반(인구 ~2,000)</b>: 풍력 터빈(₡25,000, 최대 5MW) 2~4기. 터빈을 들고 커서를 움직이면 예상 발전량이 뜨니 <b>4.5MW 이상 지점만</b> 고르세요. 바람이 약하면 변전소+고압선으로 <b>외부 수입</b>(≈₡9,000/MW)을 임시로'];
+    if(cy==='yes') pw.push('<b>중반 최우선: 수력댐(2DP)</b> — MW당 ₡58~370으로 압도적 1위입니다. 협곡이 있으니 이 맵의 정답입니다. 담수에 <b>8~9개월</b> 걸리고 상류 수위가 오르므로 저지대 시가지 침수를 미리 확인하세요. 유지비가 규모와 무관하니 <b>지을 거면 최대한 크게</b>');
+    else if(gw==='yes') pw.push('<b>중반 최우선: 지열(2DP)</b> — ₡750,000에 150MW, "추가 터빈+바이너리 사이클" 풀업글 시 300MW·MW당 ≈₡1,630으로 중반 최고 가성비입니다. 몇 안 되는 본전 뽑히는 업그레이드');
+    else pw.push('<b>중반: 가스 발전소(2DP, 250MW)</b> — 협곡도 지하수도 없으니 화석연료 중 오염이 가장 적은 가스로 갑니다. <b>석탄은 어느 경우에도 비추천</b>(소형은 MW당 ≈₡3,500로 최악, 대형은 오염 100,000×3)');
+    pw.push('<b>후반(인구 20,000+)</b>: 원자력(8DP, 750MW). 물 ≈40만 m³/월과 고학력 노동자 75명을 먼저 확보하세요');
+    pw.push('잉여 전력은 자동 수출되어 <b>MW당 ≈₡2,500/월</b> — 인구와 무관한 안정 재원입니다');
+    h+=UL(pw);
+    if(gw==='yes'&&cy==='yes') h+='<div class="ao-ok">✓ 협곡과 지하수가 모두 있습니다. 수력을 먼저 짓고 지열을 예비로 두면 전력 걱정이 사실상 끝납니다.</div>';
+    if(win==='sub') h+='<div class="ao-warn">❄️ <b>겨울에 영하로 내려가는 맵입니다.</b> 전력 소비는 18~22°C에서 100%가 최적이고 극단 온도(≈-18°C 이하)에서 <b>최대 ≈200%</b>까지 오릅니다. 여름 기준 발전량의 <b>+50~100% 여유</b>를 확보하거나 외부 수입 경로를 열어두세요. <b>태양광 단독 의존은 금물</b>(겨울 = 수요 최대 + 일조 최소, 흐린 날 추가 -25%). 도로 유지관리소의 제설차도 겨울 전에 준비하세요.</div>';
+
+    /* 흑자 */
+    h+=H('💰 초반 흑자 루트');
+    const eco=[];
+    if(res.includes('fertile')) eco.push('🌾 <b>비옥지 있음 → 곡물·채소 특화가 최속 루트</b>. 자원 농도가 가장 짙은 지점에만 면적을 그리고, 그 품목 세율을 <b>20~25%</b>로 올리세요');
+    if(res.includes('forest')) eco.push('🌲 <b>산림 있음 → 임업 특화</b>. 목재는 가구·종이로 이어지는 체인이 길어 가공업까지 키우기 좋습니다 (토양 오염 주의)');
+    if(res.includes('ore')) eco.push('⛏️ <b>광석 있음</b> — M7에서 해금됩니다. <b>유한 자원</b>이라 고갈되니 나중에 수입 기반 가공업으로 전환할 계획을 세워두세요');
+    if(res.includes('oil')) eco.push('🛢️ <b>석유 있음</b> — M8 해금, <b>화재 위험이 높으니</b> 소방서를 산업 단지 입구에 전담 배치하세요. 역시 유한 자원입니다');
+    eco.push('자원이 뭐가 됐든 <b>축산·채석은 천연자원 없이도 기본 해금</b>이라 즉시 시작할 수 있습니다');
+    eco.push('<b>핵심</b>: Economy 2.0 이후 소도시 흑자의 최속 루트는 <b>특화 산업 원자재 세율 20~25%</b>입니다. 주거세는 초반 2~5%로 낮춰 유입을 가속하고, 흑자가 안정되면 12~13%로 복원하세요');
+    eco.push('서비스 예산 슬라이더는 <b>전부 50%에서 시작</b> — 민원이 뜨는 항목만 올리세요');
+    if(!res.length) h+='<div class="ao-warn">시작 타일에 쓸 만한 자원이 없습니다. <b>축산·채석</b>으로 버티면서, 확장 허가가 나오면 자원 타일 방향으로 넓히세요.</div>';
+    h+=UL(eco);
+
+    /* 화물 */
+    h+=H('🚛 화물·물류 전략');
+    const cg=[];
+    if(conn.includes('rail')) cg.push('🚂 <b>철도 있음 → 화물 기차역(₡150,000, 저장 ≈15.5kt)</b>을 인구 8천~1.5만에 도입. <b>반드시 산업지구 바로 옆</b>에 — 멀면 회사가 트럭 직송을 택해 역이 놉니다');
+    else cg.push('<span style="color:var(--amber)">🚂 <b>철도 연결이 없습니다.</b> 화물이 전부 고속도로로 나가므로 <b>산업 전용 IC 분리</b>가 더더욱 중요합니다</span>');
+    if(conn.includes('ship')) cg.push('🚢 <b>선박 있음 → 화물항(₡490,000, 15,500t)</b>을 인구 ≈3만에. <b>철도 연결 업그레이드(₡80,000)</b>를 달면 "배→기차→내륙"이 한 번에 이어집니다');
+    else cg.push('<span style="color:var(--amber)">🚢 <b>선박 연결이 없습니다.</b> 해상 무역을 전제한 계획은 세우지 마세요</span>');
+    if(conn.includes('air')) cg.push('✈️ 항공은 후반(인구 8만+) 사무·첨단산업 도시에서만. 공항 ₡750,000 + 화물 터미널 업그레이드 ₡500,000');
+    cg.push('일반 화물 <b>수출 대금은 시 예산에 직접 안 들어옵니다</b> — 회사 이익에 붙는 법인세로만 회수됩니다. 시가 직접 버는 수출은 전기·물뿐입니다');
+    h+=UL(cg);
+
+    out.innerHTML=h;
+  }
+
+  form.addEventListener('change',e=>{ if(e.target.name) render(); });
+  render();
+})();
+
 /* ── 키워드 검색 ── */
 (function(){
   const q=document.getElementById('q'), box=document.getElementById('results');
