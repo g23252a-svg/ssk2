@@ -26,6 +26,34 @@
   --sidebar-w:290px;
   --svg-line:#8a93a5; --svg-fill:#f0f2f5;
 }
+:root[data-theme="dark"]{
+    --bg:#0f1420; --surface:#171e2e; --surface2:#1f2839;
+    --text:#e6eaf2; --text2:#aeb7c7; --text3:#6f7a8e;
+    --accent:#5b8def; --accent-soft:#1c2a4a; --accent-text:#9cbcf7;
+    --teal:#2dd4bf; --teal-soft:#123a36;
+    --amber:#fbbf24; --amber-soft:#3a2e10;
+    --red:#f87171; --red-soft:#3d1a1a;
+    --green:#4ade80; --green-soft:#12331d;
+    --purple:#a78bfa; --purple-soft:#2a1f4d;
+    --border:#28324a; --border2:#354160;
+    --shadow:0 1px 3px rgba(0,0,0,.4);
+    --shadow-lg:0 10px 30px rgba(0,0,0,.5);
+    --svg-line:#6f7a8e; --svg-fill:#1f2839;
+}
+:root[data-theme="light"]{
+    --bg:#f7f8fa; --surface:#ffffff; --surface2:#f0f2f5;
+    --text:#1a2233; --text2:#4b5568; --text3:#8a93a5;
+    --accent:#2563eb; --accent-soft:#dbeafe; --accent-text:#1d4ed8;
+    --teal:#0d9488; --teal-soft:#ccfbf1;
+    --amber:#b45309; --amber-soft:#fef3c7;
+    --red:#dc2626; --red-soft:#fee2e2;
+    --green:#15803d; --green-soft:#dcfce7;
+    --purple:#7c3aed; --purple-soft:#ede9fe;
+    --border:#e3e7ee; --border2:#d0d6e0;
+    --shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04);
+    --shadow-lg:0 10px 30px rgba(16,24,40,.10);
+    --svg-line:#8a93a5; --svg-fill:#f0f2f5;
+}
 @media (prefers-color-scheme: dark){
   :root{
     --bg:#0f1420; --surface:#171e2e; --surface2:#1f2839;
@@ -270,6 +298,47 @@ a.inline:hover{border-bottom-style:solid}
 #advOut .ao-warn b,#advOut .ao-ok b{color:inherit}
 footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align:center;color:var(--text3);font-size:13px;line-height:1.8}
 ::selection{background:var(--accent-soft);color:var(--text)}
+/* ── 테마 토글 ── */
+#themeBtn{background:none;border:1px solid var(--border);border-radius:8px;width:36px;height:36px;font-size:15px;cursor:pointer;color:var(--text);flex-shrink:0;line-height:1}
+#themeBtn:hover{background:var(--surface2)}
+/* ── 이전/다음 챕터 ── */
+.chapnav{display:flex;gap:10px;margin:44px 0 0;padding-top:22px;border-top:1px solid var(--border)}
+.chapnav a{flex:1;display:block;padding:13px 16px;border:1px solid var(--border);border-radius:12px;text-decoration:none;background:var(--surface);box-shadow:var(--shadow);transition:border-color .15s,transform .15s}
+.chapnav a:hover{border-color:var(--accent);transform:translateY(-2px)}
+.chapnav .cn-l{font-size:11.5px;color:var(--text3);font-weight:700;letter-spacing:.05em}
+.chapnav .cn-t{font-size:14.5px;color:var(--text);font-weight:700;margin-top:3px}
+.chapnav a.next{text-align:right}
+.chapnav a.ghost{visibility:hidden}
+/* ── 도해 확대 ── */
+figure.diagram svg{cursor:zoom-in}
+#lightbox{position:fixed;inset:0;z-index:200;background:rgba(8,12,20,.88);display:none;align-items:center;justify-content:center;padding:26px;overflow:auto}
+#lightbox.on{display:flex}
+#lightbox .lb-in{background:var(--surface);border-radius:14px;padding:20px;max-width:min(1500px,96vw);box-shadow:var(--shadow-lg)}
+#lightbox svg{width:100%;height:auto;max-height:82vh;cursor:default}
+#lightbox .lb-t{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;padding-right:40px}
+#lightbox .lb-x{position:absolute;top:18px;right:22px;background:var(--surface);border:1px solid var(--border2);color:var(--text);border-radius:9px;width:38px;height:38px;font-size:17px;cursor:pointer}
+/* ── 읽던 위치 ── */
+#resume{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;z-index:96;background:var(--surface);border:1px solid var(--accent);border-radius:999px;box-shadow:var(--shadow-lg);padding:9px 16px;display:none;align-items:center;gap:12px;font-size:13.5px;color:var(--text)}
+#resume.on{display:flex}
+#resume button{background:var(--accent);color:#fff;border:0;border-radius:7px;padding:5px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+#resume .rx{background:none;color:var(--text3);padding:5px 6px;font-weight:500}
+/* ── 인쇄 ── */
+@media print{
+  header.topbar,nav#sidebar,#progress,#scrim,#resume,#lightbox,.chapnav,.hero .skyline{display:none !important}
+  .layout{display:block;padding-top:0;max-width:none}
+  main{padding:0}
+  body{font-size:10.5pt;background:#fff;color:#000}
+  .hero{background:#eef2f7 !important;color:#111 !important;box-shadow:none;padding:22px}
+  .hero p,.hero .chip{color:#333 !important}
+  section.chapter{page-break-inside:auto}
+  section.chapter>h2{page-break-after:avoid;break-after:avoid}
+  h3,h4{page-break-after:avoid;break-after:avoid}
+  figure.diagram,.tablewrap,.callout,details.acc{page-break-inside:avoid;break-inside:avoid;box-shadow:none}
+  details.acc{border:1px solid #bbb}
+  details.acc[open] .acc-body,details.acc .acc-body{display:block !important}
+  .advisor{border:1px solid #bbb;box-shadow:none}
+  a{text-decoration:none;color:inherit}
+}
 </style>
 </head>
 <body>
@@ -283,8 +352,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 20px 40px;text-align
     <kbd class="skey">/</kbd>
     <div id="results" hidden role="listbox"></div>
   </div>
+  <button id="themeBtn" aria-label="밝게/어둡게 전환" title="밝게 / 어둡게">🌗</button>
   <a class="gh" href="https://github.com/g23252a-svg/ssk2" target="_blank" rel="noopener">GitHub ↗</a>
 </header>
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="도해 확대"><button class="lb-x" aria-label="닫기">✕</button><div class="lb-in"></div></div>
+<div id="resume"><span>읽던 위치가 있습니다</span><button class="rgo">이어보기</button><button class="rx" aria-label="닫기">✕</button></div>
 <div id="scrim" hidden></div>
 <div class="layout">
 <nav id="sidebar">
@@ -5610,6 +5682,83 @@ mb.addEventListener('click',()=>setDrawer(!sb.classList.contains('open')));
 scrim.addEventListener('click',()=>setDrawer(false));
 sb.addEventListener('click',e=>{if(e.target.closest('a'))setDrawer(false)});
 addEventListener('keydown',e=>{if(e.key==='Escape')setDrawer(false)});
+/* ── 테마 토글 ── */
+(function(){
+  const btn=document.getElementById('themeBtn'), root=document.documentElement;
+  const sysDark=()=>matchMedia('(prefers-color-scheme: dark)').matches;
+  let saved=null; try{saved=localStorage.getItem('ssk2-theme')}catch(e){}
+  if(saved) root.setAttribute('data-theme',saved);
+  const paint=()=>{ const cur=root.getAttribute('data-theme')||(sysDark()?'dark':'light');
+    btn.textContent = cur==='dark' ? '☀️' : '🌙';
+    btn.title = cur==='dark' ? '밝게 보기' : '어둡게 보기'; };
+  paint();
+  btn.addEventListener('click',()=>{
+    const cur=root.getAttribute('data-theme')||(sysDark()?'dark':'light');
+    const next=cur==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('ssk2-theme',next)}catch(e){}
+    paint();
+  });
+})();
+
+/* ── 이전 / 다음 챕터 ── */
+(function(){
+  const secs=[...document.querySelectorAll('section.chapter')];
+  secs.forEach((s,i)=>{
+    const nav=document.createElement('div'); nav.className='chapnav';
+    const mk=(t,dir,cls)=>{
+      if(!t) return '<a class="ghost"></a>';
+      const num=t.querySelector('h2 .num')?.textContent||'';
+      const title=(t.querySelector('h2')?.textContent||'').replace(num,'').trim();
+      return '<a class="'+cls+'" href="#'+t.id+'"><div class="cn-l">'+dir+'</div><div class="cn-t">'+num+'. '+title+'</div></a>';
+    };
+    nav.innerHTML = mk(secs[i-1],'← 이전','prev') + mk(secs[i+1],'다음 →','next');
+    s.appendChild(nav);
+  });
+})();
+
+/* ── 도해 확대 ── */
+(function(){
+  const lb=document.getElementById('lightbox'), inner=lb.querySelector('.lb-in');
+  const close=()=>{ lb.classList.remove('on'); inner.innerHTML=''; };
+  document.addEventListener('click',e=>{
+    const svg=e.target.closest('figure.diagram svg');
+    if(!svg||e.target.closest('#lightbox')) return;
+    const fig=svg.closest('figure');
+    const t=fig.querySelector('.dg-title')?.textContent||fig.querySelector('figcaption')?.textContent||'도해';
+    inner.innerHTML='<div class="lb-t">'+t.replace(/[<>]/g,'')+'</div>'+svg.outerHTML;
+    lb.classList.add('on');
+  });
+  lb.querySelector('.lb-x').addEventListener('click',close);
+  lb.addEventListener('click',e=>{ if(e.target===lb) close(); });
+  addEventListener('keydown',e=>{ if(e.key==='Escape'&&lb.classList.contains('on')) close(); });
+})();
+
+/* ── 읽던 위치 기억 ── */
+(function(){
+  const bar=document.getElementById('resume'); if(!bar) return;
+  const KEY='ssk2-pos';
+  let last=null; try{last=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
+  const secs=[...document.querySelectorAll('section.chapter')];
+  const save=()=>{ const y=scrollY;
+    if(y<400) { try{localStorage.removeItem(KEY)}catch(e){} return; }
+    let cur=secs[0];
+    secs.forEach(s=>{ if(s.getBoundingClientRect().top<160) cur=s; });
+    try{localStorage.setItem(KEY,JSON.stringify({id:cur.id,y:Math.round(y)}))}catch(e){}
+  };
+  let t; addEventListener('scroll',()=>{ clearTimeout(t); t=setTimeout(save,500); },{passive:true});
+  if(last&&last.id&&document.getElementById(last.id)&&!location.hash&&scrollY<200){
+    const s=document.getElementById(last.id);
+    const num=s.querySelector('h2 .num')?.textContent||'';
+    const title=(s.querySelector('h2')?.textContent||'').replace(num,'').trim();
+    bar.querySelector('span').textContent=num+'. '+title+' 을 보고 계셨습니다';
+    bar.classList.add('on');
+    bar.querySelector('.rgo').addEventListener('click',()=>{ scrollTo({top:last.y,behavior:'smooth'}); bar.classList.remove('on'); });
+    bar.querySelector('.rx').addEventListener('click',()=>{ bar.classList.remove('on'); try{localStorage.removeItem(KEY)}catch(e){} });
+    setTimeout(()=>bar.classList.remove('on'),12000);
+  }
+})();
+
 /* ── 맵 시작 진단기 ── */
 (function(){
   const form=document.getElementById('advForm'); if(!form) return;
