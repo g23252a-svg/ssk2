@@ -501,7 +501,7 @@ table.cmp .same{color:var(--text3)}
     <p>그래서 <b>위계</b>가 필요합니다. 국지 → 콜렉터 → 간선 → 고속으로 한 단계씩 올라가면 상충 지점이 사라집니다.</p>
 
     <h4>4. 버스 — 양 끝이 모두 정류장 권역이어야 합니다</h4>
-    <p>정류장 반경 2칸(96 m) 안에서, <b>출발지와 목적지 둘 다</b> 권역일 때만 최대 45%가 버스로 갑니다. 주거지에만 정류장을 깔면 분담률은 0입니다.</p>
+    <p>정류장 도보권 <b>5칸(240 m)</b> 안에서, <b>출발지와 목적지 둘 다</b> 권역일 때만 최대 45%가 버스로 갑니다. 주거지에만 정류장을 깔면 분담률은 0입니다. 도보권은 <b>집에서</b> 재며, 집 앞 진입로가 아니라 사람이 걷는 거리 기준입니다.</p>
     <p>그리고 <b>2차선 국지도로에 정류장을 두면 칸당 +6초</b> — 정차한 버스가 그 방향을 통째로 막기 때문입니다. 정류장은 <b>4차선 콜렉터</b>에 붙이세요(국지도로 정류장은 효과도 65%로 깎입니다).</p>
 
     <h4>5. 도구 두 가지</h4>
@@ -512,11 +512,27 @@ table.cmp .same{color:var(--text3)}
     </ul>
     <table>
       <tr><th>잘 지은 도시</th><th>무엇의 정답인가</th><th class="n">최악 V/C</th><th class="n">행복도</th></tr>
-      <tr><td>🏆 위계 교과서</td><td>실수 ①② — 국지 직결 0곳, 간선 교차로는 전부 T자</td><td class="n">0.65</td><td class="n">58</td></tr>
-      <tr><td>🌬️ 바람과 물을 읽은 도시</td><td>실수 ③⑦ — 오염 노출 0%, 취수 오염 0</td><td class="n">0.47</td><td class="n">61</td></tr>
-      <tr><td>🚛 화물이 분리된 도시</td><td>실수 ④ — 주거 통과 화물 3%</td><td class="n">0.65</td><td class="n">64</td></tr>
-      <tr><td>🚌 대중교통이 도는 도시</td><td>정류장을 콜렉터에 · 양 끝에 — 분담률 19%</td><td class="n">0.40</td><td class="n">61</td></tr>
+      <tr><td>🏆 위계 교과서</td><td>실수 ①② — 국지 직결 0곳, 주거의 82%가 2차선에 접함</td><td class="n">0.72</td><td class="n">59</td></tr>
+      <tr><td>🌬️ 바람과 물을 읽은 도시</td><td>실수 ③⑦ — 오염 노출 0%, 취수 오염 0</td><td class="n">0.59</td><td class="n">61</td></tr>
+      <tr><td>🚛 화물이 분리된 도시</td><td>실수 ④ — 주거 통과 화물 4%</td><td class="n">0.42</td><td class="n">61</td></tr>
+      <tr><td>🚌 대중교통이 도는 도시</td><td>정류장을 콜렉터에 · 양 끝에 — 분담률 17%</td><td class="n">0.43</td><td class="n">62</td></tr>
     </table>
+    <p>네 도시 모두 <b>경고 0건 · 정체 0% · 흑자</b>입니다.</p>
+
+    <h4>5-2. 집 앞은 2차선이어야 합니다</h4>
+    <p>위계는 <b>간선 → 콜렉터 → 국지 → 집</b>의 네 단계입니다. 흔히 마지막 한 단계를 건너뛰고 <b>콜렉터 연변을 전부 주거로</b> 채우는데, 그러면 진출입·주차가 그 도로의 통과 기능을 갉아먹습니다(콜렉터 칸당 +1.0초, 간선 +2.2초). 콜렉터는 국지도로를 <b>모으는</b> 길이지 집이 붙는 길이 아닙니다.</p>
+    <p>표준 단면은 이렇습니다 — 콜렉터 사이에 국지도로를 한 줄 넣고, 집이 그쪽을 보게 합니다.</p>
+    <table>
+      <tr><th>행</th><th>내용</th></tr>
+      <tr><td>y=4</td><td>4차선 콜렉터 ═══</td></tr>
+      <tr><td>y=5</td><td>주거 <span style="color:var(--text3)">(아래 국지도로에 접함)</span></td></tr>
+      <tr><td>y=6</td><td><b>2차선 국지도로</b> ───</td></tr>
+      <tr><td>y=7·8</td><td>주거</td></tr>
+      <tr><td>y=9</td><td><b>2차선 국지도로</b> ───</td></tr>
+      <tr><td>y=10</td><td>주거</td></tr>
+      <tr><td>y=11</td><td>4차선 콜렉터 ═══</td></tr>
+    </table>
+    <p>세로 방향은 콜렉터로 가로 국지도로들을 모아 간선으로 넘깁니다. 이러면 <b>용량은 콜렉터가 대고, 집은 조용한 2차선을 본다</b>는 두 마리를 다 잡습니다. 진단 패널이 <b>「주거의 N%가 4차선 이상에 직접 접해 있습니다」</b>로 이 비율을 감시합니다.</p>
 
     <h4>6. 고속도로는 IC로만</h4>
     <p>일반 도로를 고속도로에 직접 그으면 <b>연결되지 않습니다</b>(지도에 붉은 ⛔로 표시). 고속도로 칸 위에 <b>IC(진입로)</b>를 놓아야 통행이 흐릅니다. IC끼리 너무 가까우면(6칸 미만) 합류·분류가 겹쳐 경고가 뜹니다.</p>
@@ -722,7 +738,9 @@ function rebuild(){
   for(let i=0;i<N;i++){
     if(S.bld[i]!=='bus') continue;
     const q = S.road[i]>=R_COL ? 1.0 : 0.65;   // 국지도로 정류장은 노선이 느려 효과가 낮다
-    const R=2, x0=cx(i), y0=cy(i);
+    /* 도보 5칸 = 240 m. 현실의 정류장 도보 접근권(300~400 m)보다 오히려 좁게 잡았습니다.
+       2칸(96 m)으로 두면 콜렉터에 놓은 정류장이 바로 뒷줄 집조차 못 담아 무용지물이 됩니다. */
+    const R=5, x0=cx(i), y0=cy(i);
     for(let y=Math.max(0,y0-R);y<=Math.min(H-1,y0+R);y++)
       for(let x=Math.max(0,x0-R);x<=Math.min(W-1,x0+R);x++){
         const d=Math.hypot(x-x0,y-y0); if(d>R) continue;
@@ -825,16 +843,21 @@ function assignTraffic(){
   if(F.roadCells.length===0){ ST.avgCommute=0; ST.congPct=0; ST.maxVC=0; return; }
 
   // ── OD 노드 집계
-  const O=new Map();  // roadIdx → {pop, jc, ji}
-  const get=k=>{ let o=O.get(k); if(!o){o={i:k,pop:0,jc:0,ji:0}; O.set(k,o);} return o; };
+  const O=new Map();  // roadIdx → {pop, jc, ji, bus}
+  const get=k=>{ let o=O.get(k); if(!o){o={i:k,pop:0,jc:0,ji:0,busW:0,wt:0,bus:0}; O.set(k,o);} return o; };
   for(let i=0;i<N;i++){
     const z=S.zone[i], L=S.lvl[i]; if(!z||!L) continue;
     const a=accessNode(i); if(a<0) continue;
     const o=get(a);
+    const w = z===Z_R? ZONE[z].pop[L] : ZONE[z].job[L];
     if(z===Z_R) o.pop+=ZONE[z].pop[L];
     else if(z===Z_C) o.jc+=ZONE[z].job[L];
     else o.ji+=ZONE[z].job[L];
+    /* 정류장까지는 «집에서» 걸어갑니다 — 진입로가 아니라.
+       접도 노드에서 재면, 집이 정류장 코앞이어도 커버리지가 0으로 나옵니다. */
+    o.busW += F.bus[i]*w; o.wt += w;
   }
+  for(const o of O.values()) o.bus = o.wt? o.busW/o.wt : 0;
   // 외부 연결 노드 = 맵 경계의 고속도로 칸
   const EXT=[];
   for(const i of F.roadCells){
@@ -896,7 +919,7 @@ function assignTraffic(){
         if(ws[k]<=0)continue;
         let q=commute*ws[k]/wsum;
         // 버스 수단분담 — 양 끝이 모두 정류장 권역이어야 성립한다
-        const bs=0.45*F.bus[o.i]*F.bus[nodes[k].i];
+        const bs=0.45*o.bus*nodes[k].bus;
         if(bs>0){ if(it===ITER) busTrips+=q*bs; q*=(1-bs); }
         pour(o.i,nodes[k].i,q,aux,null);
         if(it===ITER){ sumTT+=d[nodes[k].i]*q; sumTrip+=q; }
@@ -1140,6 +1163,7 @@ function recalcStats(){
   let mw=0,wat=0,sew=0,gar=0, upkeep=0;
   let intakes=0, intakePol=0, worstIntakePol=0, worstIntake=-1;
   const upRoad=[0,0,0,0,0]; let upBld=0;
+  let zoneAtt=0, zoneBig=0, rAtt=0, rBig=0;
   let airR=0,noiR=0,lvR=0,cntR=0,airExp=0,airMax=0,noiExp=0;
   let covSum={fire:0,police:0,health:0,edu:0,park:0}, covN=0;
 
@@ -1150,6 +1174,10 @@ function recalcStats(){
       if(accessNode(i)<0 && L===0) noAcc++;
     }
     if(z&&L){
+      // 집이 어느 등급 도로에 붙어 있는가 — 위계의 마지막 한 단계
+      const an=accessNode(i);
+      if(an>=0){ zoneAtt++; if(S.road[an]>=R_COL){ zoneBig++; if(z===Z_R) rBig++; } }
+      if(z===Z_R) rAtt++;
       if(z===Z_R){ pop+=ZONE[z].pop[L]; devR++;
         airR+=F.air[i]; noiR+=F.noi[i]; lvR+=F.lv[i]; cntR++;
         if(F.air[i]>12) airExp++;              // 실제로 피해를 보는 주민 비율
@@ -1191,6 +1219,8 @@ function recalcStats(){
   ST.airR = cntR? airR/cntR : 0;
   ST.noiR = cntR? noiR/cntR : 0;
   ST.lvR  = cntR? lvR/cntR  : 0;
+  ST.zoneBigShare = zoneAtt? zoneBig/zoneAtt : 0;   // 4차선 이상에 직접 접한 존 비율
+  ST.rBigShare    = rAtt?    rBig/rAtt      : 0;    // 그중 주거만
   ST.airExp = cntR? airExp/cntR : 0;   // 평균은 국소 핫스팟을 감춘다 — 노출 비율을 함께 본다
   ST.noiExp = cntR? noiExp/cntR : 0;
   ST.airMax = airMax;
@@ -1317,6 +1347,14 @@ function diagnose(){
   if(ST.locOnArt>0)
     push(ST.locOnArt>6?'bad':'warn','🔀','간선·고속에 <b>2차선 국지도로가 직결</b>된 지점 '+ST.locOnArt+'곳',
       '좌회전 대기가 본선을 막아 칸마다 <b>+11초</b>의 지체가 붙습니다. 중간에 <b>4차선 콜렉터</b>를 한 단계 끼워 넣으세요 — 이것이 위계입니다.');
+
+  // 위계의 마지막 한 단계 — 집 앞은 2차선이어야 합니다
+  if(ST.rBigShare>0.60 && ST.devR>8)
+    push('warn','🏘️','주거의 <b>'+(ST.rBigShare*100).toFixed(0)+'%</b>가 4차선 이상에 직접 접해 있습니다',
+      '위계가 <b>간선 → 콜렉터 → 집</b>으로 한 단계 비어 있습니다. 콜렉터는 국지도로를 «모으는» 길이지 집이 붙는 길이 아닙니다. 진출입·주차가 통과 기능을 갉아먹어 칸마다 지체가 붙습니다(콜렉터 +1.0초, 간선 +2.2초).<br>고치는 법: 콜렉터 사이에 <b>2차선 국지도로</b>를 한 줄 넣고 집이 그쪽을 보게 하세요.');
+  else if(ST.rBigShare>0.35 && ST.devR>8)
+    push('info','🏘️','주거의 '+(ST.rBigShare*100).toFixed(0)+'%가 4차선 이상에 접합니다',
+      '일부는 괜찮지만, 콜렉터 연변을 전부 주거로 채우면 그 도로의 통과 기능이 떨어집니다.');
 
   if(ST.closeIC>0)
     push('warn','↔️','IC 간격이 6칸(288 m) 미만인 쌍 '+ST.closeIC+'개',
@@ -1632,80 +1670,88 @@ const PRESETS=[
 ];
 /* ═══ 잘 지은 도시 — «그래서 정답이 뭔데»에 답하는 쪽 ═══
    실패 프리셋과 같은 지도, 같은 규칙에서 지표가 어떻게 달라지는지 보여줍니다. */
+/* 표준 단면 — 위에서 아래로 한 단계씩 내려온다.
+     간선(테두리) → 콜렉터(y=4,11) → 국지(y=6,9,13 · 세로 x=12,20) → 집은 «국지»에 접한다
+   주거가 콜렉터에 직접 접하면 진출입·주차가 통과 기능을 갉아먹습니다. 그게 위계를 세우는 이유입니다. */
 const GOODS=[
 { ico:'🏆', t:'위계 교과서', why:'실패 ①②의 정답',
-  d:'IC → <b>6차선 간선</b> → <b>4차선 콜렉터</b> → <b>2차선 국지</b>. 국지도로는 간선에 한 번도 닿지 않습니다.',
-  look:'국지 직결 <b>0곳</b>. 간선 교차로는 전부 <b>T자</b>(십자 아님)라 처리 용량이 0.48이 아니라 0.62입니다. IC 2개가 16칸 떨어져 있어 통행이 한 칸에 몰리지 않습니다.',
+  d:'IC → <b>6차선 간선</b> → <b>4차선 콜렉터</b> → <b>2차선 국지</b> → 집. 네 단계를 하나도 건너뛰지 않습니다.',
+  look:'주거는 <b>전부 2차선 국지도로</b>에 접합니다 — 콜렉터는 국지를 «모으는» 역할만 하고 집이 직접 붙지 않습니다. 국지도로가 간선에 닿는 곳도 <b>0곳</b>이고, 간선 교차로는 전부 <b>T자</b>라 처리 용량이 0.48이 아니라 0.62입니다.',
   build(){ baseMap(); S.wind=180; S.windStr=.5;
     P.b(8,1,'ic'); P.b(24,1,'ic');
-    P.road(8,2,8,17,R_ART); P.road(24,2,24,17,R_ART); P.road(8,17,24,17,R_ART);  // 폐루프 = 대안 경로
-    for(const y of [5,8,11,14]) P.road(9,y,23,y,R_COL);
-    P.road(13,5,13,8,R_LOC); P.road(19,8,19,11,R_LOC); P.road(16,11,16,14,R_LOC);
-    P.zone(9,6,23,7,Z_R,3); P.zone(9,9,23,10,Z_R,3);
-    P.zone(9,12,23,13,Z_C,3); P.zone(9,15,23,16,Z_I,3);
+    P.road(8,2,8,15,R_ART); P.road(24,2,24,15,R_ART); P.road(8,15,24,15,R_ART);  // 폐루프 = 대안 경로
+    P.road(9,4,23,4,R_COL); P.road(9,11,23,11,R_COL);                            // 콜렉터 2줄
+    for(const y of [6,9,13]) P.road(10,y,22,y,R_LOC);                            // 국지 가로
+    for(const x of [12,20]) P.road(x,4,x,13,R_COL);                              // 국지 세로
+    P.zone(9,5,23,5,Z_R,3); P.zone(9,7,23,8,Z_R,3); P.zone(9,10,23,10,Z_R,3);
+    P.zone(9,12,23,12,Z_C,3); P.zone(9,14,23,14,Z_I,3);
     P.river(3,'intake'); P.river(29,'outlet');
-    P.b(27,15,'coal'); P.b(2,20,'dump');
-    P.b(11,6,'fire'); P.b(21,6,'police'); P.b(15,9,'clinic'); P.b(18,9,'school');
-    P.b(12,10,'park'); P.b(20,10,'park'); P.b(16,6,'park'); P.b(26,6,'wind'); } },
+    P.b(27,13,'coal'); P.b(2,13,'dump');
+    P.b(11,5,'fire'); P.b(21,5,'police'); P.b(15,10,'clinic'); P.b(18,7,'school');
+    P.b(14,10,'park'); P.b(19,10,'park'); P.b(16,5,'park'); P.b(26,5,'wind'); } },
 
 { ico:'🌬️', t:'바람과 물을 읽은 도시', why:'실패 ③⑦의 정답',
   d:'주거는 <b>바람 상류</b>, 공업·발전소는 <b>하류</b>. 취수장은 강 <b>최상류</b>, 배출구는 <b>최하류</b>.',
   look:'「대기오염」 오버레이를 켜면 플룸이 주거를 <b>비껴</b> 흐릅니다. 「수질」을 켜면 취수장 쪽 강이 <b>깨끗</b>합니다. 오염 노출과 취수 수질을 실패 프리셋과 비교해 보세요.',
   build(){ baseMap(); S.wind=180; S.windStr=.75;              // 바람이 남(아래)으로
-    P.b(10,1,'ic'); P.b(22,1,'ic');
-    P.road(10,2,10,14,R_ART); P.road(22,2,22,14,R_ART); P.road(10,14,22,14,R_ART);
-    for(const y of [4,7,10]) P.road(11,y,21,y,R_COL);
-    P.road(4,4,10,4,R_COL); P.road(22,4,28,4,R_COL);
-    P.zone(4,5,9,6,Z_R,3); P.zone(23,5,28,6,Z_R,3);
-    P.zone(11,5,21,6,Z_R,3); P.zone(11,8,21,9,Z_R,3);        // 주거는 북쪽(바람 상류)
-    P.zone(11,11,21,13,Z_C,3);                                // 상업이 완충대
-    // 공업은 남쪽 끝. 간선에 국지도로를 붙이지 않으려고 콜렉터로 한 단계 받는다
-    P.road(16,14,16,16,R_COL); P.road(12,16,20,16,R_COL);
-    P.zone(12,15,20,15,Z_I,3); P.zone(12,17,20,17,Z_I,3);
-    P.b(26,15,'coal'); P.b(5,15,'dump');                      // 오염원 전부 남쪽
+    P.b(9,1,'ic'); P.b(23,1,'ic');
+    P.road(9,2,9,15,R_ART); P.road(23,2,23,15,R_ART); P.road(9,15,23,15,R_ART);
+    P.road(10,4,22,4,R_COL); P.road(10,11,22,11,R_COL);       // 콜렉터
+    for(const y of [6,9,13]) P.road(11,y,21,y,R_LOC);         // 국지 — 집은 여기에 접한다
+    for(const x of [13,19]) P.road(x,4,x,13,R_COL);
+    P.zone(10,5,22,5,Z_R,3); P.zone(10,7,22,8,Z_R,3); P.zone(10,10,22,10,Z_R,3);  // 주거는 북쪽(바람 상류)
+    P.zone(10,12,22,12,Z_C,3);                                // 상업이 완충대
+    P.zone(10,14,22,14,Z_I,3);                                // 공업은 남쪽 끝 = 바람 하류
+    P.b(26,13,'coal'); P.b(5,13,'dump');                      // 오염원 전부 남쪽
     P.river(2,'intake'); P.river(30,'sewage');                // 취수 최상류·처리 최하류
-    P.b(13,5,'fire'); P.b(19,5,'police'); P.b(15,8,'clinic'); P.b(17,8,'school');
-    P.b(12,9,'park'); P.b(20,9,'park'); P.b(16,12,'park'); P.b(6,6,'park'); P.b(26,6,'park');
-    P.b(28,8,'wind'); P.b(4,8,'wind'); } },
+    P.b(12,5,'fire'); P.b(20,5,'police'); P.b(16,10,'clinic'); P.b(17,7,'school');
+    P.b(11,10,'park'); P.b(21,10,'park'); P.b(15,5,'park'); P.b(26,5,'park');
+    P.b(27,8,'wind'); P.b(5,8,'wind'); } },
 
 { ico:'🚛', t:'화물이 분리된 도시', why:'실패 ④의 정답',
   d:'공업 전용 IC를 <b>따로</b> 놓아, 화물이 주거지를 한 번도 지나지 않습니다.',
   look:'주거지 통과 화물이 <b>0%대</b>입니다. 🔍 경로 추적으로 공업 칸을 찍어 보면 수출 경로가 주거를 <b>완전히 비껴</b> 갑니다.',
   build(){ baseMap(); S.wind=180; S.windStr=.6;
-    P.b(7,1,'ic');                                            // 생활 IC
-    P.b(27,1,'ic');                                           // 화물 전용 IC (20칸 이격)
-    P.road(7,2,7,14,R_ART); P.road(7,14,18,14,R_ART);
-    P.road(27,2,27,17,R_ART); P.road(20,17,27,17,R_COL);      // 화물 축은 따로 논다
-    for(const y of [4,7,11]) P.road(8,y,18,y,R_COL);
-    P.road(18,4,18,14,R_COL);
-    P.road(12,4,12,7,R_LOC); P.road(15,7,15,11,R_LOC);
-    P.zone(8,5,17,6,Z_R,3); P.zone(8,8,17,10,Z_R,3);
-    P.zone(8,12,17,13,Z_C,3);
-    P.zone(20,15,26,16,Z_I,3); P.zone(20,18,26,19,Z_I,3);     // 공업은 화물 IC 옆에만
-    P.b(29,19,'coal'); P.b(24,20,'dump');
-    P.river(3,'intake'); P.river(30,'outlet');
-    P.b(10,5,'fire'); P.b(16,5,'police'); P.b(13,9,'clinic'); P.b(10,9,'school');
-    P.b(14,12,'park'); P.b(9,6,'park'); P.b(17,9,'park'); P.b(5,8,'wind'); P.b(5,11,'wind'); } },
+    P.b(6,1,'ic');                                            // 생활 IC
+    P.b(26,1,'ic');                                           // 화물 전용 IC (20칸 이격)
+    P.road(6,2,6,15,R_ART); P.road(18,4,18,15,R_ART); P.road(6,15,18,15,R_ART);
+    P.road(7,4,17,4,R_COL); P.road(7,11,17,11,R_COL);         // 생활 콜렉터
+    for(const y of [6,9,13]) P.road(8,y,16,y,R_LOC);          // 국지 — 집은 여기에 접한다
+    for(const x of [10,14]) P.road(x,4,x,13,R_COL);
+    P.zone(7,5,17,5,Z_R,3); P.zone(7,7,17,8,Z_R,3); P.zone(7,10,17,10,Z_R,3);
+    P.zone(7,12,17,12,Z_C,3); P.zone(7,14,17,14,Z_C,3);
+    // 화물 축 — 생활 도로망과 «만나지 않는» 별도 계통
+    P.road(26,2,26,16,R_ART); P.road(21,16,26,16,R_COL);
+    P.road(22,18,26,18,R_LOC); P.road(24,16,24,18,R_LOC);
+    P.zone(20,17,27,17,Z_I,3); P.zone(20,19,27,19,Z_I,3);
+    P.b(29,16,'dump');
+    P.river(3,'intake'); P.river(31,'outlet');
+    P.b(9,5,'fire'); P.b(15,5,'police'); P.b(12,10,'clinic'); P.b(9,10,'school');
+    P.b(13,12,'park'); P.b(8,5,'park'); P.b(16,10,'park');
+    /* 인구 1,100 규모에 필요한 전력은 ≈46 MW. 석탄(220 MW·₡1,400·오염 15)은 과잉이고,
+       풍력 4기(56 MW·₡720·무공해)가 싸고 깨끗합니다 — 작은 도시의 정답. */
+    P.b(4,5,'wind'); P.b(4,8,'wind'); P.b(4,11,'wind'); P.b(4,14,'wind'); } },
 
 { ico:'🚌', t:'대중교통이 도는 도시', why:'차를 줄이는 정공법',
   d:'정류장을 <b>4차선 콜렉터</b>에, 그리고 <b>주거와 일자리 양쪽 모두</b>에 놓았습니다.',
   look:'버스 수단분담이 올라간 만큼 도로 교통량이 <b>빠집니다</b>. 정류장을 2차선에 놓으면 칸당 +6초라 오히려 손해라는 점도 같이 보세요.',
   build(){ baseMap(); S.wind=180; S.windStr=.5; S.pol.bike=true;
     P.b(9,1,'ic'); P.b(23,1,'ic');
-    P.road(9,2,9,16,R_ART); P.road(23,2,23,16,R_ART); P.road(9,16,23,16,R_ART);
-    for(const y of [5,9,13]) P.road(10,y,22,y,R_COL);
-    P.road(13,5,13,9,R_LOC); P.road(19,9,19,13,R_LOC);
-    P.zone(10,6,22,8,Z_R,3);
-    P.zone(10,10,22,11,Z_C,3);
+    P.road(9,2,9,15,R_ART); P.road(23,2,23,15,R_ART); P.road(9,15,23,15,R_ART);
+    P.road(10,4,22,4,R_COL); P.road(10,11,22,11,R_COL);       // 정류장이 서는 축
+    for(const y of [6,9,13]) P.road(11,y,21,y,R_LOC);         // 집은 국지에 접한다
+    for(const x of [13,19]) P.road(x,4,x,13,R_COL);
+    P.zone(10,5,22,5,Z_R,3); P.zone(10,7,22,8,Z_R,3); P.zone(10,10,22,10,Z_R,3);
+    P.zone(10,12,22,12,Z_C,3);
     P.zone(10,14,22,14,Z_I,3);
-    /* 정류장은 전부 4차선 콜렉터 위에. 국지도로(x=13,19)는 일부러 피했습니다 —
-       2차선에 정류장을 두면 정차한 버스가 그 방향을 막아 칸당 +6초가 붙습니다.
-       그리고 3칸 간격으로 촘촘히 — 버스는 «양 끝»이 모두 권역이어야 성립하니까. */
-    for(const x of [11,14,17,20,22]) { P.b(x,5,'bus'); P.b(x,9,'bus'); P.b(x,13,'bus'); }
+    /* 정류장은 전부 4차선 콜렉터 위에 — 국지도로는 일부러 피했습니다.
+       2차선에 두면 정차한 버스가 그 방향을 막아 칸당 +6초가 붙습니다.
+       그리고 주거 쪽(y=4)과 일자리 쪽(y=11) «양쪽»에 촘촘히 — 한쪽만 깔면 분담률은 0입니다. */
+    for(const x of [11,14,17,20,22]) { P.b(x,4,'bus'); P.b(x,11,'bus'); }
     P.river(3,'intake'); P.river(29,'outlet');
-    P.b(27,16,'coal'); P.b(3,20,'dump');
-    P.b(12,6,'fire'); P.b(20,6,'police'); P.b(16,10,'clinic'); P.b(13,10,'school'); P.b(20,10,'school');
-    P.b(17,7,'park'); P.b(26,8,'wind'); } }
+    P.b(26,13,'coal'); P.b(3,13,'dump');
+    P.b(12,5,'fire'); P.b(20,5,'police'); P.b(16,10,'clinic'); P.b(12,10,'school'); P.b(20,10,'school');
+    P.b(16,5,'park'); P.b(26,5,'wind'); } }
 ];
 function loadGood(k){
   const g=GOODS[k];
@@ -2400,7 +2446,7 @@ function updHUD(){
       p.push(`지체 <b>+${(F.pen[i]*(1+0.85*Math.pow(xn,3.5))).toFixed(1)}초</b>`);
     }else if(F.pen[i]>0.4) p.push(`지체 <b>+${F.pen[i].toFixed(1)}초</b>`);
     if(F.volF[i]>1) p.push(`화물 ${Math.round(F.volF[i])}/시`);
-    if(F.bus[i]>0) p.push(`🚏 정류장 권역 ${(F.bus[i]*100).toFixed(0)}%`);
+    if(F.bus[i]>0) p.push(`🚏 정류장 도보권 ${(F.bus[i]*100).toFixed(0)}%`);
   }
   if(S.zone[i]){
     const z=ZONE[S.zone[i]], L=S.lvl[i];
