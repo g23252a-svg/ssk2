@@ -260,6 +260,10 @@ table.fin td.sub{padding-left:14px;color:var(--text2);font-weight:500}
   cursor:pointer;transition:border-color .12s,background .12s
 }
 .pst:hover{border-color:var(--acc);background:var(--acc-s)}
+.pst.good{border-left:3px solid var(--ok)}
+.pst.good:hover{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
+.pst .pwhy{display:inline-block;margin-left:6px;font-size:10px;font-weight:750;color:var(--ok);
+  background:color-mix(in srgb,var(--ok) 16%,transparent);border-radius:5px;padding:1px 5px;vertical-align:1px}
 .pst .pi{font-size:15px;line-height:1.1;flex:none;margin-top:1px}
 .pst .pt{font-size:12.5px;font-weight:750;line-height:1.35}
 .pst .pd{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.45}
@@ -418,6 +422,11 @@ table.cmp .same{color:var(--text3)}
       <div class="pb tight"><div class="diag" id="diag"></div></div>
     </div>
     <div class="pane">
+      <div class="ph">🏆 잘 지은 도시 — 정답은 이렇게 생겼습니다</div>
+      <div class="pb tight"><div class="presets" id="goods"></div></div>
+    </div>
+
+    <div class="pane">
       <div class="ph">🩺 망한 도시 고치기 — 전형적 실수 7종</div>
       <div class="pb tight"><div class="presets" id="presets"></div></div>
     </div>
@@ -498,8 +507,16 @@ table.cmp .same{color:var(--text3)}
     <h4>5. 도구 두 가지</h4>
     <ul>
       <li><b>🔍 경로 추적</b> — 개발된 존을 클릭하면 그 존의 통근·수출 경로를 지도에 그립니다. "왜 저 도로로 가는가"가 바로 보입니다.</li>
-      <li><b>🩺 망한 도시 프리셋</b> — 전형적 실수 6종이 심긴 도시를 불러와 고치는 연습입니다. 불러오면 자동으로 「고치기 전」 기준이 잡히므로, 고친 뒤 개선 폭이 표로 나옵니다.</li>
+      <li><b>🩺 망한 도시 프리셋</b> — 전형적 실수 7종이 심긴 도시를 불러와 고치는 연습입니다. 불러오면 자동으로 「고치기 전」 기준이 잡히므로, 고친 뒤 개선 폭이 표로 나옵니다.</li>
+      <li><b>🏆 잘 지은 도시 4종</b> — 「그래서 정답이 뭔데」에 답하는 쪽입니다. 같은 지도·같은 규칙에서 지표가 어떻게 달라지는지 비교해 보세요. 네 도시 모두 <b>경고 0건</b>, 정체 0%, 흑자입니다.</li>
     </ul>
+    <table>
+      <tr><th>잘 지은 도시</th><th>무엇의 정답인가</th><th class="n">최악 V/C</th><th class="n">행복도</th></tr>
+      <tr><td>🏆 위계 교과서</td><td>실수 ①② — 국지 직결 0곳, 간선 교차로는 전부 T자</td><td class="n">0.65</td><td class="n">58</td></tr>
+      <tr><td>🌬️ 바람과 물을 읽은 도시</td><td>실수 ③⑦ — 오염 노출 0%, 취수 오염 0</td><td class="n">0.47</td><td class="n">61</td></tr>
+      <tr><td>🚛 화물이 분리된 도시</td><td>실수 ④ — 주거 통과 화물 3%</td><td class="n">0.65</td><td class="n">64</td></tr>
+      <tr><td>🚌 대중교통이 도는 도시</td><td>정류장을 콜렉터에 · 양 끝에 — 분담률 19%</td><td class="n">0.40</td><td class="n">61</td></tr>
+    </table>
 
     <h4>6. 고속도로는 IC로만</h4>
     <p>일반 도로를 고속도로에 직접 그으면 <b>연결되지 않습니다</b>(지도에 붉은 ⛔로 표시). 고속도로 칸 위에 <b>IC(진입로)</b>를 놓아야 통행이 흐릅니다. IC끼리 너무 가까우면(6칸 미만) 합류·분류가 겹쳐 경고가 뜹니다.</p>
@@ -514,7 +531,7 @@ table.cmp .same{color:var(--text3)}
       <tr><td>하수 배출구</td><td>🌊 강 위</td><td class="n">하수 200</td><td class="n">+34</td><td class="n">₡12,000</td></tr>
       <tr><td>하수 처리장</td><td>🌊 강 위</td><td class="n">하수 290</td><td class="n">+7</td><td class="n">₡42,000</td></tr>
     </table>
-    <p><b>취수장을 배출구보다 하류에 두면 자기가 버린 물을 자기가 퍼 올립니다.</b> 행복도가 최대 30까지 깎입니다. 실제로 프리셋 「취수장이 하수 하류」에서 취수장과 배출구의 위치만 맞바꾸면 <b>취수 오염 10.2 → 0, 행복도 48 → 57</b>이 됩니다. 지은 것은 똑같은데 순서만 바꾼 것입니다.</p>
+    <p><b>취수장을 배출구보다 하류에 두면 자기가 버린 물을 자기가 퍼 올립니다.</b> 행복도가 최대 30까지 깎입니다. 실제로 프리셋 「취수장이 하수 하류」에서 취수장과 배출구의 위치만 맞바꾸면 <b>취수 오염 10.2 → 0, 행복도 50 → 59</b>가 됩니다. 지은 것은 똑같은데 순서만 바꾼 것입니다.</p>
     <p>공업과 매립지도 강에 침출수를 냅니다. 배출구(오염 34)를 하수 처리장(오염 7)으로 바꾸면 크게 줄지만 건설비가 3.5배입니다 — 상류 여유가 있으면 싼 배출구로 충분합니다. <b>💧 수질</b> 오버레이로 오염이 어디서 시작해 어디로 흐르는지 볼 수 있고, 강물 색 자체도 탁해집니다.</p>
     <p>지하수(양수장·급수탑)는 강과 무관해 오염되지 않지만 용량이 작습니다.</p>
 
@@ -1319,11 +1336,11 @@ function diagnose(){
       '현재 도로망이 통행량을 여유 있게 받아내고 있습니다.');
   }
 
-  if(ST.chokeShare>0.45 && ST.pop>600)
+  if(ST.chokeShare>0.62 && ST.pop>600)
     push('bad','🍾','전체 통행의 <b>'+(ST.chokeShare*100).toFixed(0)+'%</b>가 <b>단 한 칸</b>을 지납니다',
       '대안 경로가 없는 도시입니다. 그 한 칸이 막히면 도시 전체가 멈춥니다. <b>두 번째 IC를 멀리 놓고</b>, 지구를 도는 순환 축을 만들어 경로를 갈라 주세요. 차선을 넓히는 것은 임시방편입니다.',
       ST.chokeAt);
-  else if(ST.chokeShare>0.32 && ST.pop>600)
+  else if(ST.chokeShare>0.46 && ST.pop>600)
     push('warn','🍾','통행의 '+(ST.chokeShare*100).toFixed(0)+'%가 한 칸에 몰립니다',
       '아직 여유는 있지만 <b>경로 다양성이 부족</b>합니다. 도시가 커지면 여기가 먼저 무너집니다.',ST.chokeAt);
 
@@ -1613,6 +1630,105 @@ const PRESETS=[
     P.b(2,8,'coal'); P.b(28,8,'dump');
     P.b(8,8,'fire'); P.b(20,8,'police'); P.b(13,9,'clinic'); P.b(16,8,'school'); P.b(6,9,'park'); } }
 ];
+/* ═══ 잘 지은 도시 — «그래서 정답이 뭔데»에 답하는 쪽 ═══
+   실패 프리셋과 같은 지도, 같은 규칙에서 지표가 어떻게 달라지는지 보여줍니다. */
+const GOODS=[
+{ ico:'🏆', t:'위계 교과서', why:'실패 ①②의 정답',
+  d:'IC → <b>6차선 간선</b> → <b>4차선 콜렉터</b> → <b>2차선 국지</b>. 국지도로는 간선에 한 번도 닿지 않습니다.',
+  look:'국지 직결 <b>0곳</b>. 간선 교차로는 전부 <b>T자</b>(십자 아님)라 처리 용량이 0.48이 아니라 0.62입니다. IC 2개가 16칸 떨어져 있어 통행이 한 칸에 몰리지 않습니다.',
+  build(){ baseMap(); S.wind=180; S.windStr=.5;
+    P.b(8,1,'ic'); P.b(24,1,'ic');
+    P.road(8,2,8,17,R_ART); P.road(24,2,24,17,R_ART); P.road(8,17,24,17,R_ART);  // 폐루프 = 대안 경로
+    for(const y of [5,8,11,14]) P.road(9,y,23,y,R_COL);
+    P.road(13,5,13,8,R_LOC); P.road(19,8,19,11,R_LOC); P.road(16,11,16,14,R_LOC);
+    P.zone(9,6,23,7,Z_R,3); P.zone(9,9,23,10,Z_R,3);
+    P.zone(9,12,23,13,Z_C,3); P.zone(9,15,23,16,Z_I,3);
+    P.river(3,'intake'); P.river(29,'outlet');
+    P.b(27,15,'coal'); P.b(2,20,'dump');
+    P.b(11,6,'fire'); P.b(21,6,'police'); P.b(15,9,'clinic'); P.b(18,9,'school');
+    P.b(12,10,'park'); P.b(20,10,'park'); P.b(16,6,'park'); P.b(26,6,'wind'); } },
+
+{ ico:'🌬️', t:'바람과 물을 읽은 도시', why:'실패 ③⑦의 정답',
+  d:'주거는 <b>바람 상류</b>, 공업·발전소는 <b>하류</b>. 취수장은 강 <b>최상류</b>, 배출구는 <b>최하류</b>.',
+  look:'「대기오염」 오버레이를 켜면 플룸이 주거를 <b>비껴</b> 흐릅니다. 「수질」을 켜면 취수장 쪽 강이 <b>깨끗</b>합니다. 오염 노출과 취수 수질을 실패 프리셋과 비교해 보세요.',
+  build(){ baseMap(); S.wind=180; S.windStr=.75;              // 바람이 남(아래)으로
+    P.b(10,1,'ic'); P.b(22,1,'ic');
+    P.road(10,2,10,14,R_ART); P.road(22,2,22,14,R_ART); P.road(10,14,22,14,R_ART);
+    for(const y of [4,7,10]) P.road(11,y,21,y,R_COL);
+    P.road(4,4,10,4,R_COL); P.road(22,4,28,4,R_COL);
+    P.zone(4,5,9,6,Z_R,3); P.zone(23,5,28,6,Z_R,3);
+    P.zone(11,5,21,6,Z_R,3); P.zone(11,8,21,9,Z_R,3);        // 주거는 북쪽(바람 상류)
+    P.zone(11,11,21,13,Z_C,3);                                // 상업이 완충대
+    // 공업은 남쪽 끝. 간선에 국지도로를 붙이지 않으려고 콜렉터로 한 단계 받는다
+    P.road(16,14,16,16,R_COL); P.road(12,16,20,16,R_COL);
+    P.zone(12,15,20,15,Z_I,3); P.zone(12,17,20,17,Z_I,3);
+    P.b(26,15,'coal'); P.b(5,15,'dump');                      // 오염원 전부 남쪽
+    P.river(2,'intake'); P.river(30,'sewage');                // 취수 최상류·처리 최하류
+    P.b(13,5,'fire'); P.b(19,5,'police'); P.b(15,8,'clinic'); P.b(17,8,'school');
+    P.b(12,9,'park'); P.b(20,9,'park'); P.b(16,12,'park'); P.b(6,6,'park'); P.b(26,6,'park');
+    P.b(28,8,'wind'); P.b(4,8,'wind'); } },
+
+{ ico:'🚛', t:'화물이 분리된 도시', why:'실패 ④의 정답',
+  d:'공업 전용 IC를 <b>따로</b> 놓아, 화물이 주거지를 한 번도 지나지 않습니다.',
+  look:'주거지 통과 화물이 <b>0%대</b>입니다. 🔍 경로 추적으로 공업 칸을 찍어 보면 수출 경로가 주거를 <b>완전히 비껴</b> 갑니다.',
+  build(){ baseMap(); S.wind=180; S.windStr=.6;
+    P.b(7,1,'ic');                                            // 생활 IC
+    P.b(27,1,'ic');                                           // 화물 전용 IC (20칸 이격)
+    P.road(7,2,7,14,R_ART); P.road(7,14,18,14,R_ART);
+    P.road(27,2,27,17,R_ART); P.road(20,17,27,17,R_COL);      // 화물 축은 따로 논다
+    for(const y of [4,7,11]) P.road(8,y,18,y,R_COL);
+    P.road(18,4,18,14,R_COL);
+    P.road(12,4,12,7,R_LOC); P.road(15,7,15,11,R_LOC);
+    P.zone(8,5,17,6,Z_R,3); P.zone(8,8,17,10,Z_R,3);
+    P.zone(8,12,17,13,Z_C,3);
+    P.zone(20,15,26,16,Z_I,3); P.zone(20,18,26,19,Z_I,3);     // 공업은 화물 IC 옆에만
+    P.b(29,19,'coal'); P.b(24,20,'dump');
+    P.river(3,'intake'); P.river(30,'outlet');
+    P.b(10,5,'fire'); P.b(16,5,'police'); P.b(13,9,'clinic'); P.b(10,9,'school');
+    P.b(14,12,'park'); P.b(9,6,'park'); P.b(17,9,'park'); P.b(5,8,'wind'); P.b(5,11,'wind'); } },
+
+{ ico:'🚌', t:'대중교통이 도는 도시', why:'차를 줄이는 정공법',
+  d:'정류장을 <b>4차선 콜렉터</b>에, 그리고 <b>주거와 일자리 양쪽 모두</b>에 놓았습니다.',
+  look:'버스 수단분담이 올라간 만큼 도로 교통량이 <b>빠집니다</b>. 정류장을 2차선에 놓으면 칸당 +6초라 오히려 손해라는 점도 같이 보세요.',
+  build(){ baseMap(); S.wind=180; S.windStr=.5; S.pol.bike=true;
+    P.b(9,1,'ic'); P.b(23,1,'ic');
+    P.road(9,2,9,16,R_ART); P.road(23,2,23,16,R_ART); P.road(9,16,23,16,R_ART);
+    for(const y of [5,9,13]) P.road(10,y,22,y,R_COL);
+    P.road(13,5,13,9,R_LOC); P.road(19,9,19,13,R_LOC);
+    P.zone(10,6,22,8,Z_R,3);
+    P.zone(10,10,22,11,Z_C,3);
+    P.zone(10,14,22,14,Z_I,3);
+    /* 정류장은 전부 4차선 콜렉터 위에. 국지도로(x=13,19)는 일부러 피했습니다 —
+       2차선에 정류장을 두면 정차한 버스가 그 방향을 막아 칸당 +6초가 붙습니다.
+       그리고 3칸 간격으로 촘촘히 — 버스는 «양 끝»이 모두 권역이어야 성립하니까. */
+    for(const x of [11,14,17,20,22]) { P.b(x,5,'bus'); P.b(x,9,'bus'); P.b(x,13,'bus'); }
+    P.river(3,'intake'); P.river(29,'outlet');
+    P.b(27,16,'coal'); P.b(3,20,'dump');
+    P.b(12,6,'fire'); P.b(20,6,'police'); P.b(16,10,'clinic'); P.b(13,10,'school'); P.b(20,10,'school');
+    P.b(17,7,'park'); P.b(26,8,'wind'); } }
+];
+function loadGood(k){
+  const g=GOODS[k];
+  if(!confirm(`「${g.t}」을(를) 불러옵니다.\n현재 도시는 사라집니다. 계속할까요?`)) return;
+  g.build();
+  renderCompass(); rebuild(); recalcAll(); render(); syncUI();
+  setSpeed(0); snapBase();
+  document.getElementById('polBike').checked=S.pol.bike;
+  toast('🏆 '+g.t+' — 지표와 진단 패널을 실패 프리셋과 비교해 보세요.','good',5200);
+}
+function renderGoods(){
+  const el=document.getElementById('goods'); if(!el) return;
+  el.innerHTML='';
+  GOODS.forEach((g,k)=>{
+    const b=document.createElement('button'); b.className='pst good';
+    b.innerHTML=`<span class="pi">${g.ico}</span><span><span class="pt">${g.t}`
+      +`<span class="pwhy">${g.why}</span></span>`
+      +`<span class="pd">${g.d}<br><b style="color:var(--acc)">볼 것:</b> ${g.look}</span></span>`;
+    b.onclick=()=>loadGood(k);
+    el.appendChild(b);
+  });
+}
+
 function loadPreset(k){
   const p=PRESETS[k];
   if(!confirm(`「${p.t}」을(를) 불러옵니다.\n현재 도시는 사라집니다. 계속할까요?`)) return;
@@ -2438,7 +2554,7 @@ function loop(now){
    ═══════════════════════════════════════════════════════════════ */
 addEventListener('resize',()=>{ fitCanvas(); render(); drawTrend(); });
 refreshColors();
-renderTools(); renderLegend(); renderCompass(); renderPresets(); updUndoBtn();
+renderTools(); renderLegend(); renderCompass(); renderGoods(); renderPresets(); updUndoBtn();
 fitCanvas();
 newCity();
 fitCanvas(); render();
