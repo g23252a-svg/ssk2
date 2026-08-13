@@ -1,0 +1,2226 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>도시공학 시뮬레이터 — 시티즈 스카이라인 2 공략집</title>
+<meta name="description" content="Cities: Skylines 2의 도로 위계·IC 연결·교차로 상충·바람과 공업 배치·화물 동선을 직접 지어보며 배우는 브라우저 도시공학 시뮬레이터.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --bg:#eef0f4; --panel:#ffffff; --panel2:#f7f8fa; --line:#dfe3e8; --line2:#eceff3;
+  --text:#14171c; --text2:#4a515b; --text3:#858d98;
+  --acc:#2f6fed; --acc-s:#2f6fed22;
+  --ok:#12996b; --warn:#d5901f; --bad:#d94f38; --info:#3b82c4;
+  --zr:#4ea36b; --zc:#3b82c4; --zi:#c9a227;
+  --terrain:#e7ebe4; --terrain2:#dfe5dc; --water:#bcd6e6;
+  --shadow:0 1px 2px rgba(16,20,28,.06),0 6px 18px rgba(16,20,28,.07);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0e1116; --panel:#161a21; --panel2:#1b2028; --line:#272d37; --line2:#20262e;
+    --text:#e8ecf1; --text2:#a8b1bd; --text3:#6f7885;
+    --acc:#5c93ff; --acc-s:#5c93ff26;
+    --ok:#2ecb8f; --warn:#e8b04a; --bad:#f2705a; --info:#5aa8e0;
+    --zr:#59b87b; --zc:#4d97dc; --zi:#d9b53c;
+    --terrain:#1a1f26; --terrain2:#161b21; --water:#1d3242;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="light"]{
+  --bg:#eef0f4; --panel:#ffffff; --panel2:#f7f8fa; --line:#dfe3e8; --line2:#eceff3;
+  --text:#14171c; --text2:#4a515b; --text3:#858d98;
+  --acc:#2f6fed; --acc-s:#2f6fed22;
+  --ok:#12996b; --warn:#d5901f; --bad:#d94f38; --info:#3b82c4;
+  --zr:#4ea36b; --zc:#3b82c4; --zi:#c9a227;
+  --terrain:#e7ebe4; --terrain2:#dfe5dc; --water:#bcd6e6;
+  --shadow:0 1px 2px rgba(16,20,28,.06),0 6px 18px rgba(16,20,28,.07);
+}
+:root[data-theme="dark"]{
+  --bg:#0e1116; --panel:#161a21; --panel2:#1b2028; --line:#272d37; --line2:#20262e;
+  --text:#e8ecf1; --text2:#a8b1bd; --text3:#6f7885;
+  --acc:#5c93ff; --acc-s:#5c93ff26;
+  --ok:#2ecb8f; --warn:#e8b04a; --bad:#f2705a; --info:#5aa8e0;
+  --zr:#59b87b; --zc:#4d97dc; --zi:#d9b53c;
+  --terrain:#1a1f26; --terrain2:#161b21; --water:#1d3242;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,'Segoe UI','Malgun Gothic',sans-serif;
+  background:var(--bg); color:var(--text);
+  font-size:14px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+button{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0}
+
+/* ───── 상단바 ───── */
+header.top{
+  position:sticky; top:0; z-index:40;
+  display:flex; align-items:center; gap:12px;
+  padding:0 14px; height:52px;
+  background:color-mix(in srgb,var(--panel) 88%,transparent);
+  backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:-.01em;white-space:nowrap}
+.brand .logo{
+  width:26px;height:26px;border-radius:7px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--acc),#7b4ef0);color:#fff;font-size:14px;flex:none
+}
+.brand small{display:block;font-size:10.5px;font-weight:600;color:var(--text3);letter-spacing:.02em}
+.top .sp{flex:1}
+.tbtn{
+  display:inline-flex;align-items:center;gap:6px;
+  height:32px;padding:0 11px;border-radius:9px;
+  border:1px solid var(--line);background:var(--panel2);
+  font-size:12.5px;font-weight:650;cursor:pointer;white-space:nowrap;
+  transition:background .13s,border-color .13s
+}
+.tbtn:hover{background:var(--acc-s);border-color:var(--acc)}
+.tbtn.gh{text-decoration:none}
+
+/* ───── 레이아웃 ───── */
+.app{
+  display:grid;
+  grid-template-columns:214px minmax(0,1fr) 322px;
+  gap:12px; padding:12px;
+  align-items:start;
+  max-width:1560px; margin:0 auto;
+}
+.col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.pane{
+  background:var(--panel); border:1px solid var(--line); border-radius:13px;
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.pane > .ph{
+  display:flex;align-items:center;gap:7px;
+  padding:9px 12px; border-bottom:1px solid var(--line2);
+  font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--text3);
+  text-transform:uppercase;
+}
+.pane > .pb{padding:10px 12px}
+.pane > .pb.tight{padding:8px}
+
+/* ───── 도구 팔레트 ───── */
+.tools{display:flex;flex-direction:column;gap:3px}
+.tool{
+  display:flex;align-items:center;gap:8px;width:100%;
+  padding:7px 8px;border-radius:9px;border:1px solid transparent;background:transparent;
+  cursor:pointer;text-align:left;transition:background .12s,border-color .12s
+}
+.tool:hover{background:var(--panel2)}
+.tool[aria-pressed="true"]{background:var(--acc-s);border-color:var(--acc)}
+.tool .sw{width:22px;height:22px;border-radius:6px;flex:none;display:grid;place-items:center;font-size:13px;line-height:1}
+.tool .tn{flex:1;min-width:0;font-size:12.5px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tool .tc{font-size:10.5px;font-weight:700;color:var(--text3);font-variant-numeric:tabular-nums;flex:none}
+.tool[aria-pressed="true"] .tc{color:var(--acc)}
+.grp{font-size:10.5px;font-weight:800;letter-spacing:.07em;color:var(--text3);margin:9px 0 3px 4px;text-transform:uppercase}
+.grp:first-child{margin-top:0}
+
+/* ───── 캔버스 ───── */
+.stage{position:relative;background:var(--terrain);border-radius:13px 13px 0 0}
+canvas#map{display:block;width:100%;height:auto;cursor:crosshair;touch-action:none;border-radius:13px 13px 0 0}
+.legend{
+  display:flex;flex-wrap:wrap;gap:4px;
+  padding:8px 10px;border-top:1px solid var(--line2);background:var(--panel2)
+}
+.ovbtn{
+  padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);
+  font-size:11.5px;font-weight:700;cursor:pointer;transition:background .12s,border-color .12s
+}
+.ovbtn:hover{background:var(--acc-s)}
+.ovbtn[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+.hud{
+  position:absolute;left:9px;bottom:9px;z-index:5;
+  padding:6px 9px;border-radius:9px;
+  background:color-mix(in srgb,var(--panel) 92%,transparent);
+  border:1px solid var(--line);
+  font-size:11.5px;font-weight:650;color:var(--text2);
+  font-variant-numeric:tabular-nums; pointer-events:none;
+  max-width:min(340px,70%); line-height:1.45;
+  box-shadow:var(--shadow);
+}
+.hud b{color:var(--text)}
+.scalebar{
+  position:absolute;right:9px;bottom:9px;z-index:5;
+  display:flex;align-items:center;gap:6px;
+  font-size:10.5px;font-weight:700;color:var(--text2);
+  background:color-mix(in srgb,var(--panel) 88%,transparent);
+  border:1px solid var(--line);border-radius:8px;padding:4px 7px;pointer-events:none
+}
+.scalebar i{display:block;height:3px;background:var(--text2);border-radius:2px}
+
+/* ───── 지표 ───── */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.kpi{background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:7px 8px;min-width:0}
+.kpi .kl{font-size:10px;font-weight:750;color:var(--text3);letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .kv{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-top:1px}
+.kpi .kv small{font-size:10.5px;font-weight:700;color:var(--text3);margin-left:1px}
+.kpi.ok .kv{color:var(--ok)} .kpi.warn .kv{color:var(--warn)} .kpi.bad .kv{color:var(--bad)}
+
+.bar{height:6px;border-radius:4px;background:var(--line2);overflow:hidden;margin-top:5px}
+.bar i{display:block;height:100%;border-radius:4px;transition:width .3s}
+
+/* ───── 진단 ───── */
+.diag{display:flex;flex-direction:column;gap:6px;max-height:270px;overflow:auto}
+.dg{
+  display:flex;gap:8px;padding:8px 9px;border-radius:10px;
+  background:var(--panel2);border:1px solid var(--line2);
+  border-left:3px solid var(--text3);
+}
+.dg.bad{border-left-color:var(--bad)} .dg.warn{border-left-color:var(--warn)}
+.dg.ok{border-left-color:var(--ok)} .dg.info{border-left-color:var(--info)}
+.dg .di{font-size:14px;line-height:1.2;flex:none;margin-top:1px}
+.dg .dt{font-size:12.5px;font-weight:750;line-height:1.35}
+.dg .dd{font-size:11.5px;color:var(--text2);margin-top:2px;line-height:1.45}
+.dg .dd b{color:var(--text)}
+.dg .dloc{
+  margin-top:4px;font-size:10.5px;font-weight:750;color:var(--acc);
+  background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px
+}
+
+/* ───── 미션 ───── */
+.ms{display:flex;flex-direction:column;gap:5px}
+.mi{
+  display:flex;gap:8px;padding:8px 9px;border-radius:10px;
+  border:1px solid var(--line2);background:var(--panel2);
+}
+.mi.cur{border-color:var(--acc);background:var(--acc-s)}
+.mi.done{opacity:.62}
+.mi .mn{
+  width:20px;height:20px;border-radius:6px;flex:none;display:grid;place-items:center;
+  font-size:11px;font-weight:800;background:var(--line);color:var(--text2)
+}
+.mi.cur .mn{background:var(--acc);color:#fff}
+.mi.done .mn{background:var(--ok);color:#fff}
+.mi .mt{font-size:12.5px;font-weight:750;line-height:1.35}
+.mi .md{font-size:11.5px;color:var(--text2);margin-top:2px;line-height:1.45}
+.mi .mtip{font-size:11px;color:var(--text3);margin-top:4px;line-height:1.45;border-top:1px dashed var(--line);padding-top:4px}
+.mi .mck{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.ck{font-size:10.5px;font-weight:750;padding:2px 6px;border-radius:6px;background:var(--line2);color:var(--text3);font-variant-numeric:tabular-nums}
+.ck.on{background:color-mix(in srgb,var(--ok) 20%,transparent);color:var(--ok)}
+
+/* ───── 컨트롤 ───── */
+.row{display:flex;align-items:center;gap:8px;margin:7px 0}
+.row:first-child{margin-top:0}
+.row:last-child{margin-bottom:0}
+.row label{font-size:11.5px;font-weight:700;color:var(--text2);flex:none;min-width:52px}
+.row input[type=range]{flex:1;min-width:0;accent-color:var(--acc)}
+.row .rv{font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums;min-width:36px;text-align:right;flex:none}
+.compass{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:96px;flex:none}
+.compass button{
+  aspect-ratio:1;border-radius:7px;border:1px solid var(--line);background:var(--panel2);
+  font-size:11px;font-weight:800;cursor:pointer;display:grid;place-items:center;padding:0
+}
+.compass button:hover{background:var(--acc-s)}
+.compass button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+.compass .mid{border:0;background:transparent;cursor:default;font-size:15px}
+.compass .mid:hover{background:transparent}
+.sw2{display:flex;align-items:center;gap:7px;padding:6px 0;cursor:pointer}
+.sw2 input{width:15px;height:15px;accent-color:var(--acc);flex:none;margin:0}
+.sw2 .sn{font-size:12px;font-weight:700}
+.sw2 .sd{font-size:11px;color:var(--text3);line-height:1.4}
+.speed{display:flex;gap:3px}
+.speed button{
+  flex:1;padding:6px 0;border-radius:8px;border:1px solid var(--line);background:var(--panel2);
+  font-size:12px;font-weight:800;cursor:pointer
+}
+.speed button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+.acts{display:flex;gap:5px;flex-wrap:wrap}
+.acts button{
+  flex:1;min-width:76px;padding:7px 6px;border-radius:9px;border:1px solid var(--line);
+  background:var(--panel2);font-size:11.5px;font-weight:750;cursor:pointer
+}
+.acts button:hover{background:var(--acc-s);border-color:var(--acc)}
+.acts button.danger:hover{background:color-mix(in srgb,var(--bad) 14%,transparent);border-color:var(--bad);color:var(--bad)}
+
+/* 프리셋 */
+.presets{display:flex;flex-direction:column;gap:4px}
+.pst{
+  display:flex;gap:8px;align-items:flex-start;width:100%;text-align:left;
+  padding:8px 9px;border-radius:10px;border:1px solid var(--line2);background:var(--panel2);
+  cursor:pointer;transition:border-color .12s,background .12s
+}
+.pst:hover{border-color:var(--acc);background:var(--acc-s)}
+.pst .pi{font-size:15px;line-height:1.1;flex:none;margin-top:1px}
+.pst .pt{font-size:12.5px;font-weight:750;line-height:1.35}
+.pst .pd{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.45}
+/* 비교표 */
+table.cmp{width:100%;border-collapse:collapse;font-size:12px}
+table.cmp th,table.cmp td{padding:4px 6px;border-bottom:1px solid var(--line2);text-align:right;font-variant-numeric:tabular-nums}
+table.cmp th{font-size:10.5px;color:var(--text3);font-weight:750;text-align:right}
+table.cmp td:first-child,table.cmp th:first-child{text-align:left;font-weight:700}
+table.cmp .up{color:var(--ok);font-weight:800}
+table.cmp .dn{color:var(--bad);font-weight:800}
+table.cmp .same{color:var(--text3)}
+
+.note{font-size:11.5px;color:var(--text3);line-height:1.5;margin:6px 0 0}
+.note b{color:var(--text2)}
+.kbd{
+  display:inline-block;padding:0 5px;border-radius:5px;border:1px solid var(--line);
+  background:var(--panel2);font-size:10.5px;font-weight:750;font-family:ui-monospace,Menlo,Consolas,monospace
+}
+
+/* 토스트 */
+#toast{
+  position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(10px);
+  z-index:90;padding:11px 16px;border-radius:12px;
+  background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);
+  font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .22s,transform .22s;
+  max-width:min(460px,92vw); text-align:center; line-height:1.45;
+}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.good{border-color:var(--ok)} #toast.bad{border-color:var(--bad)}
+
+/* 도움말 모달 */
+#help{
+  position:fixed;inset:0;z-index:80;display:none;
+  background:rgba(8,10,14,.55);backdrop-filter:blur(3px);
+  padding:24px 16px;overflow:auto
+}
+#help.on{display:block}
+#help .hw{
+  max-width:720px;margin:0 auto;background:var(--panel);border:1px solid var(--line);
+  border-radius:16px;box-shadow:var(--shadow);padding:22px 24px
+}
+#help h3{font-size:18px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+#help h4{font-size:13.5px;font-weight:800;margin:18px 0 6px}
+#help p,#help li{font-size:13px;color:var(--text2);line-height:1.65}
+#help ul{margin:0;padding-left:19px}
+#help b{color:var(--text)}
+#help table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12.5px}
+#help th,#help td{border:1px solid var(--line2);padding:5px 8px;text-align:left}
+#help th{background:var(--panel2);font-weight:750;font-size:11.5px;color:var(--text3)}
+#help td.n{text-align:right;font-variant-numeric:tabular-nums}
+#help .close{
+  margin-top:20px;width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);
+  background:var(--acc);color:#fff;font-size:13px;font-weight:750;cursor:pointer
+}
+
+@media(max-width:1180px){
+  .app{grid-template-columns:190px minmax(0,1fr); }
+  .col.right{grid-column:1/-1}
+  .kpis{grid-template-columns:repeat(8,1fr)}
+}
+@media(max-width:820px){
+  .app{grid-template-columns:1fr;padding:8px;gap:8px}
+  .col.left{order:2} .col.mid{order:1} .col.right{order:3}
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  .tools{display:grid;grid-template-columns:repeat(2,1fr);gap:3px}
+  .grp{grid-column:1/-1}
+  header.top{padding:0 10px;gap:8px}
+  .brand small{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <span class="logo">🏙</span>
+    <span>도시공학 시뮬레이터<small>Cities: Skylines 2 학습용</small></span>
+  </div>
+  <span class="sp"></span>
+  <button class="tbtn" id="helpBtn">📖 규칙</button>
+  <button class="tbtn" id="themeBtn" aria-label="테마 전환">🌗</button>
+  <a class="tbtn gh" href="index.html">📘 공략집</a>
+</header>
+
+<div class="app">
+
+  <!-- ══════════ 좌: 도구 ══════════ -->
+  <div class="col left">
+    <div class="pane">
+      <div class="ph">건설 도구</div>
+      <div class="pb tight"><div class="tools" id="tools"></div></div>
+    </div>
+    <div class="pane">
+      <div class="ph">진행</div>
+      <div class="pb">
+        <div class="speed" id="speed">
+          <button data-s="0" aria-pressed="false">⏸</button>
+          <button data-s="1" aria-pressed="true">1×</button>
+          <button data-s="3" aria-pressed="false">3×</button>
+          <button data-s="8" aria-pressed="false">8×</button>
+        </div>
+        <p class="note" style="margin-top:8px"><b id="clock">1년차 1월</b><br>격자 1칸 = <b>48 m</b> — CS2의 <b>존닝 깊이</b>(게임 셀 6칸)와 같습니다. 도로 사이 <b>2칸</b>이 곧 96 m 블록입니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 중앙: 지도 ══════════ -->
+  <div class="col mid">
+    <div class="pane">
+      <div class="stage">
+        <canvas id="map"></canvas>
+        <div class="hud" id="hud">칸 위에 마우스를 올리면 상세 수치가 나옵니다.</div>
+        <div class="scalebar"><i id="sbar" style="width:60px"></i><span id="sbtxt">192 m</span></div>
+      </div>
+      <div class="legend" id="legend"></div>
+    </div>
+
+    <div class="pane">
+      <div class="ph">도시 지표</div>
+      <div class="pb">
+        <div class="kpis" id="kpis"></div>
+      </div>
+    </div>
+
+    <div class="pane">
+      <div class="ph">환경 &amp; 정책 — 입력값을 바꿔 결과를 비교해 보세요</div>
+      <div class="pb">
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <div style="flex:none">
+            <div style="font-size:11.5px;font-weight:750;color:var(--text2);margin-bottom:5px">바람이 향하는 방향</div>
+            <div class="compass" id="compass"></div>
+          </div>
+          <div style="flex:1;min-width:210px">
+            <div class="row"><label>바람 세기</label><input type="range" id="windStr" min="0" max="100" value="55"><span class="rv" id="windStrV">55</span></div>
+            <div class="row"><label>주거 세율</label><input type="range" id="taxR" min="5" max="30" value="13"><span class="rv" id="taxRV">13%</span></div>
+            <div class="row"><label>상업 세율</label><input type="range" id="taxC" min="5" max="30" value="13"><span class="rv" id="taxCV">13%</span></div>
+            <div class="row"><label>공업 세율</label><input type="range" id="taxI" min="5" max="30" value="13"><span class="rv" id="taxIV">13%</span></div>
+          </div>
+          <div style="flex:1;min-width:210px">
+            <label class="sw2"><input type="checkbox" id="polBike"><span><span class="sn">🚲 도심 자전거 이니셔티브</span><br><span class="sd">단거리 차량 통행 −18% · 유지비 소폭</span></span></label>
+            <label class="sw2"><input type="checkbox" id="polPark"><span><span class="sn">🅿️ 주차 요금 징수</span><br><span class="sd">통행 −7% · 수입 +, 상업 매력 −</span></span></label>
+            <label class="sw2"><input type="checkbox" id="polTruck"><span><span class="sn">🚛 주거지 대형차량 통제</span><br><span class="sd">화물이 주거 인접 도로를 회피(우회 거리 +)</span></span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 우: 진단 · 미션 ══════════ -->
+  <div class="col right">
+    <div class="pane">
+      <div class="ph">🎓 학습 미션</div>
+      <div class="pb tight"><div class="ms" id="missions"></div></div>
+    </div>
+    <div class="pane">
+      <div class="ph">🔍 진단 — 왜 이렇게 되었는가</div>
+      <div class="pb tight"><div class="diag" id="diag"></div></div>
+    </div>
+    <div class="pane">
+      <div class="ph">🩺 망한 도시 고치기 — 전형적 실수 6종</div>
+      <div class="pb tight"><div class="presets" id="presets"></div></div>
+    </div>
+
+    <div class="pane">
+      <div class="ph">📊 개선 효과 — 고치기 전/후</div>
+      <div class="pb">
+        <div class="acts" style="margin-bottom:8px">
+          <button id="btnSnap">📌 지금을 기준으로</button>
+          <button id="btnSnapClear">✖ 기준 지우기</button>
+        </div>
+        <div id="cmp"><p class="note">「지금을 기준으로」를 누른 뒤 도시를 고치면, 무엇이 얼마나 좋아졌는지 나란히 보여줍니다.</p></div>
+      </div>
+    </div>
+
+    <div class="pane">
+      <div class="ph">📈 추이</div>
+      <div class="pb"><canvas id="trend" style="width:100%;height:96px;display:block"></canvas></div>
+    </div>
+
+    <div class="pane">
+      <div class="ph">저장</div>
+      <div class="pb">
+        <div class="acts">
+          <button id="btnUndo">↩︎ 되돌리기</button>
+          <button id="btnSave">💾 저장</button>
+          <button id="btnLoad">📂 불러오기</button>
+          <button id="btnReset" class="danger">🗑 새 도시</button>
+        </div>
+        <p class="note"><b>단축키</b> — <span class="kbd">1</span>~<span class="kbd">4</span> 도로 · <span class="kbd">Q W E</span> 주거/상업/공업 · <span class="kbd">R</span> 경로 추적 · <span class="kbd">X</span> 철거 · <span class="kbd">Ctrl+Z</span> 되돌리기 · <span class="kbd">Space</span> 일시정지 · <span class="kbd">Tab</span> 오버레이</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<div id="help" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="hw">
+    <h3 id="helpTitle">이 시뮬레이터가 계산하는 것</h3>
+    <p>실제 CS2의 축약 모델입니다. <b>정확한 수치 재현이 목적이 아니라, 인과관계를 눈으로 보는 것</b>이 목적입니다.</p>
+
+    <h4>1. 교통 배정 — 이 게임의 본체</h4>
+    <p>주민은 <b>가장 빠른 길</b>로 갑니다(최단거리가 아닙니다). 도로가 막히면 통행시간이 늘고, 그러면 경로가 바뀝니다. 이 되먹임을 <b>5회 반복 균형 배정(MSA)</b>으로 계산합니다. 각 칸의 통행시간은</p>
+    <p style="text-align:center;font-weight:700;color:var(--text)">t = t₀ × (1 + 0.15 × (교통량 ÷ 용량)⁴) + 교차로 지체</p>
+    <p>4제곱이 핵심입니다. 용량의 80%까지는 거의 안 막히다가, 100%를 넘는 순간 급격히 무너집니다. <b>실제 도로가 그렇습니다.</b></p>
+
+    <h4>2. 도로 등급</h4>
+    <table>
+      <tr><th>등급</th><th class="n">용량(대/시)</th><th class="n">속도</th><th class="n">건설비/칸</th><th>소음</th></tr>
+      <tr><td>2차선 국지</td><td class="n">900</td><td class="n">30</td><td class="n">₡900</td><td>1.0×</td></tr>
+      <tr><td>4차선 콜렉터</td><td class="n">2,000</td><td class="n">50</td><td class="n">₡1,800</td><td>1.15×</td></tr>
+      <tr><td>6차선 간선</td><td class="n">3,600</td><td class="n">60</td><td class="n">₡3,200</td><td>1.5×</td></tr>
+      <tr><td>고속도로</td><td class="n">6,400</td><td class="n">100</td><td class="n">₡6,000</td><td>3.0×</td></tr>
+    </table>
+
+    <h4>3. 막히는 곳은 도로가 아니라 <u>교차로</u>입니다</h4>
+    <p>이 시뮬레이터의 가장 중요한 부분입니다. 교차로는 신호가 녹색을 나눠 가지므로 <b>접근로 용량을 다 쓰지 못합니다.</b></p>
+    <table>
+      <tr><th>교차로 형태</th><th class="n">신호 효율</th><th>6차선 간선(3,600)에서 실제 처리량</th></tr>
+      <tr><td>T자 (3갈래)</td><td class="n">0.62</td><td class="n">2,232 대/시</td></tr>
+      <tr><td>십자 (4갈래)</td><td class="n">0.48</td><td class="n">1,728 대/시</td></tr>
+      <tr><td>십자 + 국지도로 직결</td><td class="n">0.38</td><td class="n">1,382 대/시</td></tr>
+    </table>
+    <p>즉 <b>6차선을 깔아도 십자 교차로가 있으면 4차선만도 못해집니다.</b> 차선을 늘리는 대신 교차로를 줄이세요. 십자 하나를 T자 둘로 나누는 것만으로 처리량이 올라갑니다.</p>
+    <p>여기에 기본 지체가 더 붙습니다 — T자 <b>+5초</b>, 십자 <b>+12초</b>. 그리고:</p>
+    <ul>
+      <li><b>간선·고속에 2차선 국지도로가 직결되면 +11초</b> — 좌회전 대기가 본선을 막습니다</li>
+      <li><b>간선에 존을 직접 붙이면 칸마다 +2.2초</b>(진출입·주차) / 국지도로는 +0.5초</li>
+      <li>교차로가 포화되면 이 지체가 <b>3.5제곱으로</b> 커집니다(상한 +90초)</li>
+    </ul>
+    <p>그래서 <b>위계</b>가 필요합니다. 국지 → 콜렉터 → 간선 → 고속으로 한 단계씩 올라가면 상충 지점이 사라집니다.</p>
+
+    <h4>4. 버스 — 양 끝이 모두 정류장 권역이어야 합니다</h4>
+    <p>정류장 반경 2칸(96 m) 안에서, <b>출발지와 목적지 둘 다</b> 권역일 때만 최대 45%가 버스로 갑니다. 주거지에만 정류장을 깔면 분담률은 0입니다.</p>
+    <p>그리고 <b>2차선 국지도로에 정류장을 두면 칸당 +6초</b> — 정차한 버스가 그 방향을 통째로 막기 때문입니다. 정류장은 <b>4차선 콜렉터</b>에 붙이세요(국지도로 정류장은 효과도 65%로 깎입니다).</p>
+
+    <h4>5. 도구 두 가지</h4>
+    <ul>
+      <li><b>🔍 경로 추적</b> — 개발된 존을 클릭하면 그 존의 통근·수출 경로를 지도에 그립니다. "왜 저 도로로 가는가"가 바로 보입니다.</li>
+      <li><b>🩺 망한 도시 프리셋</b> — 전형적 실수 6종이 심긴 도시를 불러와 고치는 연습입니다. 불러오면 자동으로 「고치기 전」 기준이 잡히므로, 고친 뒤 개선 폭이 표로 나옵니다.</li>
+    </ul>
+
+    <h4>6. 고속도로는 IC로만</h4>
+    <p>일반 도로를 고속도로에 직접 그으면 <b>연결되지 않습니다</b>(지도에 붉은 ⛔로 표시). 고속도로 칸 위에 <b>IC(진입로)</b>를 놓아야 통행이 흐릅니다. IC끼리 너무 가까우면(6칸 미만) 합류·분류가 겹쳐 경고가 뜹니다.</p>
+
+    <h4>7. 오염 — 바람이 전부입니다</h4>
+    <p>공업·석탄발전소·매립지의 대기오염은 <b>바람이 향하는 방향으로 길게</b> 퍼집니다(반감거리 약 6칸 = 290 m). 바람 세기를 올리면 풍하측이 더 멀리 오염됩니다.</p>
+    <p>지표는 <b>평균이 아니라 「오염 노출」</b> — 오염도 12를 넘는 곳에 사는 주민 비율입니다. 평균은 국소 핫스팟을 감춥니다. 실제로 같은 도시에서 바람 방향만 뒤집으면 주거지 평균 오염이 <b>7.0 → 0.4</b>로 떨어집니다. 배치는 그대로인데 말입니다.</p>
+    <p>소음은 바람과 무관하게 가까이만 퍼지되(반감 약 2칸), <b>교통량에 비례</b>합니다. 막히는 도로는 시끄럽기도 합니다.</p>
+
+    <h4>8. 성장 · 행복도 · 재정</h4>
+    <ul>
+      <li>존은 <b>도로에 접해야</b> 개발되고, 전기·물이 있어야 성장합니다</li>
+      <li>레벨업 조건 = 지가 + 서비스 커버리지 − 오염 − 소음 − 통근시간</li>
+      <li>세율을 13%보다 올리면 수입은 늘지만 <b>수요가 줄고</b> 폐가가 생깁니다</li>
+      <li>시작 자금 <b>₡1,000,000</b> — 실제 CS2와 같습니다</li>
+    </ul>
+
+    <h4>9. 지도의 축척</h4>
+    <p>격자 1칸 = <b>48 m</b>이고, 이는 CS2의 <b>존닝 깊이</b>(게임 셀 6칸)와 정확히 같습니다. 따라서 도로 사이 <b>2칸이 곧 96 m 블록</b> — 공략집이 권장하는 그 치수입니다. 지도 전체는 1,536 × 1,056 m, 즉 <b>도시가 아니라 지구(district) 하나</b>입니다. 통근 시간이 2~3분대로 나오는 것은 그래서입니다.</p>
+
+    <h4>10. 이 모델이 단순화한 것</h4>
+    <p>버스는 노선이 아니라 <b>정류장 권역</b>으로만 다룹니다. 철도·항만·공항, 교육 단계별 인력, 특화 산업 공급망, 재해, 지형 고저는 넣지 않았습니다. 이것들은 <a href="index.html" style="color:var(--acc)">공략집 본문</a>에서 다룹니다.</p>
+    <p>수치는 <b>CS2를 그대로 재현한 값이 아닙니다.</b> 인과의 방향과 크기 순서를 맞추는 데 목적이 있습니다.</p>
+
+    <button class="close" id="helpClose">닫고 도시 짓기</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ═══════════════════════════════════════════════════════════════
+   0. 상수 & 상태
+   ═══════════════════════════════════════════════════════════════ */
+const W=32, H=22, N=W*H, CELLM=48;   // 격자 1칸 = 48m = CS2 존닝 깊이(게임 셀 6칸)
+let CELL=25;                          // 픽셀
+
+const R_NONE=0,R_LOC=1,R_COL=2,R_ART=3,R_HW=4;
+const ROAD=[null,
+ {id:'loc',nm:'2차선 국지도로',sh:'2차선',cap:900, spd:30, cost:900, up:9,  w:.34,noise:1.00,c:'#9aa1ab'},
+ {id:'col',nm:'4차선 콜렉터',  sh:'4차선',cap:2000,spd:50, cost:1800,up:18, w:.52,noise:1.15,c:'#7c8490'},
+ {id:'art',nm:'6차선 간선도로',sh:'6차선',cap:3600,spd:60, cost:3200,up:32, w:.72,noise:1.50,c:'#5d6470'},
+ {id:'hw', nm:'고속도로',      sh:'고속',  cap:6400,spd:100,cost:6000,up:60, w:.86,noise:3.00,c:'#454c57'}
+];
+const Z_NONE=0,Z_R=1,Z_C=2,Z_I=3;
+const ZONE=[null,
+ {id:'r',nm:'주거',cv:'--zr',pop:[0,7,18,38], job:[0,0,0,0]},
+ {id:'c',nm:'상업',cv:'--zc',pop:[0,0,0,0],  job:[0,5,13,28]},
+ {id:'i',nm:'공업',cv:'--zi',pop:[0,0,0,0],  job:[0,9,20,40]}
+];
+const SVC={
+ ic:    {nm:'IC (진입로)',   ico:'🛤️',cost:25000,up:120, hw:true},
+ coal:  {nm:'석탄 발전소',   ico:'🏭',cost:80000,up:1400,mw:220, air:15, noise:2.6},
+ wind:  {nm:'풍력 발전기',   ico:'🌬️',cost:22000,up:180, mw:14,  air:0,  noise:1.1},
+ water: {nm:'급수탑',        ico:'🚰',cost:16000,up:230, wat:140},
+ sewage:{nm:'하수 처리장',   ico:'♻️',cost:34000,up:520, sew:170,air:4,  noise:1.4},
+ dump:  {nm:'매립지',        ico:'🗑️',cost:28000,up:360, gar:200,air:10, noise:1.2},
+ fire:  {nm:'소방서',        ico:'🚒',cost:30000,up:520, cov:7, kind:'fire'},
+ police:{nm:'경찰서',        ico:'🚓',cost:32000,up:560, cov:7, kind:'police'},
+ clinic:{nm:'진료소',        ico:'🏥',cost:26000,up:480, cov:6, kind:'health'},
+ school:{nm:'초등학교',      ico:'🏫',cost:24000,up:440, cov:5, kind:'edu'},
+ park:  {nm:'공원',          ico:'🌳',cost:6000, up:90,  cov:4, kind:'park', lv:10},
+ bus:   {nm:'버스 정류장',   ico:'🚏',cost:1200, up:60,  onRoad:true}
+};
+const SVC_KEYS=Object.keys(SVC);
+
+const S={
+  road:new Uint8Array(N), zone:new Uint8Array(N), bld:new Array(N).fill(null),
+  lvl :new Uint8Array(N), dev :new Float32Array(N),
+  funds:1000000, week:0, speed:1,
+  tool:'r3', overlay:'base',
+  wind:225, windStr:.55, taxR:13, taxC:13, taxI:13,
+  pol:{bike:false,park:false,truck:false},
+  mission:0, done:[], probe:-1
+};
+
+/* 계산 결과 (저장 안 함) */
+const F={
+  vol:new Float32Array(N),        // 총 교통량 (대/시)
+  volF:new Float32Array(N),       // 그중 화물
+  pen:new Float32Array(N),        // 교차로 기본 지체(초) — 자유류 상태
+  nodeCap:new Float32Array(N),    // 교차로 처리 용량(대/시). 0이면 교차로 아님
+  deg:new Uint8Array(N),          // 연결 차수
+  bus:new Float32Array(N),        // 버스 정류장 접근성 0~1
+  air:new Float32Array(N), noi:new Float32Array(N), lv:new Float32Array(N),
+  cov:{fire:new Float32Array(N),police:new Float32Array(N),health:new Float32Array(N),edu:new Float32Array(N),park:new Float32Array(N)},
+  roadCells:[], odNodes:[], paths:[]
+};
+/* 유효 V/C — 링크와 교차로 중 더 빡빡한 쪽이 그 칸의 실제 제약이다.
+   도시 게임에서 막히는 곳은 거의 항상 교차로다. */
+function vcOf(i){
+  const v=F.vol[i], lc=ROAD[S.road[i]].cap;
+  let x=v/lc;
+  if(F.nodeCap[i]>0) x=Math.max(x, v/F.nodeCap[i]);
+  return x;
+}
+let ST={};                        // 통계
+let DIAG=[];                      // 진단 메시지
+
+const idx=(x,y)=>y*W+x, cx=i=>i%W, cy=i=>(i/W)|0;
+const inB=(x,y)=>x>=0&&x<W&&y>=0&&y<H;
+const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
+const DIRS=[[1,0],[-1,0],[0,1],[0,-1]];
+const won=v=>'₡'+Math.round(v).toLocaleString('ko-KR');
+
+/* ═══════════════════════════════════════════════════════════════
+   1. 초기 지형 — 고속도로 + 강
+   ═══════════════════════════════════════════════════════════════ */
+const RIVER=new Uint8Array(N);
+function buildTerrain(){
+  RIVER.fill(0);
+  // 완만한 강: 좌하 → 우하 (사인파)
+  for(let x=0;x<W;x++){
+    const yc = H-4 + Math.sin(x*0.26)*1.6;
+    for(let y=0;y<H;y++) if(Math.abs(y-yc)<1.15) RIVER[idx(x,y)]=1;
+  }
+}
+function newCity(){
+  S.road.fill(0); S.zone.fill(0); S.bld.fill(null); S.lvl.fill(0); S.dev.fill(0);
+  S.funds=1000000; S.week=0; S.mission=0; S.done=[];
+  buildTerrain();
+  // 상단 고속도로 (y=1) — 맵 양 끝이 외부 연결
+  for(let x=0;x<W;x++) S.road[idx(x,1)]=R_HW;
+  rebuild(); recalcAll(); render(); syncUI();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2. 그래프 — 연결 규칙 (고속도로는 IC로만)
+   ═══════════════════════════════════════════════════════════════ */
+function isIC(i){ return S.bld[i]==='ic'; }
+/** i와 j가 실제로 통행 가능하게 이어져 있는가 */
+function linked(i,j){
+  const a=S.road[i], b=S.road[j];
+  if(!a||!b) return false;
+  if(a===R_HW && b===R_HW) return true;
+  if(a===R_HW) return isIC(i);     // 고속 → 일반: 고속 쪽에 IC가 있어야
+  if(b===R_HW) return isIC(j);
+  return true;
+}
+function rebuild(){
+  F.roadCells.length=0;
+  for(let i=0;i<N;i++) if(S.road[i]) F.roadCells.push(i);
+  F.pen.fill(0); F.nodeCap.fill(0); F.deg.fill(0);
+  for(const i of F.roadCells){
+    const cls=S.road[i]; let deg=0, hasLoc=false;
+    for(const[dx,dy]of DIRS){
+      const x=cx(i)+dx,y=cy(i)+dy; if(!inB(x,y))continue;
+      const j=idx(x,y); if(!linked(i,j))continue;
+      deg++; if(S.road[j]===R_LOC) hasLoc=true;
+    }
+    F.deg[i]=deg;
+    let p = deg<=2?0 : (deg===3?5:12);
+    if(cls>=R_ART && hasLoc) p+=11;          // 간선·고속에 국지 직결 → 좌회전 상충
+    if(cls===R_HW && deg>2)  p+=6;           // 고속 본선 분기 자체가 부담
+    // 존 진출입 마찰 — 간선에 존을 직접 붙이면 비싸다
+    let zc=0;
+    for(const[dx,dy]of DIRS){
+      const x=cx(i)+dx,y=cy(i)+dy; if(!inB(x,y))continue;
+      const j=idx(x,y); if(S.zone[j]&&S.lvl[j]>0) zc++;
+    }
+    p += zc * (cls>=R_ART?2.2 : cls===R_COL?1.0 : 0.5);
+    // 버스 정류장: 2차선에 두면 정차한 버스가 그 방향을 통째로 막는다
+    if(S.bld[i]==='bus') p += cls===R_LOC?6.0 : cls===R_COL?1.2 : 0.6;
+    F.pen[i]=p;
+
+    /* 교차로 처리 용량 — 신호가 녹색을 나눠 가지므로 접근로 용량을 다 쓰지 못한다.
+       이것이 "차선 수보다 교차로 개수가 중요한" 이유다. */
+    if(deg>=3){
+      let eff = deg===3?0.62 : deg===4?0.48 : 0.38;
+      if(cls>=R_ART && hasLoc) eff*=0.80;    // 하위 등급 좌회전이 녹색을 더 잡아먹음
+      F.nodeCap[i]=ROAD[cls].cap*eff;
+    }
+  }
+  // 버스 정류장 접근성 (반경 2칸)
+  F.bus.fill(0);
+  for(let i=0;i<N;i++){
+    if(S.bld[i]!=='bus') continue;
+    const q = S.road[i]>=R_COL ? 1.0 : 0.65;   // 국지도로 정류장은 노선이 느려 효과가 낮다
+    const R=2, x0=cx(i), y0=cy(i);
+    for(let y=Math.max(0,y0-R);y<=Math.min(H-1,y0+R);y++)
+      for(let x=Math.max(0,x0-R);x<=Math.min(W-1,x0+R);x++){
+        const d=Math.hypot(x-x0,y-y0); if(d>R) continue;
+        const v=q*(1-d/(R+1));
+        const j=idx(x,y); if(v>F.bus[j]) F.bus[j]=v;
+      }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. 최소힙 다익스트라
+   ═══════════════════════════════════════════════════════════════ */
+class Heap{
+  constructor(cap){ this.k=new Int32Array(cap); this.v=new Float32Array(cap); this.n=0; }
+  clear(){this.n=0}
+  push(k,v){
+    let i=this.n++; this.k[i]=k; this.v[i]=v;
+    while(i>0){ const p=(i-1)>>1; if(this.v[p]<=this.v[i])break;
+      const tk=this.k[p],tv=this.v[p]; this.k[p]=this.k[i];this.v[p]=this.v[i];this.k[i]=tk;this.v[i]=tv; i=p; }
+  }
+  pop(){
+    const rk=this.k[0], rv=this.v[0]; this.n--;
+    if(this.n>0){ this.k[0]=this.k[this.n]; this.v[0]=this.v[this.n];
+      let i=0; for(;;){ const l=2*i+1,r=l+1; let m=i;
+        if(l<this.n&&this.v[l]<this.v[m])m=l;
+        if(r<this.n&&this.v[r]<this.v[m])m=r;
+        if(m===i)break;
+        const tk=this.k[m],tv=this.v[m]; this.k[m]=this.k[i];this.v[m]=this.v[i];this.k[i]=tk;this.v[i]=tv; i=m; } }
+    return [rk,rv];
+  }
+}
+const HEAP=new Heap(N*4);
+const _dist=new Float32Array(N), _prev=new Int32Array(N);
+
+/** 비용 배열: 각 도로 칸에 "진입 비용(초)" */
+function makeCosts(vol, avoidR){
+  const c=new Float32Array(N);
+  for(const i of F.roadCells){
+    const r=ROAD[S.road[i]];
+    const t0=CELLM/(r.spd/3.6);
+    // ① 링크 지체 — BPR
+    const xl=vol[i]/r.cap;
+    let t=t0*(1+0.15*xl*xl*xl*xl);
+    // ② 교차로 지체 — 포화도가 오르면 대기행렬이 폭발한다
+    const nc=F.nodeCap[i];
+    if(nc>0){
+      const xn=vol[i]/nc;
+      // 대기행렬은 폭발하지만 무한하지는 않다 — 교차로당 +90초로 상한을 둔다.
+      // (상한이 없으면 1.5km 지도에서 통근 90분 같은 비현실적인 값이 나온다)
+      t += Math.min(F.pen[i]*(1+0.85*Math.pow(xn,3.5)), F.pen[i]+90);
+    }else t += F.pen[i];
+    if(avoidR && ST.nearR && ST.nearR[i]) t+=14;   // 「주거지 대형차량 통제」 정책
+    c[i]=t;
+  }
+  return c;
+}
+function dijkstra(src, cost){
+  _dist.fill(Infinity); _prev.fill(-1);
+  HEAP.clear();
+  _dist[src]=cost[src]*0.5; HEAP.push(src,_dist[src]);
+  while(HEAP.n){
+    const [u,du]=HEAP.pop();
+    if(du>_dist[u]+1e-6) continue;
+    const ux=cx(u),uy=cy(u);
+    for(const[dx,dy]of DIRS){
+      const x=ux+dx,y=uy+dy; if(!inB(x,y))continue;
+      const v=idx(x,y); if(!S.road[v]||!linked(u,v))continue;
+      const nd=du+cost[v];
+      if(nd<_dist[v]-1e-6){ _dist[v]=nd; _prev[v]=u; HEAP.push(v,nd); }
+    }
+  }
+  return _dist;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   4. 통행 발생 & 균형 배정
+   ═══════════════════════════════════════════════════════════════ */
+/** 존 칸의 접도 노드 — 낮은 등급 우선(올바른 도시설계) */
+function accessNode(i){
+  let best=-1,bc=99;
+  for(const[dx,dy]of DIRS){
+    const x=cx(i)+dx,y=cy(i)+dy; if(!inB(x,y))continue;
+    const j=idx(x,y); const r=S.road[j];
+    if(!r||r===R_HW) continue;                 // 고속도로엔 존 접도 불가
+    if(r<bc){bc=r;best=j;}
+  }
+  return best;
+}
+
+/* 균형 배정은 이 시뮬레이터에서 가장 비싼 계산이라 실시간 기준으로 throttle 한다.
+   (8배속에서 매 틱 돌리면 루프가 멈춘다) */
+let lastAssign=0;
+function assignThrottled(force){
+  const t=performance.now();
+  if(!force && t-lastAssign<700) return;
+  lastAssign=t; assignTraffic();
+}
+function assignTraffic(){
+  F.vol.fill(0); F.volF.fill(0);
+  if(F.roadCells.length===0){ ST.avgCommute=0; ST.congPct=0; ST.maxVC=0; return; }
+
+  // ── OD 노드 집계
+  const O=new Map();  // roadIdx → {pop, jc, ji}
+  const get=k=>{ let o=O.get(k); if(!o){o={i:k,pop:0,jc:0,ji:0}; O.set(k,o);} return o; };
+  for(let i=0;i<N;i++){
+    const z=S.zone[i], L=S.lvl[i]; if(!z||!L) continue;
+    const a=accessNode(i); if(a<0) continue;
+    const o=get(a);
+    if(z===Z_R) o.pop+=ZONE[z].pop[L];
+    else if(z===Z_C) o.jc+=ZONE[z].job[L];
+    else o.ji+=ZONE[z].job[L];
+  }
+  // 외부 연결 노드 = 맵 경계의 고속도로 칸
+  const EXT=[];
+  for(const i of F.roadCells){
+    if(S.road[i]!==R_HW) continue;
+    const x=cx(i),y=cy(i);
+    if(x===0||x===W-1||y===0||y===H-1) EXT.push(i);
+  }
+  const nodes=[...O.values()];
+  F.odNodes=nodes;
+  if(nodes.length===0 || EXT.length===0){ ST.avgCommute=0; ST.congPct=0; ST.maxVC=0; ST.transit=0; return; }
+
+  // 상위 48개로 제한 (성능)
+  nodes.sort((a,b)=>(b.pop+b.jc+b.ji)-(a.pop+a.jc+a.ji));
+  const MAXO=48;
+  if(nodes.length>MAXO){
+    const tail=nodes.slice(MAXO), keep=nodes.slice(0,MAXO);
+    let tp=0,tc=0,ti=0; for(const t of tail){tp+=t.pop;tc+=t.jc;ti+=t.ji;}
+    const kp=keep.reduce((s,k)=>s+k.pop,0)||1, kc=keep.reduce((s,k)=>s+k.jc,0)||1, ki=keep.reduce((s,k)=>s+k.ji,0)||1;
+    for(const k of keep){ k.pop+=tp*k.pop/kp; k.jc+=tc*k.jc/kc; k.ji+=ti*k.ji/ki; }
+    nodes.length=0; nodes.push(...keep);
+  }
+
+  const totJob=nodes.reduce((s,n)=>s+n.jc+n.ji,0);
+  const totPop=nodes.reduce((s,n)=>s+n.pop,0);
+
+  // 정책 효과
+  let mult=1;
+  if(S.pol.bike) mult*=0.82;
+  if(S.pol.park) mult*=0.93;
+
+  const ITER=5;
+  const aux=new Float32Array(N), auxF=new Float32Array(N);
+  let sumTT=0, sumTrip=0, busTrips=0, genTot=0;
+
+  for(let it=1; it<=ITER; it++){
+    aux.fill(0); auxF.fill(0);
+    const cost=makeCosts(F.vol,false);
+    const costT=S.pol.truck? makeCosts(F.vol,true) : cost;
+    if(it===ITER){
+      sumTT=0; sumTrip=0; busTrips=0;
+      // 이번 도시가 만들어 내는 총 통행량 — "한 칸에 몇 %가 몰리는가"의 분모
+      genTot=0;
+      for(const o of nodes) genTot += o.pop*0.83*mult + o.ji*0.14;
+    }
+
+    // ── 주민 통행 (통근 + 쇼핑 + 외부)
+    for(const o of nodes){
+      if(o.pop<=0) continue;
+      const d=dijkstra(o.i,cost);
+      const commute=o.pop*0.55*mult, shop=o.pop*0.20*mult, ext=o.pop*0.08*mult;
+      // 중력모형 가중치
+      let wsum=0; const ws=[];
+      for(const t of nodes){
+        const j=t.jc+t.ji; if(j<=0||t.i===o.i){ws.push(0);continue;}
+        const tt=d[t.i]; if(!isFinite(tt)){ws.push(0);continue;}
+        const w=j/Math.pow(Math.max(tt,30),1.8); ws.push(w); wsum+=w;
+      }
+      if(wsum>0) for(let k=0;k<nodes.length;k++){
+        if(ws[k]<=0)continue;
+        let q=commute*ws[k]/wsum;
+        // 버스 수단분담 — 양 끝이 모두 정류장 권역이어야 성립한다
+        const bs=0.45*F.bus[o.i]*F.bus[nodes[k].i];
+        if(bs>0){ if(it===ITER) busTrips+=q*bs; q*=(1-bs); }
+        pour(o.i,nodes[k].i,q,aux,null);
+        if(it===ITER){ sumTT+=d[nodes[k].i]*q; sumTrip+=q; }
+      }
+      // 쇼핑 → 상업
+      let cs=0; const cw=[];
+      for(const t of nodes){ const j=t.jc; const tt=d[t.i];
+        const w=(j>0&&isFinite(tt)&&t.i!==o.i)? j/Math.pow(Math.max(tt,30),2.0):0; cw.push(w); cs+=w; }
+      if(cs>0) for(let k=0;k<nodes.length;k++) if(cw[k]>0) pour(o.i,nodes[k].i,shop*cw[k]/cs,aux,null);
+      // 외부 통행 → 가장 가까운 외부 연결
+      let be=-1,bd=Infinity; for(const e of EXT) if(d[e]<bd){bd=d[e];be=e;}
+      if(be>=0&&isFinite(bd)) pour(o.i,be,ext,aux,null);
+    }
+
+    // ── 화물: 공업 → 외부(수출) / 공업 → 상업(공급)
+    for(const o of nodes){
+      if(o.ji<=0) continue;
+      const d=dijkstra(o.i,costT);
+      const fr=o.ji*0.14;
+      let be=-1,bd=Infinity; for(const e of EXT) if(d[e]<bd){bd=d[e];be=e;}
+      if(be>=0&&isFinite(bd)) pour(o.i,be,fr*0.65,aux,auxF);
+      let cs=0; const cw=[];
+      for(const t of nodes){ const j=t.jc; const tt=d[t.i];
+        const w=(j>0&&isFinite(tt))? j/Math.pow(Math.max(tt,30),1.6):0; cw.push(w); cs+=w; }
+      if(cs>0) for(let k=0;k<nodes.length;k++) if(cw[k]>0) pour(o.i,nodes[k].i,fr*0.35*cw[k]/cs,aux,auxF);
+    }
+
+    // ── 외부 유입 (미충원 일자리 통근 + 상업 납품)
+    if(totJob>0){
+      const inflow=Math.max(0,totJob-totPop*0.52)*0.5 + totJob*0.07;
+      if(it===ITER) genTot+=inflow;
+      const per=inflow/EXT.length;
+      for(const e of EXT){
+        const d=dijkstra(e,cost);
+        let ws=0; const ww=[];
+        for(const t of nodes){ const j=t.jc+t.ji; const tt=d[t.i];
+          const w=(j>0&&isFinite(tt))? j/Math.pow(Math.max(tt,30),1.8):0; ww.push(w); ws+=w; }
+        if(ws>0) for(let k=0;k<nodes.length;k++) if(ww[k]>0) pour(e,nodes[k].i,per*ww[k]/ws,aux,null);
+      }
+    }
+
+    // MSA 평균화
+    for(const i of F.roadCells){
+      F.vol[i]  += (aux[i]  - F.vol[i]) /it;
+      F.volF[i] += (auxF[i] - F.volF[i])/it;
+    }
+  }
+
+  // 통계 — 유효 V/C(링크·교차로 중 빡빡한 쪽) 기준
+  let cong=0, maxVC=0, tot=0, worstIsNode=false;
+  for(const i of F.roadCells){
+    const vc=vcOf(i);
+    if(vc>maxVC){ maxVC=vc; ST.worst=i; worstIsNode = F.nodeCap[i]>0 && F.vol[i]/F.nodeCap[i] >= F.vol[i]/ROAD[S.road[i]].cap; }
+    if(vc>0.85) cong++;
+    tot++;
+  }
+  ST.congPct = tot? cong/tot*100 : 0;
+  ST.maxVC   = maxVC;
+  ST.worstIsNode = worstIsNode;
+  /* 단일 관문 — 전체 통행 중 몇 %가 한 칸을 지나는가.
+     대안 경로가 없는 도시는 그 한 칸이 죽으면 전부 죽는다. */
+  let peak=0, peakI=-1;
+  for(const i of F.roadCells) if(F.vol[i]>peak){ peak=F.vol[i]; peakI=i; }
+  ST.totalTrips = genTot;
+  ST.chokeShare = genTot>0 ? peak/genTot : 0;
+  ST.chokeAt = peakI;
+  ST.avgCommute = sumTrip>0 ? sumTT/sumTrip/60 : 0;   // 분
+  ST.transit = (sumTrip+busTrips)>0 ? busTrips/(sumTrip+busTrips) : 0;
+}
+
+/* ── 경로 추적 — "왜 저 도로로 가는가"를 눈으로 ── */
+function traceFrom(i){
+  F.paths=[];
+  if(i==null||i<0) return;
+  const a=accessNode(i);
+  if(a<0 || !F.odNodes.length) return;
+  const cost=makeCosts(F.vol,false);
+  const d=dijkstra(a,cost);
+  const prev=Int32Array.from(_prev);
+  const walk=(dst)=>{
+    const out=[]; let u=dst,g=0;
+    while(u>=0 && u!==a && g++<N){ out.push(u); u=prev[u]; }
+    if(u===a){ out.push(a); return out.reverse(); }
+    return null;
+  };
+  const z=S.zone[i];
+  // ① 가장 유력한 목적지 (중력 가중 최대)
+  let best=-1,bw=0;
+  for(const t of F.odNodes){
+    const j=(z===Z_I)? t.jc : (t.jc+t.ji);
+    if(j<=0||t.i===a) continue;
+    const tt=d[t.i]; if(!isFinite(tt)) continue;
+    const w=j/Math.pow(Math.max(tt,30),1.8);
+    if(w>bw){bw=w;best=t.i;}
+  }
+  if(best>=0){ const p=walk(best);
+    if(p) F.paths.push({cells:p,color:'#3b82f6',label:z===Z_I?'주요 납품처':'주요 통근지',mins:d[best]/60}); }
+  // ② 외부 연결 (공업이면 수출 경로)
+  let be=-1,bd=Infinity;
+  for(const e of F.roadCells){
+    if(S.road[e]!==R_HW) continue;
+    const x=cx(e),y=cy(e); if(!(x===0||x===W-1||y===0||y===H-1)) continue;
+    if(d[e]<bd){bd=d[e];be=e;}
+  }
+  if(be>=0&&isFinite(bd)){ const p=walk(be);
+    if(p) F.paths.push({cells:p,color:z===Z_I?'#e0432c':'#e8a13a',label:z===Z_I?'수출 경로':'외부 연결',mins:bd/60}); }
+}
+
+/** src→dst 경로를 따라 q를 붓는다 (_prev 사용) */
+function pour(src,dst,q,arr,arrF){
+  if(q<=0||dst===src) return;
+  let u=dst, guard=0;
+  while(u>=0 && u!==src && guard++<N){
+    arr[u]+=q; if(arrF) arrF[u]+=q;
+    u=_prev[u];
+  }
+  if(u===src){ arr[src]+=q; if(arrF) arrF[src]+=q; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. 오염 · 소음 · 커버리지 · 지가
+   ═══════════════════════════════════════════════════════════════ */
+function windVec(){
+  const r=(S.wind-90)*Math.PI/180;       // 0°=북(위쪽)
+  return [Math.cos(r), Math.sin(r)];
+}
+function diffuse(src,wx,wy,ws,iters,keep,decay){
+  let a=Float32Array.from(src), b=new Float32Array(N);
+  for(let k=0;k<iters;k++){
+    b.fill(0);
+    for(let i=0;i<N;i++){
+      const v=a[i]; if(v<1e-3) continue;
+      const kept=v*keep, rest=v-kept;
+      b[i]+=kept;
+      let tot=0; const wArr=[];
+      for(const[dx,dy]of DIRS){
+        const dot=dx*wx+dy*wy;
+        const w=1+ws*Math.max(0,dot)*3.0;
+        wArr.push(w); tot+=w;
+      }
+      for(let d=0;d<4;d++){
+        const x=cx(i)+DIRS[d][0], y=cy(i)+DIRS[d][1];
+        if(!inB(x,y)) continue;                       // 맵 밖으로 나가면 소멸
+        b[idx(x,y)] += rest*wArr[d]/tot;
+      }
+    }
+    for(let i=0;i<N;i++) b[i]=b[i]*decay + src[i];
+    const t=a; a=b; b=t;
+  }
+  return a;
+}
+function recalcEnv(){
+  const [wx,wy]=windVec();
+  // 대기오염 원
+  const airSrc=new Float32Array(N);
+  for(let i=0;i<N;i++){
+    if(S.zone[i]===Z_I && S.lvl[i]>0) airSrc[i]+= 3.0+S.lvl[i]*2.2;
+    const b=S.bld[i]; if(b&&SVC[b].air) airSrc[i]+=SVC[b].air;
+    if(S.road[i]===R_HW) airSrc[i]+=0.9+F.vol[i]/ROAD[R_HW].cap*2.2;
+    else if(S.road[i]) airSrc[i]+=F.vol[i]/ROAD[S.road[i]].cap*0.9;
+  }
+  /* decay를 0.80으로 두면 플룸이 4칸(190 m) 만에 소멸해 바람 교훈이 성립하지 않는다.
+     반감거리 ≈ 6칸(290 m)이 되도록 잡는다. */
+  F.air=diffuse(airSrc,wx,wy,S.windStr,26,0.40,0.93);
+
+  // 소음: 교통량 비례, 바람 무관, 근거리
+  const noiSrc=new Float32Array(N);
+  for(let i=0;i<N;i++){
+    const r=S.road[i];
+    if(r){ const vc=F.vol[i]/ROAD[r].cap; noiSrc[i]+=ROAD[r].noise*(2.6+vc*11); }
+    if(S.zone[i]===Z_I&&S.lvl[i]>0) noiSrc[i]+=2.5+S.lvl[i]*1.4;
+    if(S.zone[i]===Z_C&&S.lvl[i]>0) noiSrc[i]+=1.0+S.lvl[i]*0.7;
+    const b=S.bld[i]; if(b&&SVC[b].noise) noiSrc[i]+=SVC[b].noise*3.2;
+  }
+  F.noi=diffuse(noiSrc,0,0,0,14,0.45,0.82);   // 소음은 바람 무관·근거리(반감 ≈2칸)
+
+  // 서비스 커버리지
+  for(const k in F.cov) F.cov[k].fill(0);
+  for(let i=0;i<N;i++){
+    const b=S.bld[i]; if(!b) continue; const s=SVC[b];
+    if(!s.cov) continue;
+    const R=s.cov, x0=cx(i), y0=cy(i);
+    for(let y=Math.max(0,y0-R);y<=Math.min(H-1,y0+R);y++)
+      for(let x=Math.max(0,x0-R);x<=Math.min(W-1,x0+R);x++){
+        const d=Math.hypot(x-x0,y-y0); if(d>R) continue;
+        const j=idx(x,y), v=1-d/R/1.25;
+        if(v>F.cov[s.kind][j]) F.cov[s.kind][j]=v;
+      }
+  }
+  // 지가
+  for(let i=0;i<N;i++){
+    let v=38;
+    v += F.cov.park[i]*22 + F.cov.edu[i]*10 + F.cov.health[i]*8 + F.cov.police[i]*6 + F.cov.fire[i]*4;
+    v -= F.air[i]*0.85;
+    v -= F.noi[i]*0.55;
+    if(RIVER[i]) v+=6;
+    // 상업 접근성
+    let near=0;
+    for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++){
+      const x=cx(i)+dx,y=cy(i)+dy; if(!inB(x,y))continue;
+      const j=idx(x,y); if(S.zone[j]===Z_C&&S.lvl[j]>0) near++;
+    }
+    v += Math.min(12, near*1.4);
+    F.lv[i]=clamp(v,0,100);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   6. 성장 · 재정 · 행복도
+   ═══════════════════════════════════════════════════════════════ */
+function recalcStats(){
+  let pop=0,jobC=0,jobI=0,devR=0,devC=0,devI=0,zR=0,zC=0,zI=0,noAcc=0,ic=0;
+  let mw=0,wat=0,sew=0,gar=0, upkeep=0;
+  let airR=0,noiR=0,lvR=0,cntR=0,airExp=0,airMax=0,noiExp=0;
+  let covSum={fire:0,police:0,health:0,edu:0,park:0}, covN=0;
+
+  for(let i=0;i<N;i++){
+    const z=S.zone[i], L=S.lvl[i];
+    if(z){
+      if(z===Z_R)zR++; else if(z===Z_C)zC++; else zI++;
+      if(accessNode(i)<0 && L===0) noAcc++;
+    }
+    if(z&&L){
+      if(z===Z_R){ pop+=ZONE[z].pop[L]; devR++;
+        airR+=F.air[i]; noiR+=F.noi[i]; lvR+=F.lv[i]; cntR++;
+        if(F.air[i]>12) airExp++;              // 실제로 피해를 보는 주민 비율
+        if(F.noi[i]>22) noiExp++;
+        if(F.air[i]>airMax) airMax=F.air[i];
+        for(const k in covSum) covSum[k]+=F.cov[k][i]; covN++;
+      }
+      else if(z===Z_C){ jobC+=ZONE[z].job[L]; devC++; }
+      else { jobI+=ZONE[z].job[L]; devI++; }
+    }
+    const b=S.bld[i];
+    if(b){ const s=SVC[b]; upkeep+=s.up;
+      if(s.mw)mw+=s.mw; if(s.wat)wat+=s.wat; if(s.sew)sew+=s.sew; if(s.gar)gar+=s.gar;
+      if(b==='ic')ic++;
+    }
+    if(S.road[i]) upkeep+=ROAD[S.road[i]].up;
+  }
+  const jobs=jobC+jobI;
+  const needMW  = pop*0.021 + jobs*0.030;
+  const needWat = pop*0.030 + jobs*0.022;
+  const needSew = needWat*0.92;
+  const needGar = pop*0.028 + jobs*0.030;
+
+  ST.pop=pop; ST.jobC=jobC; ST.jobI=jobI; ST.jobs=jobs;
+  ST.devR=devR; ST.devC=devC; ST.devI=devI; ST.zR=zR; ST.zC=zC; ST.zI=zI;
+  ST.noAcc=noAcc; ST.ic=ic; ST.upkeep=upkeep;
+  ST.mw=mw; ST.needMW=needMW; ST.wat=wat; ST.needWat=needWat;
+  ST.sew=sew; ST.needSew=needSew; ST.gar=gar; ST.needGar=needGar;
+  ST.powerOK = mw>=needMW; ST.watOK = wat>=needWat; ST.sewOK=sew>=needSew; ST.garOK=gar>=needGar;
+  ST.airR = cntR? airR/cntR : 0;
+  ST.noiR = cntR? noiR/cntR : 0;
+  ST.lvR  = cntR? lvR/cntR  : 0;
+  ST.airExp = cntR? airExp/cntR : 0;   // 평균은 국소 핫스팟을 감춘다 — 노출 비율을 함께 본다
+  ST.noiExp = cntR? noiExp/cntR : 0;
+  ST.airMax = airMax;
+  ST.cov  = {}; for(const k in covSum) ST.cov[k]= covN? covSum[k]/covN : 0;
+
+  // 세수 (13% 기준)
+  const inc = pop*3.1*(S.taxR/13) + jobC*5.6*(S.taxC/13) + jobI*4.9*(S.taxI/13)
+            + (S.pol.park? pop*0.22:0);
+  ST.income=inc; ST.balance=inc-upkeep;
+
+  // 행복도
+  let hp=50;
+  hp += ST.cov.fire*7 + ST.cov.police*7 + ST.cov.health*8 + ST.cov.edu*7 + ST.cov.park*8;
+  hp -= ST.airR*0.55 + ST.airExp*16;   // 평균 + 심하게 노출된 주민 비율
+  hp -= ST.noiR*0.40 + ST.noiExp*10;
+  hp -= Math.max(0, ST.avgCommute-2.6)*9.0;   // 지도가 1.5×1.0km 지구 규모라 임계값도 지구 규모다
+  if(!ST.powerOK) hp-=26; if(!ST.watOK) hp-=22; if(!ST.sewOK) hp-=14; if(!ST.garOK) hp-=13;
+  hp -= Math.max(0,S.taxR-13)*1.1;
+  if(S.pol.bike) hp+=2; if(S.pol.park) hp-=2;
+  ST.happy=clamp(hp,0,100);
+
+  // 주거 인접 도로 표시(대형차량 통제 정책용) + 화물 관통 지표
+  const nearR=new Uint8Array(N);
+  for(let i=0;i<N;i++){
+    if(!(S.zone[i]===Z_R&&S.lvl[i]>0)) continue;
+    for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
+      const x=cx(i)+dx,y=cy(i)+dy; if(!inB(x,y))continue;
+      const j=idx(x,y); if(S.road[j]&&S.road[j]<=R_COL) nearR[j]=1;
+    }
+  }
+  ST.nearR=nearR;
+  let fTot=0,fNear=0;
+  for(const i of F.roadCells){ fTot+=F.volF[i]; if(nearR[i]) fNear+=F.volF[i]; }
+  ST.freightR = fTot>0? fNear/fTot : 0;
+
+  // 위계 위반 카운트
+  let locOnArt=0, illegalHW=0, hasArt=false, closeIC=0;
+  const ics=[];
+  for(const i of F.roadCells){
+    const cls=S.road[i];
+    if(cls===R_ART) hasArt=true;
+    if(cls>=R_ART){
+      for(const[dx,dy]of DIRS){
+        const x=cx(i)+dx,y=cy(i)+dy; if(!inB(x,y))continue;
+        const j=idx(x,y); if(S.road[j]===R_LOC&&linked(i,j)) locOnArt++;
+      }
+    }
+    if(cls!==R_HW){
+      for(const[dx,dy]of DIRS){
+        const x=cx(i)+dx,y=cy(i)+dy; if(!inB(x,y))continue;
+        const j=idx(x,y); if(S.road[j]===R_HW&&!isIC(j)) illegalHW++;
+      }
+    }
+    if(isIC(i)) ics.push(i);
+  }
+  for(let a=0;a<ics.length;a++)for(let b=a+1;b<ics.length;b++)
+    if(Math.hypot(cx(ics[a])-cx(ics[b]),cy(ics[a])-cy(ics[b]))<6) closeIC++;
+  ST.locOnArt=locOnArt; ST.illegalHW=illegalHW; ST.hasArt=hasArt; ST.closeIC=closeIC;
+}
+
+function growth(){
+  // 수요
+  const jobs=ST.jobs, pop=ST.pop;
+  const demR = clamp((jobs*0.62 - pop)/Math.max(60,pop*0.35+60), -1, 1) + 0.30 - (S.taxR-13)*0.035;
+  const demC = clamp((pop*0.16 - ST.jobC)/Math.max(30,ST.jobC*0.5+30), -1, 1) + 0.18 - (S.taxC-13)*0.035;
+  const demI = clamp((pop*0.20 + ST.jobC*0.5 - ST.jobI)/Math.max(30,ST.jobI*0.5+30), -1, 1) + 0.18 - (S.taxI-13)*0.035;
+  ST.demR=clamp(demR,-1,1); ST.demC=clamp(demC,-1,1); ST.demI=clamp(demI,-1,1);
+
+  const util = (ST.powerOK?1:0)*(ST.watOK?1:0);
+  for(let i=0;i<N;i++){
+    const z=S.zone[i]; if(!z) continue;
+    if(accessNode(i)<0){ S.dev[i]=0; continue; }
+    const dem = z===Z_R?ST.demR : z===Z_C?ST.demC : ST.demI;
+    // 적합도
+    let fit;
+    if(z===Z_R) fit = 0.28 + F.lv[i]/100*0.75 - F.air[i]*0.012 - F.noi[i]*0.009 + ST.happy/100*0.35;
+    else if(z===Z_C) fit = 0.34 + F.lv[i]/100*0.55 + ST.cov.park*0.2 - F.air[i]*0.006;
+    else fit = 0.55 - Math.max(0,ST.avgCommute-3.5)*0.08;
+    fit -= Math.max(0,ST.avgCommute-2.8)*0.09;
+    fit *= util;
+
+    const L=S.lvl[i];
+    if(L===0){
+      if(dem>0 && fit>0.18) S.dev[i]+=0.05*dem*fit*4;
+      else S.dev[i]-=0.01;
+    }else{
+      if(L<3 && dem>-0.2 && fit>0.55) S.dev[i]+=0.03*fit;
+      else if(fit<0.10 || !util || ST.happy<24) S.dev[i]-=0.035;
+      else S.dev[i]*=0.995;
+    }
+    S.dev[i]=clamp(S.dev[i],-1,1.2);
+    if(S.dev[i]>=1 && S.lvl[i]<3){ S.lvl[i]++; S.dev[i]=0.15; }
+    if(S.dev[i]<=-0.8){ if(S.lvl[i]>0){S.lvl[i]--; S.dev[i]=0.1;} else S.dev[i]=0; }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   7. 진단 엔진
+   ═══════════════════════════════════════════════════════════════ */
+function diagnose(){
+  const D=[];
+  const push=(lvl,ico,t,d,loc)=>D.push({lvl,ico,t,d,loc});
+
+  if(ST.illegalHW>0)
+    push('bad','⛔','고속도로에 도로가 직접 붙어 있습니다 — <b>연결되지 않았습니다</b>',
+      `${ST.illegalHW}곳. 고속도로 칸 위에 <b>IC(진입로)</b>를 놓아야 통행이 흐릅니다. 지도에 붉은 ⛔로 표시된 지점을 확인하세요.`);
+
+  if(ST.ic===0 && ST.zR+ST.zC+ST.zI>0)
+    push('bad','🛤️','외부와 연결되지 않았습니다',
+      '고속도로 칸에 IC를 하나 놓으세요. 외부 연결이 없으면 화물 수출도, 외부 통근 유입도 0입니다.');
+
+  if(ST.noAcc>0)
+    push('warn','🚧','도로에 닿지 않은 존이 <b>'+ST.noAcc+'칸</b>',
+      'CS2에서 존은 도로에 접해야만 개발됩니다. 지도에 빗금으로 표시했습니다.');
+
+  if(ST.locOnArt>0)
+    push(ST.locOnArt>6?'bad':'warn','🔀','간선·고속에 <b>2차선 국지도로가 직결</b>된 지점 '+ST.locOnArt+'곳',
+      '좌회전 대기가 본선을 막아 칸마다 <b>+11초</b>의 지체가 붙습니다. 중간에 <b>4차선 콜렉터</b>를 한 단계 끼워 넣으세요 — 이것이 위계입니다.');
+
+  if(ST.closeIC>0)
+    push('warn','↔️','IC 간격이 6칸(288 m) 미만인 쌍 '+ST.closeIC+'개',
+      '합류 구간과 분류 구간이 겹치면 본선이 무너집니다(위빙). IC는 넉넉히 띄우세요.');
+
+  if(ST.maxVC>=1.0){
+    push('bad','🚗','최악 병목 <b>V/C '+ST.maxVC.toFixed(2)+'</b> — 용량 초과 ('+(ST.worstIsNode?'교차로':'구간')+')',
+      ST.worstIsNode
+        ? '막히는 곳은 도로가 아니라 <b>교차로</b>입니다. 차선을 늘려도 교차로가 그대로면 소용없습니다. 이 교차로로 몰리는 통행을 <b>다른 교차로로 분산</b>하거나, 갈래 수를 줄이세요(십자 → T자 두 개).'
+        : '이 구간 자체가 좁습니다. 다만 차선을 늘리기 전에 <b>왜 그 한 칸에 몰리는지</b>부터 보세요 — 대개 대안 경로가 없어서입니다.',
+      ST.worst);
+  } else if(ST.maxVC>=0.85){
+    push('warn','🚙','최악 구간 V/C '+ST.maxVC.toFixed(2)+' — 포화 임박 ('+(ST.worstIsNode?'교차로':'구간')+')',
+      '용량의 85%를 넘으면 작은 증가에도 급격히 느려집니다(BPR 4제곱). 지금이 우회로를 만들 때입니다.',ST.worst);
+  } else if(F.roadCells.length>12 && ST.pop>200){
+    push('ok','✅','정체 없음 — 최악 구간 V/C '+ST.maxVC.toFixed(2),
+      '현재 도로망이 통행량을 여유 있게 받아내고 있습니다.');
+  }
+
+  if(ST.chokeShare>0.45 && ST.pop>600)
+    push('bad','🍾','전체 통행의 <b>'+(ST.chokeShare*100).toFixed(0)+'%</b>가 <b>단 한 칸</b>을 지납니다',
+      '대안 경로가 없는 도시입니다. 그 한 칸이 막히면 도시 전체가 멈춥니다. <b>두 번째 IC를 멀리 놓고</b>, 지구를 도는 순환 축을 만들어 경로를 갈라 주세요. 차선을 넓히는 것은 임시방편입니다.',
+      ST.chokeAt);
+  else if(ST.chokeShare>0.32 && ST.pop>600)
+    push('warn','🍾','통행의 '+(ST.chokeShare*100).toFixed(0)+'%가 한 칸에 몰립니다',
+      '아직 여유는 있지만 <b>경로 다양성이 부족</b>합니다. 도시가 커지면 여기가 먼저 무너집니다.',ST.chokeAt);
+
+  if(ST.ic===1 && ST.pop>1500)
+    push('warn','🛤️','IC가 하나뿐입니다 (인구 '+ST.pop.toLocaleString('ko-KR')+'명)',
+      '외부로 나가는 모든 통행 — 통근·화물·방문 — 이 그 하나를 지납니다. 인구가 이 정도면 <b>두 번째 IC</b>를 놓을 때입니다. 단, 6칸(288 m) 이상 띄우세요.');
+
+  if(ST.avgCommute>5.0)
+    push('bad','⏱️','평균 통근 <b>'+ST.avgCommute.toFixed(1)+'분</b> — 지구 규모치고 너무 깁니다',
+      '주거와 일자리가 지나치게 떨어져 있거나, 경로가 크게 우회합니다. 이 지도는 가로 1.5 km입니다 — 자유류라면 2분이면 횡단합니다. 초과분은 <b>교차로 대기</b>입니다.');
+  else if(ST.avgCommute>3.4)
+    push('warn','⏱️','평균 통근 '+ST.avgCommute.toFixed(1)+'분',
+      '2.6분을 넘는 만큼 행복도가 깎입니다. 교차로를 줄이거나, 주거 인근에 상업·공업을 섞으세요.');
+
+  if(!ST.powerOK)
+    push('bad','⚡','전력 부족 — '+ST.mw.toFixed(0)+' / '+ST.needMW.toFixed(0)+' MW',
+      '정전이 나면 성장이 멈추고 행복도 −26. 발전소를 늘리세요.');
+  if(!ST.watOK)
+    push('bad','💧','상수도 부족 — '+ST.wat.toFixed(0)+' / '+ST.needWat.toFixed(0),
+      '급수탑을 추가하세요. 물이 없으면 존이 개발되지 않습니다.');
+  if(!ST.sewOK && ST.pop>0)
+    push('warn','♻️','하수 처리 용량 부족 — '+ST.sew.toFixed(0)+' / '+ST.needSew.toFixed(0),'하수 처리장을 추가하세요.');
+  if(!ST.garOK && ST.pop>0)
+    push('warn','🗑️','쓰레기 처리 부족 — '+ST.gar.toFixed(0)+' / '+ST.needGar.toFixed(0),'매립지를 추가하세요. 단, 바람 하류에.');
+
+  if(ST.airExp>0.22)
+    push('bad','🏭','주거의 <b>'+(ST.airExp*100).toFixed(0)+'%</b>가 대기오염에 노출 (최대 '+ST.airMax.toFixed(0)+')',
+      '공업·발전소가 <b>주거지의 바람 상류</b>에 있습니다. 바람은 지금 <b>'+windName(S.wind)+'쪽</b>으로 붑니다 — 오염원을 주거의 반대편으로 옮기거나, 바람을 등지도록 배치를 뒤집으세요. 오버레이를 <b>대기오염</b>으로 켜면 플룸이 보입니다.');
+  else if(ST.airExp>0.07)
+    push('warn','🏭','주거의 '+(ST.airExp*100).toFixed(0)+'%가 대기오염에 노출',
+      '평균은 낮아 보여도 <b>바람 하류의 몇 줄</b>이 집중적으로 맞고 있습니다. 그 줄은 지가가 오르지 않아 레벨업이 막힙니다.');
+
+  if(ST.noiExp>0.20)
+    push('warn','🔊','주거의 '+(ST.noiExp*100).toFixed(0)+'%가 소음에 노출',
+      '소음원은 <b>막히는 도로</b>입니다. 고속도로는 소음 3배. 주거지와 간선 사이에 공원이나 상업을 완충으로 두세요.');
+
+  if(ST.freightR>0.25 && ST.jobI>0)
+    push('warn','🚛','화물의 <b>'+(ST.freightR*100).toFixed(0)+'%</b>가 주거지 도로를 통과합니다',
+      '공업에서 고속도로 IC까지 <b>주거지를 거치지 않는 전용 동선</b>을 만드세요. 화물 전용 IC가 정답입니다.');
+
+  if(ST.balance<0 && ST.pop>0){
+    // 적자의 심각도는 금액이 아니라 «버틸 수 있는 개월 수»다
+    const runway = S.funds>0 ? S.funds/(-ST.balance) : 0;
+    push(runway<10?'bad':'warn','💸','월 수지 <b>'+won(ST.balance)+'</b> — 적자 (약 '+Math.max(0,Math.floor(runway))+'개월치 잔고)',
+      '유지비가 세수를 넘었습니다. 도로를 과하게 깔았거나(고속도로 유지비는 국지의 6.7배) 서비스가 인구 대비 과합니다.');
+  }
+
+  // 버스 — 정류장을 어디에 두었는가
+  let busLoc=0, busTot=0;
+  for(let i=0;i<N;i++) if(S.bld[i]==='bus'){ busTot++; if(S.road[i]===R_LOC) busLoc++; }
+  if(busLoc>0)
+    push('warn','🚏','버스 정류장 '+busLoc+'개가 <b>2차선 국지도로</b>에 있습니다',
+      '정차한 버스가 그 방향을 통째로 막습니다(칸당 +6초). 정류장은 <b>4차선 콜렉터</b>에 붙이고, 국지도로는 정류장까지 걸어오는 길로 쓰세요.');
+  else if(busTot>0 && ST.transit>0.02)
+    push('ok','🚏','버스 수단분담 <b>'+(ST.transit*100).toFixed(0)+'%</b>',
+      '그만큼의 통행이 도로에서 빠졌습니다. 분담률은 <b>출발지와 목적지 양쪽 모두</b>가 정류장 권역일 때만 올라갑니다.');
+  else if(busTot>0)
+    push('info','🚏','정류장은 있는데 수단분담이 0입니다',
+      '버스는 <b>양 끝</b>이 모두 정류장 권역이어야 성립합니다. 주거지에만 두지 말고 <b>일자리 쪽에도</b> 두세요.');
+
+  if(ST.zR>0 && ST.jobs < ST.pop*0.4 && ST.pop>150)
+    push('warn','🏢','일자리 부족 — 인구 '+ST.pop+'명에 일자리 '+ST.jobs+'개',
+      '주거만 늘리면 실업이 쌓여 수요가 멈춥니다. 상업·공업을 지정하세요.');
+  if(ST.jobs > ST.pop*1.1 && ST.jobs>60)
+    push('info','🏠','일자리가 인구보다 많습니다',
+      '부족분은 외부 통근으로 채워지며, 그만큼 <b>IC와 진입 도로에 부하</b>가 걸립니다. 주거를 늘리면 이 통행이 줄어듭니다.');
+
+  const w=['fire','police','health','edu','park'], wn={fire:'소방',police:'치안',health:'의료',edu:'교육',park:'공원'};
+  const missing=w.filter(k=>ST.cov[k]<0.25);
+  if(missing.length && ST.pop>250)
+    push('info','🏥','서비스 미커버 — '+missing.map(k=>wn[k]).join(' · '),
+      '커버리지가 낮으면 행복도와 지가가 오르지 않아 <b>레벨업이 막힙니다</b>.');
+
+  if(D.length===0)
+    push('ok','🌤️','문제 없음','도시를 더 키워 보세요. 인구가 늘면 새로운 병목이 나타납니다.');
+
+  /* 같은 심각도라면 교통·연결 문제를 먼저 보여준다 — 이 시뮬레이터가 가르치려는 것이 그것이다.
+     재정·서비스 경고가 맨 위를 차지하면 정작 배울 것이 묻힌다. */
+  const rank={bad:0,warn:1,info:2,ok:3};
+  const topic=t=>{
+    if(/⛔|🛤️|🔀|↔️|🚗|🚙|🚛|⏱️|🚏|🚧/.test(t)) return 0;   // 도로·연결·교통
+    if(/🏭|🔊/.test(t)) return 1;                              // 오염
+    if(/⚡|💧|♻️|🗑️/.test(t)) return 2;                        // 인프라 부족
+    return 3;                                                  // 재정·수요·서비스
+  };
+  D.sort((a,b)=> rank[a.lvl]-rank[b.lvl] || topic(a.ico)-topic(b.ico));
+  DIAG=D.slice(0,9);
+}
+function windName(d){
+  const n=['북','북동','동','남동','남','남서','서','북서'];
+  return n[Math.round(((d%360)+360)%360/45)%8];
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   8. 미션
+   ═══════════════════════════════════════════════════════════════ */
+const MISSIONS=[
+{ t:'① 도시를 세상과 연결하라',
+  d:'고속도로 위에 <b>IC</b>를 놓고, 거기서 도로를 뻗어 주거·상업·공업을 각각 <b>1칸 이상</b> 발전시키세요.',
+  tip:'고속도로에 도로를 직접 그으면 이어지지 않습니다(붉은 ⛔). 실제 CS2도 램프로만 연결됩니다.',
+  ck:()=>[['IC 설치',ST.ic>=1],['주거 개발',ST.devR>=1],['상업 개발',ST.devC>=1],['공업 개발',ST.devI>=1]] },
+
+{ t:'② 위계를 세워라',
+  d:'인구 <b>700명</b>을 <b>정체 구간 2% 이하</b>로 유지하세요. <b>6차선 간선</b>이 최소 1개는 있어야 합니다.',
+  tip:'2차선만으로 도시를 키우면 반드시 막힙니다. IC → 6차선 간선 → 4차선 콜렉터 → 2차선 국지 순으로 내려오세요.',
+  ck:()=>[['인구 700',ST.pop>=700],['간선도로',!!ST.hasArt],['정체 ≤2%',ST.congPct<=2]] },
+
+{ t:'③ 교차로 상충을 없애라',
+  d:'인구 <b>1,800명</b> · 정체 <b>8% 이하</b> · <b>간선에 국지도로 직결 0곳</b>.',
+  tip:'간선에 2차선을 바로 붙이지 말고, 4차선 콜렉터를 한 단계 끼워 넣으세요. 이 한 가지가 통행시간을 가장 크게 줄입니다.',
+  ck:()=>[['인구 1,800',ST.pop>=1800],['정체 ≤8%',ST.congPct<=8],['국지 직결 0',ST.locOnArt===0]] },
+
+{ t:'④ 바람을 읽어라',
+  d:'공업 <b>8칸 이상</b>을 개발하면서 <b>오염 노출 8% 이하</b>를 유지하세요.',
+  tip:'상단 「바람이 향하는 방향」을 바꿔 보세요. 공업·석탄발전소·매립지는 항상 <b>주거의 바람 하류</b>에 둡니다. 오버레이를 대기오염으로 켜면 플룸 꼬리가 보입니다. 평균이 아니라 <b>노출된 주민 비율</b>이 기준입니다.',
+  ck:()=>[['공업 8칸',ST.devI>=8],['오염 노출 ≤8%',ST.airExp<=0.08],['인구 2,000',ST.pop>=2000]] },
+
+{ t:'⑤ 화물을 분리하라',
+  d:'공업 일자리 <b>180개</b> 이상 · 주거지 통과 화물 <b>12% 이하</b>.',
+  tip:'공업지구 전용 IC를 따로 놓고, 공업 → IC 경로가 주거지를 거치지 않게 만드세요. 「주거지 대형차량 통제」 정책도 도움이 됩니다.',
+  ck:()=>[['공업 일자리 180',ST.jobI>=180],['주거 통과 ≤12%',ST.freightR<=0.12]] },
+
+{ t:'⑥ 살 만한 도시',
+  d:'인구 <b>6,000명</b> · 행복도 <b>70 이상</b> · 정체 <b>10% 이하</b> · <b>월 흑자</b>.',
+  tip:'여기까지 오면 도로·오염·서비스·재정을 동시에 보고 있는 것입니다. 실제 CS2에서 막히는 지점과 정확히 같습니다.',
+  ck:()=>[['인구 6,000',ST.pop>=6000],['행복도 70',ST.happy>=70],['정체 ≤10%',ST.congPct<=10],['흑자',ST.balance>0]] }
+];
+function checkMissions(){
+  if(S.mission>=MISSIONS.length) return;
+  const c=MISSIONS[S.mission].ck();
+  if(c.every(x=>x[1])){
+    S.done.push(S.mission); S.mission++;
+    if(S.mission>=MISSIONS.length) toast('🎉 모든 미션 완료! 이제 자유롭게 도시를 키워 보세요.','good',4200);
+    else toast('✅ 미션 '+'①②③④⑤⑥'[S.mission-1]+' 완료 → 다음 미션이 열렸습니다','good',3200);
+    renderMissions();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   8.5 프리셋 — 전형적으로 망한 도시들
+   ═══════════════════════════════════════════════════════════════ */
+const P={
+  road:(x0,y0,x1,y1,c)=>{ const dx=Math.sign(x1-x0),dy=Math.sign(y1-y0);
+    let x=x0,y=y0; for(;;){ if(inB(x,y)) S.road[idx(x,y)]=c;
+      if(x===x1&&y===y1)break; if(x!==x1)x+=dx; else if(y!==y1)y+=dy; } },
+  zone:(x0,y0,x1,y1,z,L)=>{ for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
+      if(!inB(x,y))continue; const i=idx(x,y);
+      if(S.road[i]||S.bld[i]||RIVER[i])continue; S.zone[i]=z; S.lvl[i]=L||1; S.dev[i]=.3; } },
+  b:(x,y,k)=>{ if(inB(x,y)) S.bld[idx(x,y)]=k; }
+};
+function baseMap(){
+  S.road.fill(0); S.zone.fill(0); S.bld.fill(null); S.lvl.fill(0); S.dev.fill(0);
+  buildTerrain();
+  for(let x=0;x<W;x++) S.road[idx(x,1)]=R_HW;
+  S.funds=600000; S.week=0; S.probe=-1; F.paths=[]; probeInfo='';
+  UNDO.length=0; updUndoBtn(); TREND.length=0;
+}
+const PRESETS=[
+{ ico:'🕸️', t:'2차선 격자 도시', d:'전부 2차선 국지도로. 교차로가 촘촘해 교차로 용량이 먼저 무너집니다.',
+  fix:'간선(6차선) 축을 하나 세우고, 콜렉터(4차선)로 받아 국지도로를 붙이세요.',
+  build(){ baseMap(); P.b(9,1,'ic');
+    P.road(9,2,9,3,R_LOC);
+    for(let y=3;y<=18;y+=3) P.road(2,y,26,y,R_LOC);     // 가로 6줄
+    for(let x=2;x<=26;x+=4) P.road(x,3,x,18,R_LOC);     // 세로 7줄 → 42개 4갈래 교차로
+    P.zone(3,4,25,11,Z_R,3); P.zone(3,13,14,17,Z_C,2); P.zone(16,13,25,17,Z_I,3);
+    P.b(4,20,'coal'); P.b(8,20,'water'); P.b(12,20,'sewage'); P.b(20,20,'dump');
+    P.b(6,5,'fire'); P.b(18,5,'police'); P.b(12,9,'clinic'); P.b(22,9,'school'); P.b(15,20,'park'); } },
+
+{ ico:'🔀', t:'간선에 전부 직결', d:'6차선 간선에 2차선 국지도로가 줄줄이 직결. 좌회전 대기가 본선을 마비시킵니다.',
+  fix:'국지도로를 간선에서 떼고, 콜렉터를 한 단계 끼워 넣으세요.',
+  build(){ baseMap(); P.b(13,1,'ic');
+    P.road(13,2,13,19,R_ART);
+    // 국지도로 12줄이 전부 간선에 직결된다 — 이것이 실수다
+    for(let y=3;y<=19;y+=2){ P.road(4,y,12,y,R_LOC); P.road(14,y,24,y,R_LOC); }
+    P.road(4,3,4,19,R_LOC); P.road(24,3,24,19,R_LOC);
+    P.zone(5,4,12,12,Z_R,3); P.zone(15,4,23,12,Z_R,3);
+    P.zone(15,14,23,19,Z_C,2); P.zone(5,14,12,19,Z_I,3);
+    P.b(2,18,'coal'); P.b(2,15,'water'); P.b(2,12,'sewage'); P.b(26,18,'dump');
+    P.b(8,5,'fire'); P.b(19,5,'police'); P.b(17,9,'clinic'); P.b(9,9,'school'); P.b(26,10,'park'); } },
+
+{ ico:'🏭', t:'공업이 바람 상류', d:'석탄발전소와 공업이 주거지의 바람 상류에 있습니다. 지가가 오르지 않습니다.',
+  fix:'바람 방향을 확인하고(대기오염 오버레이), 오염원을 주거의 <b>바람 하류</b>로 옮기세요.',
+  build(){ baseMap(); S.wind=180; S.windStr=.7; P.b(14,1,'ic');
+    P.road(14,2,14,19,R_ART);
+    P.road(3,4,25,4,R_COL); P.road(3,10,25,10,R_COL); P.road(3,16,25,16,R_COL);
+    for(const x of [5,8,11,17,20,23]) P.road(x,4,x,16,R_LOC);
+    P.zone(3,2,25,3,Z_I,2);                       // 공업이 북쪽(=바람 상류)
+    P.b(6,2,'coal'); P.b(20,2,'dump');
+    P.zone(3,5,25,9,Z_R,2); P.zone(3,11,25,15,Z_R,2); P.zone(3,17,25,19,Z_C,2);
+    P.b(9,18,'water'); P.b(12,18,'sewage');
+    P.b(7,11,'fire'); P.b(18,11,'police'); P.b(15,6,'clinic'); P.b(10,6,'school'); } },
+
+{ ico:'🚛', t:'화물이 주거지 관통', d:'공업지구에서 IC까지 가는 유일한 길이 주거지 한복판을 지납니다.',
+  fix:'공업 쪽에 전용 IC를 따로 놓아 화물 동선을 주거지에서 분리하세요.',
+  build(){ baseMap(); P.b(5,1,'ic');
+    P.road(5,2,5,10,R_ART);
+    P.road(5,10,27,10,R_COL);                       // 화물 간선이 동네 한복판을 가른다
+    for(const x of [3,8,11,14,17,20]) P.road(x,4,x,16,R_LOC);
+    P.road(3,4,20,4,R_LOC); P.road(3,16,20,16,R_LOC);
+    P.zone(3,5,20,9,Z_R,2); P.zone(3,11,20,15,Z_R,2);   // 회랑 양옆이 전부 주거
+    P.zone(22,11,27,16,Z_I,2); P.road(27,10,27,16,R_LOC); P.road(22,16,27,16,R_LOC);
+    P.zone(22,4,27,8,Z_C,2); P.road(22,4,27,4,R_LOC); P.road(22,4,22,10,R_LOC);
+    P.b(2,19,'coal'); P.b(6,19,'water'); P.b(9,19,'sewage'); P.b(29,19,'dump');
+    P.b(9,7,'fire'); P.b(15,7,'police'); P.b(12,13,'clinic'); P.b(18,13,'school'); P.b(6,13,'park'); } },
+
+{ ico:'↔️', t:'IC 밀집', d:'IC 4개가 다닥다닥 붙어 합류·분류가 겹칩니다(위빙). 고속 본선이 무너집니다.',
+  fix:'IC를 6칸(288 m) 이상 띄우세요. 하나만 남기고 지워도 대개 좋아집니다.',
+  build(){ baseMap();
+    for(const x of [8,10,12,14]) { P.b(x,1,'ic'); P.road(x,2,x,7,R_COL); }
+    P.road(4,7,20,7,R_ART); P.road(4,13,20,13,R_COL);
+    for(const x of [4,7,11,16,20]) P.road(x,7,x,18,R_LOC);
+    P.zone(5,8,19,12,Z_R,2); P.zone(5,14,12,18,Z_C,2); P.zone(13,14,19,18,Z_I,2);
+    P.b(2,18,'coal'); P.b(22,18,'water'); P.b(22,15,'sewage'); P.b(25,18,'dump');
+    P.b(6,9,'fire'); P.b(17,9,'police'); P.b(12,10,'clinic'); P.b(9,15,'school'); } },
+
+{ ico:'🍾', t:'진입로가 하나뿐', d:'도시 전체가 IC 하나 · 도로 한 줄에 매달려 있습니다. 그 한 칸이 죽으면 전부 죽습니다.',
+  fix:'두 번째 IC를 멀리 놓고, 순환 축을 만들어 <b>대안 경로</b>를 주세요.',
+  build(){ baseMap(); P.b(16,1,'ic');
+    P.road(16,2,16,18,R_COL);
+    P.road(6,18,26,18,R_COL);
+    for(const x of [6,10,13,19,23,26]) P.road(x,18,x,10,R_LOC);
+    for(let y=10;y<=16;y+=3) P.road(6,y,26,y,R_LOC);
+    P.zone(7,11,15,17,Z_R,2); P.zone(17,11,25,17,Z_R,2);
+    P.zone(7,19,15,20,Z_C,2); P.zone(17,19,25,20,Z_I,2);
+    P.b(3,20,'coal'); P.b(3,17,'water'); P.b(3,14,'sewage'); P.b(28,20,'dump');
+    P.b(9,12,'fire'); P.b(21,12,'police'); P.b(15,14,'clinic'); P.b(19,14,'school'); } }
+];
+function loadPreset(k){
+  const p=PRESETS[k];
+  if(!confirm(`「${p.t}」을(를) 불러옵니다.\n현재 도시는 사라집니다. 계속할까요?`)) return;
+  p.build();
+  S.mission=Math.max(S.mission,0);
+  renderCompass(); rebuild(); recalcAll(); render(); syncUI();
+  setSpeed(0);
+  toast('🩺 '+p.t+' — 무엇이 잘못됐는지 진단 패널을 보세요. 일시정지 상태입니다.','',5200);
+  snapBase();                                    // 고치기 전을 자동으로 기준으로 잡는다
+}
+function renderPresets(){
+  const el=document.getElementById('presets'); el.innerHTML='';
+  PRESETS.forEach((p,k)=>{
+    const b=document.createElement('button'); b.className='pst';
+    b.innerHTML=`<span class="pi">${p.ico}</span><span><span class="pt">${p.t}</span><span class="pd">${p.d}<br><b style="color:var(--ok)">고치는 법:</b> ${p.fix}</span></span>`;
+    b.onclick=()=>loadPreset(k);
+    el.appendChild(b);
+  });
+}
+
+/* ── A/B 비교 ── */
+let BASE=null;
+const CMP_ROWS=[
+  ['인구',      ()=>ST.pop,        0, 1],
+  ['일자리',    ()=>ST.jobs,       0, 1],
+  ['정체 구간', ()=>ST.congPct,    1,-1,'%'],
+  ['최악 V/C',  ()=>ST.maxVC,      2,-1],
+  ['평균 통근', ()=>ST.avgCommute, 1,-1,'분'],
+  ['행복도',    ()=>ST.happy,      0, 1],
+  ['오염 노출', ()=>(ST.airExp||0)*100, 0,-1,'%'],
+  ['월 수지 ₡', ()=>ST.balance,    0, 1]
+];
+function snapBase(){
+  BASE={}; for(const r of CMP_ROWS) BASE[r[0]]=r[1]();
+  renderCmp();
+}
+function renderCmp(){
+  const el=document.getElementById('cmp');
+  if(!BASE){ el.innerHTML='<p class="note">「지금을 기준으로」를 누른 뒤 도시를 고치면, 무엇이 얼마나 좋아졌는지 나란히 보여줍니다.</p>'; return; }
+  let h='<table class="cmp"><tr><th>지표</th><th>고치기 전</th><th>지금</th><th>변화</th></tr>';
+  for(const [nm,fn,dp,dir,unit] of CMP_ROWS){
+    const a=BASE[nm], b=fn(), d=b-a;
+    const good = dir>0 ? d>0 : d<0;
+    const cls = Math.abs(d)<(dp?0.05:0.5) ? 'same' : (good?'up':'dn');
+    const sign = d>0?'+':'';
+    h+=`<tr><td>${nm}</td><td>${a.toFixed(dp)}${unit||''}</td><td>${b.toFixed(dp)}${unit||''}</td>`
+      +`<td class="${cls}">${cls==='same'?'—':sign+d.toFixed(dp)}</td></tr>`;
+  }
+  h+='</table>';
+  el.innerHTML=h;
+}
+
+/* ── 추이 그래프 ── */
+const TREND=[]; const TREND_MAX=120;
+function pushTrend(){
+  TREND.push({p:ST.pop||0, c:ST.congPct||0, h:ST.happy||0});
+  if(TREND.length>TREND_MAX) TREND.shift();
+}
+function drawTrend(){
+  const c=document.getElementById('trend'); if(!c) return;
+  const dpr=Math.min(2,devicePixelRatio||1);
+  const w=c.clientWidth||280, h=96;
+  if(c.width!==w*dpr||c.height!==h*dpr){ c.width=w*dpr; c.height=h*dpr; }
+  const g=c.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0);
+  g.clearRect(0,0,w,h);
+  if(TREND.length<2){
+    g.fillStyle=TC.line2||'#ddd'; g.font='11px system-ui'; g.textAlign='center'; g.textBaseline='middle';
+    g.fillStyle='#8b939e'; g.fillText('진행하면 인구·정체·행복도 추이가 그려집니다', w/2, h/2);
+    return;
+  }
+  const series=[
+    {k:'p', col:'#3b82f6', max:Math.max(100,...TREND.map(t=>t.p)), nm:'인구'},
+    {k:'c', col:'#e0432c', max:100, nm:'정체%'},
+    {k:'h', col:'#12996b', max:100, nm:'행복도'}
+  ];
+  g.strokeStyle='rgba(128,136,148,.22)'; g.lineWidth=1;
+  for(let k=1;k<4;k++){ const y=h*k/4; g.beginPath(); g.moveTo(0,y); g.lineTo(w,y); g.stroke(); }
+  for(const s of series){
+    g.strokeStyle=s.col; g.lineWidth=1.8; g.beginPath();
+    TREND.forEach((t,i)=>{
+      const x=i/(TREND.length-1)*w, y=h-4-(t[s.k]/s.max)*(h-12);
+      i?g.lineTo(x,y):g.moveTo(x,y);
+    });
+    g.stroke();
+  }
+  g.font='700 10px system-ui'; g.textBaseline='top'; g.textAlign='left';
+  let lx=4; for(const s of series){ g.fillStyle=s.col; g.fillText('■ '+s.nm,lx,3); lx+=Math.max(46,s.nm.length*9+16); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   9. 렌더링
+   ═══════════════════════════════════════════════════════════════ */
+const cv=document.getElementById('map'), ctx=cv.getContext('2d');
+let hover=-1, flash=-1, flashT=0;
+/* 테마 색은 프레임마다 getComputedStyle을 부르면 비싸므로 캐시한다 */
+let TC={};
+function refreshColors(){
+  const cs=getComputedStyle(document.documentElement);
+  const g=v=>cs.getPropertyValue(v).trim();
+  TC={ terrain:g('--terrain'), terrain2:g('--terrain2'), water:g('--water'),
+       line2:g('--line2'), line:g('--line'), panel:g('--panel'), acc:g('--acc'),
+       zr:g('--zr'), zc:g('--zc'), zi:g('--zi') };
+  TC.zone=[null,TC.zr,TC.zc,TC.zi];
+}
+
+function fitCanvas(){
+  const wrap=cv.parentElement, avail=wrap.clientWidth||800;
+  CELL=Math.max(14, Math.floor(avail/W));
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  cv.width=W*CELL*dpr; cv.height=H*CELL*dpr;
+  /* CELL에 최소값(14)이 있어 좁은 화면에서는 내부 해상도가 화면보다 커진다.
+     그럴 땐 CSS로 축소해 보여준다 — cellAt()이 rect 비율로 좌표를 환산하므로 클릭은 그대로 맞는다. */
+  const shown=Math.min(W*CELL, avail);
+  cv.style.width=shown+'px';
+  cv.style.height=(shown*H/W)+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const sb=document.getElementById('sbar');
+  sb.style.width=(CELL*6)+'px';
+  document.getElementById('sbtxt').textContent=(6*CELLM)+' m';
+}
+
+function heat(v,stops){
+  for(let i=stops.length-1;i>=0;i--) if(v>=stops[i][0]) return stops[i][1];
+  return stops[0][1];
+}
+const VC_STOPS=[[0,'#2ecb8f'],[.6,'#a9d13c'],[.75,'#e8c33a'],[.88,'#ef8b35'],[1.0,'#e0432c'],[1.25,'#a71d10']];
+
+function render(){
+  const w=W*CELL,h=H*CELL;
+  ctx.clearRect(0,0,w,h);
+
+  // 지형
+  ctx.fillStyle=TC.terrain; ctx.fillRect(0,0,w,h);
+  ctx.fillStyle=TC.terrain2;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+    if((x+y)%2===0) ctx.fillRect(x*CELL,y*CELL,CELL,CELL);
+  }
+  ctx.fillStyle=TC.water;
+  for(let i=0;i<N;i++) if(RIVER[i]) ctx.fillRect(cx(i)*CELL,cy(i)*CELL,CELL,CELL);
+
+  // 존
+  for(let i=0;i<N;i++){
+    const z=S.zone[i]; if(!z) continue;
+    const L=S.lvl[i];
+    ctx.globalAlpha = L===0? 0.20 : 0.34+L*0.16;
+    ctx.fillStyle=TC.zone[z];
+    ctx.fillRect(cx(i)*CELL+1,cy(i)*CELL+1,CELL-2,CELL-2);
+    ctx.globalAlpha=1;
+    if(L>0){
+      // 건물 블록 — 레벨이 높을수록 큰 덩어리
+      const p=CELL*(L===1?.30:L===2?.22:.15);
+      ctx.fillStyle=TC.zone[z];
+      ctx.globalAlpha=.85;
+      ctx.fillRect(cx(i)*CELL+p,cy(i)*CELL+p,CELL-2*p,CELL-2*p);
+      ctx.globalAlpha=1;
+      if(L===3){ ctx.strokeStyle='rgba(255,255,255,.55)'; ctx.lineWidth=1;
+        ctx.strokeRect(cx(i)*CELL+p+.5,cy(i)*CELL+p+.5,CELL-2*p-1,CELL-2*p-1); }
+    }else if(accessNode(i)<0){
+      // 도로 미접도 빗금
+      ctx.save();
+      ctx.beginPath(); ctx.rect(cx(i)*CELL,cy(i)*CELL,CELL,CELL); ctx.clip();
+      ctx.strokeStyle='rgba(224,79,56,.55)'; ctx.lineWidth=1.4;
+      for(let k=-CELL;k<CELL;k+=5){ ctx.beginPath();
+        ctx.moveTo(cx(i)*CELL+k,cy(i)*CELL); ctx.lineTo(cx(i)*CELL+k+CELL,cy(i)*CELL+CELL); ctx.stroke(); }
+      ctx.restore();
+    }
+  }
+
+  // 오버레이 히트맵
+  if(S.overlay==='air'||S.overlay==='noise'||S.overlay==='land'||S.overlay==='svc'){
+    for(let i=0;i<N;i++){
+      let v=0,col;
+      if(S.overlay==='air'){ v=clamp(F.air[i]/34,0,1); col=`rgba(198,72,40,${v*0.78})`; }
+      else if(S.overlay==='noise'){ v=clamp(F.noi[i]/40,0,1); col=`rgba(150,60,190,${v*0.66})`; }
+      else if(S.overlay==='land'){ v=F.lv[i]/100; col=`rgba(30,150,110,${v*0.62})`; }
+      else { const m=Math.max(F.cov.fire[i],F.cov.police[i],F.cov.health[i],F.cov.edu[i],F.cov.park[i]);
+             const a=(F.cov.fire[i]+F.cov.police[i]+F.cov.health[i]+F.cov.edu[i]+F.cov.park[i])/5;
+             v=a; col=`rgba(60,120,235,${(0.15+a*0.8)*0.6})`; if(m<=0) col='rgba(120,120,130,.14)'; }
+      if(v<=0.012 && S.overlay!=='svc') continue;
+      ctx.fillStyle=col; ctx.fillRect(cx(i)*CELL,cy(i)*CELL,CELL,CELL);
+    }
+  }
+
+  // 도로 (좁은 것부터 → 넓은 것이 위에)
+  for(let cls=1;cls<=4;cls++){
+    for(const i of F.roadCells){
+      if(S.road[i]!==cls) continue;
+      const r=ROAD[cls];
+      let col=r.c;
+      if(S.overlay==='traffic'){ col=heat(vcOf(i),VC_STOPS); }
+      else if(S.overlay==='freight'){ const f=clamp(F.volF[i]/Math.max(1,r.cap*0.35),0,1);
+        col=f<0.02?r.c:`rgb(${Math.round(90+165*f)},${Math.round(90-40*f)},${Math.round(190-150*f)})`; }
+      const X=cx(i)*CELL, Y=cy(i)*CELL, C=CELL/2, wd=r.w*CELL;
+      ctx.fillStyle=col;
+      ctx.fillRect(X+C-wd/2, Y+C-wd/2, wd, wd);
+      for(const[dx,dy]of DIRS){
+        const nx=cx(i)+dx, ny=cy(i)+dy; if(!inB(nx,ny))continue;
+        const j=idx(nx,ny); if(!S.road[j]) continue;
+        if(!linked(i,j)) continue;
+        if(dx){ const x0=dx>0? X+C : X; ctx.fillRect(x0, Y+C-wd/2, C, wd); }
+        else  { const y0=dy>0? Y+C : Y; ctx.fillRect(X+C-wd/2, y0, wd, C); }
+      }
+      // 고속도로 중앙 분리대
+      if(cls===R_HW && S.overlay!=='traffic' && S.overlay!=='freight'){
+        ctx.fillStyle='rgba(255,220,90,.55)';
+        const hz = (inB(cx(i)+1,cy(i))&&S.road[idx(cx(i)+1,cy(i))]===R_HW)||(inB(cx(i)-1,cy(i))&&S.road[idx(cx(i)-1,cy(i))]===R_HW);
+        if(hz) ctx.fillRect(X,Y+C-.8,CELL,1.6); else ctx.fillRect(X+C-.8,Y,1.6,CELL);
+      }
+    }
+  }
+
+  // 끊긴 연결 표시 (고속도로 ↔ 일반, IC 없음)
+  ctx.font='bold '+Math.max(9,CELL*0.5)+'px system-ui';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  for(const i of F.roadCells){
+    if(S.road[i]===R_HW) continue;
+    for(const[dx,dy]of DIRS){
+      const nx=cx(i)+dx,ny=cy(i)+dy; if(!inB(nx,ny))continue;
+      const j=idx(nx,ny); if(S.road[j]!==R_HW||isIC(j)) continue;
+      const mx=(cx(i)+nx)/2*CELL+CELL/2, my=(cy(i)+ny)/2*CELL+CELL/2;
+      ctx.fillStyle='#e0432c';
+      ctx.beginPath(); ctx.arc(mx,my,CELL*0.26,0,7); ctx.fill();
+      ctx.fillStyle='#fff'; ctx.font='bold '+Math.max(8,CELL*0.34)+'px system-ui';
+      ctx.fillText('✕',mx,my+0.5);
+    }
+  }
+
+  // 건물
+  for(let i=0;i<N;i++){
+    const b=S.bld[i]; if(!b) continue;
+    const X=cx(i)*CELL, Y=cy(i)*CELL;
+    if(b==='bus'){
+      ctx.fillStyle='#2f9be0';
+      ctx.beginPath(); ctx.arc(X+CELL/2,Y+CELL/2,CELL*0.27,0,7); ctx.fill();
+      ctx.strokeStyle='#fff'; ctx.lineWidth=1.3; ctx.stroke();
+      continue;                                  // 도로 위에 얹히므로 배경 박스를 그리지 않는다
+    }
+    if(b!=='ic'){
+      ctx.fillStyle=TC.panel; ctx.globalAlpha=.9;
+      ctx.fillRect(X+1,Y+1,CELL-2,CELL-2); ctx.globalAlpha=1;
+      ctx.strokeStyle=TC.line; ctx.lineWidth=1;
+      ctx.strokeRect(X+1.5,Y+1.5,CELL-3,CELL-3);
+    }else{
+      ctx.fillStyle='#ffd35c';
+      ctx.beginPath(); ctx.arc(X+CELL/2,Y+CELL/2,CELL*0.40,0,7); ctx.fill();
+      ctx.strokeStyle='#8a6b00'; ctx.lineWidth=1.4; ctx.stroke();
+    }
+    ctx.font=Math.max(9,CELL*0.62)+'px "Apple Color Emoji","Segoe UI Emoji",system-ui';
+    ctx.fillText(SVC[b].ico, X+CELL/2, Y+CELL/2+1);
+  }
+
+  // 커버리지 반경 (서비스 오버레이)
+  if(S.overlay==='svc'){
+    ctx.strokeStyle='rgba(60,120,235,.5)'; ctx.lineWidth=1.2; ctx.setLineDash([4,3]);
+    for(let i=0;i<N;i++){ const b=S.bld[i]; if(!b||!SVC[b].cov)continue;
+      ctx.beginPath(); ctx.arc(cx(i)*CELL+CELL/2,cy(i)*CELL+CELL/2,SVC[b].cov*CELL,0,7); ctx.stroke(); }
+    ctx.setLineDash([]);
+  }
+
+  // 바람 화살표
+  if(S.overlay==='air'){
+    const [wx,wy]=windVec();
+    ctx.save();
+    ctx.strokeStyle='rgba(255,255,255,.85)'; ctx.fillStyle='rgba(0,0,0,.35)';
+    ctx.lineWidth=2;
+    const bx=w-58, by=44;
+    ctx.beginPath(); ctx.arc(bx,by,26,0,7); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(bx-wx*17,by-wy*17); ctx.lineTo(bx+wx*17,by+wy*17); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(bx+wx*19,by+wy*19);
+    ctx.lineTo(bx+wx*9-wy*7, by+wy*9+wx*7);
+    ctx.lineTo(bx+wx*9+wy*7, by+wy*9-wx*7);
+    ctx.closePath(); ctx.fillStyle='rgba(255,255,255,.9)'; ctx.fill();
+    ctx.restore();
+  }
+
+  // 격자선
+  ctx.strokeStyle=TC.line2; ctx.globalAlpha=.5; ctx.lineWidth=1;
+  ctx.beginPath();
+  for(let x=0;x<=W;x++){ctx.moveTo(x*CELL+.5,0);ctx.lineTo(x*CELL+.5,h);}
+  for(let y=0;y<=H;y++){ctx.moveTo(0,y*CELL+.5);ctx.lineTo(w,y*CELL+.5);}
+  ctx.stroke(); ctx.globalAlpha=1;
+
+  // 추적 경로
+  if(F.paths.length){
+    F.paths.forEach((p,pi)=>{
+      ctx.save();
+      ctx.lineJoin='round'; ctx.lineCap='round';
+      ctx.strokeStyle='rgba(0,0,0,.35)'; ctx.lineWidth=CELL*0.34;
+      ctx.beginPath();
+      p.cells.forEach((c,k)=>{ const X=cx(c)*CELL+CELL/2,Y=cy(c)*CELL+CELL/2;
+        k?ctx.lineTo(X,Y):ctx.moveTo(X,Y); });
+      ctx.stroke();
+      ctx.strokeStyle=p.color; ctx.lineWidth=CELL*0.20;
+      ctx.setLineDash([CELL*0.5,CELL*0.34]);
+      ctx.lineDashOffset=-((Date.now()/55)%(CELL*0.84)) - pi*3;
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // 도착점 표식
+      const e=p.cells[p.cells.length-1];
+      ctx.fillStyle=p.color;
+      ctx.beginPath(); ctx.arc(cx(e)*CELL+CELL/2,cy(e)*CELL+CELL/2,CELL*0.28,0,7); ctx.fill();
+      ctx.strokeStyle='#fff'; ctx.lineWidth=1.6; ctx.stroke();
+      ctx.restore();
+    });
+    // 출발점
+    if(S.probe>=0){
+      ctx.strokeStyle='#fff'; ctx.lineWidth=2.4;
+      ctx.strokeRect(cx(S.probe)*CELL+2,cy(S.probe)*CELL+2,CELL-4,CELL-4);
+      ctx.strokeStyle='#111'; ctx.lineWidth=1;
+      ctx.strokeRect(cx(S.probe)*CELL+2,cy(S.probe)*CELL+2,CELL-4,CELL-4);
+    }
+  }
+
+  // 병목 깜빡임
+  if(flash>=0 && Date.now()-flashT<2600){
+    const t=(Date.now()-flashT)/2600;
+    ctx.strokeStyle='rgba(224,67,44,'+(0.9-t*0.5)+')'; ctx.lineWidth=3;
+    const rr=CELL*(0.6+t*1.6);
+    ctx.beginPath(); ctx.arc(cx(flash)*CELL+CELL/2,cy(flash)*CELL+CELL/2,rr,0,7); ctx.stroke();
+  }
+
+  // 호버
+  if(hover>=0){
+    ctx.strokeStyle=TC.acc; ctx.lineWidth=2;
+    ctx.strokeRect(cx(hover)*CELL+1,cy(hover)*CELL+1,CELL-2,CELL-2);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   10. UI
+   ═══════════════════════════════════════════════════════════════ */
+const TOOLGROUPS=[
+ {g:'도로',items:[['r1','2차선 국지','#9aa1ab'],['r2','4차선 콜렉터','#7c8490'],['r3','6차선 간선','#5d6470'],['r4','고속도로','#454c57']]},
+ {g:'구역',items:[['z1','주거','var(--zr)'],['z2','상업','var(--zc)'],['z3','공업','var(--zi)']]},
+ {g:'시설',items:SVC_KEYS.map(k=>['b'+k,SVC[k].nm,null])},
+ {g:'',items:[['probe','경로 추적',null],['del','철거',null]]}
+];
+function toolCost(t){
+  if(t[0]==='r') return ROAD[+t[1]].cost;
+  if(t[0]==='z') return 0;              // CS2와 동일하게 존 지정은 무료
+  if(t.startsWith('b')) return SVC[t.slice(1)].cost;
+  return 0;
+}
+function renderTools(){
+  const el=document.getElementById('tools'); el.innerHTML='';
+  for(const grp of TOOLGROUPS){
+    if(grp.g){ const g=document.createElement('div'); g.className='grp'; g.textContent=grp.g; el.appendChild(g); }
+    for(const [id,nm,col] of grp.items){
+      const b=document.createElement('button');
+      b.className='tool'; b.dataset.t=id; b.setAttribute('aria-pressed', S.tool===id?'true':'false');
+      const sw=document.createElement('span'); sw.className='sw';
+      if(id[0]==='r'||id[0]==='z'){ sw.style.background=col; }
+      else if(id==='del'){ sw.textContent='🧨'; }
+      else if(id==='probe'){ sw.textContent='🔍'; }
+      else { sw.textContent=SVC[id.slice(1)].ico; }
+      const n=document.createElement('span'); n.className='tn'; n.textContent=nm;
+      const c=document.createElement('span'); c.className='tc';
+      const cost=toolCost(id);
+      c.textContent = (id==='del'||id==='probe') ? '' : (cost===0 ? '무료' : cost>=1000 ? '₡'+(cost/1000)+'k' : '₡'+cost);
+      b.append(sw,n,c);
+      b.onclick=()=>{ S.tool=id; renderTools(); };
+      el.appendChild(b);
+    }
+  }
+}
+const OVERLAYS=[['base','🗺 기본'],['traffic','🚗 교통량'],['freight','🚛 화물'],['air','🏭 대기오염'],['noise','🔊 소음'],['land','💎 지가'],['svc','🏥 서비스']];
+function renderLegend(){
+  const el=document.getElementById('legend'); el.innerHTML='';
+  for(const[k,nm]of OVERLAYS){
+    const b=document.createElement('button'); b.className='ovbtn'; b.textContent=nm;
+    b.setAttribute('aria-pressed',S.overlay===k?'true':'false');
+    b.onclick=()=>{S.overlay=k; renderLegend(); render();};
+    el.appendChild(b);
+  }
+}
+function kpi(label,val,unit,cls,barPct,barCol){
+  return `<div class="kpi ${cls||''}"><div class="kl">${label}</div><div class="kv">${val}${unit?`<small>${unit}</small>`:''}</div>${
+    barPct!=null?`<div class="bar"><i style="width:${clamp(barPct,0,100)}%;background:${barCol||'var(--acc)'}"></i></div>`:''}</div>`;
+}
+function renderKPI(){
+  const e=document.getElementById('kpis');
+  const cg=ST.congPct||0, hp=ST.happy||0;
+  e.innerHTML=
+    kpi('인구',(ST.pop||0).toLocaleString('ko-KR'),'명')+
+    kpi('일자리',(ST.jobs||0).toLocaleString('ko-KR'),'개')+
+    kpi('자금',won(S.funds).replace('₡',''),'₡', S.funds<0?'bad':'')+
+    kpi('월 수지',(ST.balance>=0?'+':'')+Math.round(ST.balance||0).toLocaleString('ko-KR'),'₡',ST.balance>=0?'ok':'bad')+
+    kpi('정체 구간',cg.toFixed(1),'%',cg<=3?'ok':cg<=10?'warn':'bad',cg*4,cg<=3?'var(--ok)':cg<=10?'var(--warn)':'var(--bad)')+
+    kpi('평균 통근',(ST.avgCommute||0).toFixed(1),'분',ST.avgCommute<=2.6?'ok':ST.avgCommute<=4.2?'warn':'bad')+
+    kpi('행복도',hp.toFixed(0),'',hp>=70?'ok':hp>=45?'warn':'bad',hp,hp>=70?'var(--ok)':hp>=45?'var(--warn)':'var(--bad)')+
+    kpi('오염 노출',((ST.airExp||0)*100).toFixed(0),'%',ST.airExp<=0.07?'ok':ST.airExp<=0.22?'warn':'bad');
+}
+function renderDiag(){
+  const el=document.getElementById('diag'); el.innerHTML='';
+  for(const d of DIAG){
+    const n=document.createElement('div'); n.className='dg '+d.lvl;
+    n.innerHTML=`<span class="di">${d.ico}</span><span><span class="dt">${d.t}</span><span class="dd">${d.d}</span></span>`;
+    if(d.loc!=null){
+      const b=document.createElement('button'); b.className='dloc'; b.textContent='📍 위치 보기';
+      b.onclick=()=>{ flash=d.loc; flashT=Date.now(); S.overlay='traffic'; renderLegend(); render();
+        cv.scrollIntoView({block:'center',behavior:'smooth'}); };
+      n.querySelector('span:last-child').appendChild(b);
+    }
+    el.appendChild(n);
+  }
+}
+function renderMissions(){
+  const el=document.getElementById('missions'); el.innerHTML='';
+  MISSIONS.forEach((m,i)=>{
+    if(i>S.mission) return;                       // 아직 안 열림
+    const done=i<S.mission, cur=i===S.mission;
+    const n=document.createElement('div'); n.className='mi'+(cur?' cur':'')+(done?' done':'');
+    let cks='';
+    if(cur){
+      cks='<div class="mck">'+m.ck().map(([t,ok])=>`<span class="ck ${ok?'on':''}">${ok?'✓':'○'} ${t}</span>`).join('')+'</div>';
+    }
+    n.innerHTML=`<span class="mn">${done?'✓':i+1}</span><span><span class="mt">${m.t}</span>`+
+      (cur?`<span class="md">${m.d}</span>${cks}<div class="mtip">💡 ${m.tip}</div>`:'')+`</span>`;
+    el.appendChild(n);
+  });
+  if(S.mission>=MISSIONS.length){
+    const n=document.createElement('div'); n.className='mi cur';
+    n.innerHTML='<span class="mn">★</span><span><span class="mt">자유 모드</span><span class="md">모든 미션을 마쳤습니다. 이제 인구 2만을 정체 없이 만들어 보세요.</span></span>';
+    el.appendChild(n);
+  }
+}
+function syncUI(){
+  renderKPI(); renderDiag(); renderMissions(); renderCmp(); drawTrend();
+  document.getElementById('clock').textContent=`${Math.floor(S.week/48)+1}년차 ${Math.floor(S.week%48/4)+1}월`;
+}
+
+/* 토스트 */
+let toastT;
+function toast(msg,kind,ms){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='on '+(kind||'');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.className='',ms||2200);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   11. 입력
+   ═══════════════════════════════════════════════════════════════ */
+/* ── 되돌리기 (획 단위) ── */
+const UNDO=[]; const UNDO_MAX=40;
+function snapshot(){
+  return {road:S.road.slice(),zone:S.zone.slice(),lvl:S.lvl.slice(),
+          dev:S.dev.slice(),bld:S.bld.slice(),funds:S.funds};
+}
+function restore(s){
+  S.road.set(s.road); S.zone.set(s.zone); S.lvl.set(s.lvl); S.dev.set(s.dev);
+  S.bld=s.bld.slice(); S.funds=s.funds;
+}
+function pushUndo(){ UNDO.push(snapshot()); if(UNDO.length>UNDO_MAX) UNDO.shift(); updUndoBtn(); }
+function undo(){
+  if(!UNDO.length){ toast('되돌릴 작업이 없습니다'); return; }
+  restore(UNDO.pop()); updUndoBtn();
+  S.probe=-1; F.paths=[]; probeInfo='';
+  rebuild(); recalcAll(); render(); syncUI();
+  toast('↩︎ 되돌렸습니다');
+}
+function updUndoBtn(){
+  const b=document.getElementById('btnUndo');
+  if(b){ b.disabled=!UNDO.length; b.style.opacity=UNDO.length?1:.45; }
+}
+
+let painting=false, lastCell=-1, spent=0;
+function cellAt(ev){
+  const r=cv.getBoundingClientRect();
+  const x=Math.floor((ev.clientX-r.left)/r.width*W);
+  const y=Math.floor((ev.clientY-r.top)/r.height*H);
+  return inB(x,y)? idx(x,y) : -1;
+}
+function canBuild(i,t){
+  if(t==='del') return true;
+  if(RIVER[i] && t[0]!=='r') return false;
+  if(t[0]==='r'){ const b=S.bld[i]; if(b&&b!=='ic'&&b!=='bus') return false; return true; }
+  if(t[0]==='z'){ if(S.road[i]||S.bld[i]) return false; return true; }
+  if(t[0]==='b'){
+    const k=t.slice(1);
+    if(k==='ic'){ if(S.road[i]!==R_HW) return false; if(S.bld[i]) return false; return true; }
+    if(k==='bus'){ return S.road[i]>0 && S.road[i]!==R_HW && !S.bld[i]; }
+    if(S.road[i]||S.zone[i]||S.bld[i]) return false;
+    // 도로 접도 필요
+    for(const[dx,dy]of DIRS){ const x=cx(i)+dx,y=cy(i)+dy;
+      if(inB(x,y)&&S.road[idx(x,y)]&&S.road[idx(x,y)]!==R_HW) return true; }
+    return false;
+  }
+  return false;
+}
+function apply(i){
+  const t=S.tool;
+  if(t==='probe'){
+    if(!S.zone[i]||!S.lvl[i]){ toast('개발된 존을 클릭하세요 — 그 존의 통행 경로를 그려 줍니다'); S.probe=-1; F.paths=[]; render(); return false; }
+    S.probe=i; traceFrom(i);
+    if(!F.paths.length){ probeInfo=''; toast('경로가 없습니다 — 이 존은 도로망으로 어디에도 닿지 못합니다','bad'); }
+    else showPathInfo();
+    render(); return false;
+  }
+  if(t==='del'){
+    let ref=0;
+    if(S.bld[i]){ ref=SVC[S.bld[i]].cost*0.35; S.bld[i]=null; }
+    else if(S.road[i]){ ref=ROAD[S.road[i]].cost*0.3; S.road[i]=0; }
+    else if(S.zone[i]){ S.zone[i]=0; S.lvl[i]=0; S.dev[i]=0; }
+    else return false;
+    S.funds+=ref; return true;
+  }
+  if(!canBuild(i,t)) return false;
+  const cost=toolCost(t);
+  if(S.funds<cost){ toast('자금이 부족합니다 — '+won(cost)+' 필요','bad'); return false; }
+  if(t[0]==='r'){
+    const cls=+t[1];
+    if(S.road[i]===cls) return false;
+    const prev=S.road[i]? ROAD[S.road[i]].cost*0.3 : 0;
+    S.road[i]=cls; S.zone[i]=0; S.lvl[i]=0; S.dev[i]=0;
+    const b=S.bld[i];
+    if(b && b!=='ic' && b!=='bus') S.bld[i]=null;
+    if(b==='ic'  && cls!==R_HW) S.bld[i]=null;   // 고속도로가 아니게 되면 IC는 사라진다
+    if(b==='bus' && cls===R_HW) S.bld[i]=null;   // 고속도로엔 정류장을 둘 수 없다
+    S.funds-=cost-prev;
+  }else if(t[0]==='z'){
+    const z=+t[1]; if(S.zone[i]===z) return false;
+    S.zone[i]=z; S.lvl[i]=0; S.dev[i]=0; S.funds-=cost;
+  }else{
+    S.bld[i]=t.slice(1); S.funds-=cost;
+  }
+  spent+=cost;
+  return true;
+}
+function line(a,b,fn){
+  let x0=cx(a),y0=cy(a),x1=cx(b),y1=cy(b);
+  const dx=Math.abs(x1-x0),sx=x0<x1?1:-1, dy=-Math.abs(y1-y0),sy=y0<y1?1:-1;
+  let err=dx+dy;
+  for(;;){ fn(idx(x0,y0));
+    if(x0===x1&&y0===y1)break;
+    const e2=2*err;
+    if(e2>=dy){err+=dy;x0+=sx;}
+    if(e2<=dx){err+=dx;y0+=sy;}
+  }
+}
+let dirty=false, dirtyT;
+function markDirty(){
+  dirty=true; clearTimeout(dirtyT);
+  dirtyT=setTimeout(()=>{ recalcAll(); render(); syncUI(); },260);
+  render();
+}
+cv.addEventListener('pointerdown',ev=>{
+  ev.preventDefault(); cv.setPointerCapture(ev.pointerId);
+  const i=cellAt(ev); if(i<0)return;
+  if(S.tool==='probe'){ apply(i); return; }      // 추적은 드래그 대상이 아니다
+  pushUndo();
+  painting=true; lastCell=i; spent=0;
+  if(apply(i)){ rebuild(); markDirty(); }
+});
+cv.addEventListener('pointermove',ev=>{
+  const i=cellAt(ev);
+  if(i!==hover){ hover=i; updHUD(); if(!painting) render(); }
+  if(!painting||i<0) return;
+  if(i!==lastCell){
+    let ch=false;
+    line(lastCell,i,k=>{ if(apply(k)) ch=true; });
+    lastCell=i;
+    if(ch){ rebuild(); markDirty(); }
+  }
+});
+addEventListener('pointerup',()=>{ if(painting){painting=false; rebuild(); markDirty();} });
+cv.addEventListener('pointerleave',()=>{ hover=-1; updHUD(); render(); });
+cv.addEventListener('contextmenu',ev=>ev.preventDefault());
+
+let probeInfo='';
+function showPathInfo(){
+  const z=S.zone[S.probe];
+  probeInfo = `🔍 <b>${ZONE[z].nm} Lv.${S.lvl[S.probe]}</b>의 통행 경로 — `
+    + F.paths.map(p=>`<b style="color:${p.color}">${p.label} ${p.mins.toFixed(1)}분</b>`).join(' · ')
+    + ' <span style="opacity:.7">(빈 곳을 클릭하면 해제)</span>';
+  updHUD();
+}
+function updHUD(){
+  const el=document.getElementById('hud');
+  if(hover<0){
+    el.innerHTML = probeInfo || '칸 위에 마우스를 올리면 상세 수치가 나옵니다. 드래그로 도로·구역을 그립니다.';
+    return;
+  }
+  const i=hover, p=[];
+  p.push(`<b>(${cx(i)}, ${cy(i)})</b>`);
+  if(S.road[i]){
+    const r=ROAD[S.road[i]], vc=vcOf(i);
+    p.push(`${r.nm} · 통행 <b>${Math.round(F.vol[i]).toLocaleString('ko-KR')}</b>/시 · V/C <b style="color:${heat(vc,VC_STOPS)}">${vc.toFixed(2)}</b>`);
+    if(F.nodeCap[i]>0){
+      const xn=F.vol[i]/F.nodeCap[i];
+      p.push(`${F.deg[i]}갈래 교차로 · 처리용량 <b>${Math.round(F.nodeCap[i]).toLocaleString('ko-KR')}</b>/시 (포화 ${(xn*100).toFixed(0)}%)`);
+      p.push(`지체 <b>+${(F.pen[i]*(1+0.85*Math.pow(xn,3.5))).toFixed(1)}초</b>`);
+    }else if(F.pen[i]>0.4) p.push(`지체 <b>+${F.pen[i].toFixed(1)}초</b>`);
+    if(F.volF[i]>1) p.push(`화물 ${Math.round(F.volF[i])}/시`);
+    if(F.bus[i]>0) p.push(`🚏 정류장 권역 ${(F.bus[i]*100).toFixed(0)}%`);
+  }
+  if(S.zone[i]){
+    const z=ZONE[S.zone[i]], L=S.lvl[i];
+    p.push(`${z.nm} Lv.${L}${L?` · ${z.pop[L]?`인구 ${z.pop[L]}`:`일자리 ${z.job[L]}`}`:' (미개발)'}`);
+    if(!L) p.push(accessNode(i)<0? '<b style="color:var(--bad)">도로 미접도</b>' : `성장 ${(S.dev[i]*100).toFixed(0)}%`);
+  }
+  if(S.bld[i]) p.push(`${SVC[S.bld[i]].ico} ${SVC[S.bld[i]].nm}`);
+  if(RIVER[i]) p.push('🌊 강');
+  p.push(`대기 <b>${F.air[i].toFixed(0)}</b> · 소음 <b>${F.noi[i].toFixed(0)}</b> · 지가 <b>${F.lv[i].toFixed(0)}</b>`);
+  el.innerHTML=p.join(' · ');
+}
+
+/* 도구 단축키 */
+addEventListener('keydown',ev=>{
+  if(ev.target.tagName==='INPUT') return;
+  if((ev.ctrlKey||ev.metaKey) && ev.key.toLowerCase()==='z'){ undo(); ev.preventDefault(); return; }
+  const m={'1':'r1','2':'r2','3':'r3','4':'r4','q':'z1','w':'z2','e':'z3','x':'del','r':'probe'};
+  const k=ev.key.toLowerCase();
+  if(m[k]){ S.tool=m[k]; renderTools(); ev.preventDefault(); }
+  else if(ev.code==='Space'){ setSpeed(S.speed===0?1:0); ev.preventDefault(); }
+  else if(ev.key==='Tab'){ const i=OVERLAYS.findIndex(o=>o[0]===S.overlay);
+    S.overlay=OVERLAYS[(i+1)%OVERLAYS.length][0]; renderLegend(); render(); ev.preventDefault(); }
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   12. 컨트롤 바인딩
+   ═══════════════════════════════════════════════════════════════ */
+function setSpeed(s){
+  S.speed=s;
+  document.querySelectorAll('#speed button').forEach(b=>b.setAttribute('aria-pressed', +b.dataset.s===s?'true':'false'));
+}
+document.querySelectorAll('#speed button').forEach(b=>b.onclick=()=>setSpeed(+b.dataset.s));
+
+const COMPASS=[['북서',315],['북',0],['북동',45],['서',270],null,['동',90],['남서',225],['남',180],['남동',135]];
+function renderCompass(){
+  const el=document.getElementById('compass'); el.innerHTML='';
+  for(const c of COMPASS){
+    const b=document.createElement('button');
+    if(!c){ b.className='mid'; b.textContent='🧭'; b.disabled=true; el.appendChild(b); continue; }
+    b.textContent=c[0]; b.setAttribute('aria-pressed',S.wind===c[1]?'true':'false');
+    b.onclick=()=>{ S.wind=c[1]; renderCompass(); recalcAll(); render(); syncUI(); };
+    el.appendChild(b);
+  }
+}
+const bind=(id,fn,fmt)=>{
+  const el=document.getElementById(id), v=document.getElementById(id+'V');
+  el.oninput=()=>{ fn(+el.value); if(v) v.textContent=fmt?fmt(+el.value):el.value; recalcAll(); render(); syncUI(); };
+};
+bind('windStr',v=>S.windStr=v/100);
+bind('taxR',v=>S.taxR=v, v=>v+'%');
+bind('taxC',v=>S.taxC=v, v=>v+'%');
+bind('taxI',v=>S.taxI=v, v=>v+'%');
+document.getElementById('polBike').onchange=e=>{S.pol.bike=e.target.checked; recalcAll(); render(); syncUI();};
+document.getElementById('polPark').onchange=e=>{S.pol.park=e.target.checked; recalcAll(); render(); syncUI();};
+document.getElementById('polTruck').onchange=e=>{S.pol.truck=e.target.checked; recalcAll(); render(); syncUI();};
+
+/* 테마 */
+const TK='ssk2-theme';
+(function(){ const s=localStorage.getItem(TK); if(s) document.documentElement.dataset.theme=s; })();
+document.getElementById('themeBtn').onclick=()=>{
+  const cur=document.documentElement.dataset.theme
+    || (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  const nx=cur==='dark'?'light':'dark';
+  document.documentElement.dataset.theme=nx; localStorage.setItem(TK,nx);
+  refreshColors(); render();
+};
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{ refreshColors(); render(); });
+/* 도움말 */
+const help=document.getElementById('help');
+document.getElementById('helpBtn').onclick=()=>help.classList.add('on');
+document.getElementById('helpClose').onclick=()=>help.classList.remove('on');
+help.onclick=e=>{ if(e.target===help) help.classList.remove('on'); };
+addEventListener('keydown',e=>{ if(e.key==='Escape') help.classList.remove('on'); });
+
+/* 저장 */
+const SK='ssk2-sim-v1';
+document.getElementById('btnSave').onclick=()=>{
+  const d={ road:[...S.road], zone:[...S.zone], bld:S.bld, lvl:[...S.lvl],
+    funds:S.funds, week:S.week, wind:S.wind, windStr:S.windStr,
+    taxR:S.taxR,taxC:S.taxC,taxI:S.taxI, pol:S.pol, mission:S.mission };
+  try{ localStorage.setItem(SK,JSON.stringify(d)); toast('💾 저장했습니다','good'); }
+  catch(e){ toast('저장 실패 — 브라우저 저장 공간이 부족합니다','bad'); }
+};
+document.getElementById('btnLoad').onclick=()=>{
+  const raw=localStorage.getItem(SK);
+  if(!raw){ toast('저장된 도시가 없습니다','bad'); return; }
+  try{
+    const d=JSON.parse(raw);
+    S.road.set(d.road); S.zone.set(d.zone); S.lvl.set(d.lvl); S.bld=d.bld; S.dev.fill(0.2);
+    S.funds=d.funds; S.week=d.week; S.wind=d.wind; S.windStr=d.windStr;
+    S.taxR=d.taxR; S.taxC=d.taxC; S.taxI=d.taxI; S.pol=d.pol; S.mission=d.mission||0;
+    document.getElementById('windStr').value=S.windStr*100; document.getElementById('windStrV').textContent=Math.round(S.windStr*100);
+    for(const k of ['R','C','I']){ document.getElementById('tax'+k).value=S['tax'+k]; document.getElementById('tax'+k+'V').textContent=S['tax'+k]+'%'; }
+    document.getElementById('polBike').checked=S.pol.bike;
+    document.getElementById('polPark').checked=S.pol.park;
+    document.getElementById('polTruck').checked=S.pol.truck;
+    renderCompass(); rebuild(); recalcAll(); render(); syncUI();
+    toast('📂 불러왔습니다','good');
+  }catch(e){ toast('불러오기 실패','bad'); }
+};
+document.getElementById('btnReset').onclick=()=>{
+  if(!confirm('현재 도시를 지우고 새로 시작할까요?')) return;
+  UNDO.length=0; updUndoBtn(); TREND.length=0; BASE=null;
+  newCity(); renderCompass(); toast('새 도시를 시작합니다');
+};
+document.getElementById('btnUndo').onclick=undo;
+document.getElementById('btnSnap').onclick=()=>{ snapBase(); toast('📌 지금 상태를 기준으로 잡았습니다','good'); };
+document.getElementById('btnSnapClear').onclick=()=>{ BASE=null; renderCmp(); };
+
+/* ═══════════════════════════════════════════════════════════════
+   13. 메인 루프
+   ═══════════════════════════════════════════════════════════════ */
+function recalcAll(){
+  rebuild();
+  assignTraffic();          // 편집 직후엔 항상 즉시 재배정
+  lastAssign=performance.now();
+  recalcEnv();
+  recalcStats();
+  // nearR은 recalcStats에서 나오므로 「대형차량 통제」는 다음 배정부터 반영된다
+  diagnose();
+  checkMissions();
+  if(S.probe>=0){                       // 도로가 바뀌면 경로도 바뀐다
+    if(S.zone[S.probe]&&S.lvl[S.probe]){ traceFrom(S.probe); if(F.paths.length) showPathInfo(); }
+    else { S.probe=-1; F.paths=[]; probeInfo=''; }
+  }
+}
+let acc=0, last=performance.now();
+function loop(now){
+  const dt=now-last; last=now;
+  if(S.speed>0){
+    acc+=dt*S.speed;
+    while(acc>=900){
+      acc-=900;
+      S.week++;
+      growth();
+      if(S.week%4===0){ S.funds+=ST.balance||0; pushTrend(); }
+      if(S.week%2===0) assignThrottled(false);
+      recalcEnv(); recalcStats(); diagnose();
+      checkMissions();
+      syncUI();
+    }
+    render();
+  } else if(F.paths.length || (flash>=0 && Date.now()-flashT<2600)){
+    render();                              // 일시정지 중에도 경로·병목 애니메이션은 살아 있어야 한다
+  }
+  requestAnimationFrame(loop);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   14. 시작
+   ═══════════════════════════════════════════════════════════════ */
+addEventListener('resize',()=>{ fitCanvas(); render(); drawTrend(); });
+refreshColors();
+renderTools(); renderLegend(); renderCompass(); renderPresets(); updUndoBtn();
+fitCanvas();
+newCity();
+fitCanvas(); render();
+requestAnimationFrame(loop);
+if(!localStorage.getItem('ssk2-sim-seen')){
+  localStorage.setItem('ssk2-sim-seen','1');
+  setTimeout(()=>help.classList.add('on'),400);
+}
+</script>
+</body>
+</html>

@@ -120,11 +120,15 @@ header.topbar{
 @media (max-width:760px){
   .topbar .logo .lt{display:none}
   .topbar a.gh{display:none}
+  .topbar a.gh.sim{display:inline-block;padding:6px 9px}   /* 시뮬레이터는 모바일에서도 아이콘으로 남긴다 */
+  .topbar a.gh.sim .lt{display:none}
   .searchwrap .skey{display:none}
   #q{padding-right:12px}
 }
 .topbar a.gh{color:var(--text2);text-decoration:none;font-size:13px;padding:6px 12px;border:1px solid var(--border);border-radius:8px;white-space:nowrap}
 .topbar a.gh:hover{background:var(--surface2);color:var(--text)}
+.topbar a.gh.sim{border-color:var(--accent);color:var(--accent);font-weight:650}
+.topbar a.gh.sim:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
 #menuBtn{display:none;background:none;border:1px solid var(--border);border-radius:8px;width:36px;height:36px;font-size:17px;color:var(--text);cursor:pointer;flex-shrink:0}
 .layout{display:flex;max-width:1460px;margin:0 auto;padding-top:58px}
 nav#sidebar{
@@ -363,6 +367,7 @@ figure.diagram svg{cursor:zoom-in}
     <div id="results" hidden role="listbox"></div>
   </div>
   <button id="themeBtn" aria-label="밝게/어둡게 전환" title="밝게 / 어둡게">🌗</button>
+  <a class="gh sim" href="sim.html" title="도로·교차로·바람을 직접 지어 보며 익히는 시뮬레이터">🏗️ <span class="lt">시뮬레이터</span></a>
   <a class="gh" href="https://github.com/g23252a-svg/ssk2" target="_blank" rel="noopener">GitHub ↗</a>
 </header>
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="도해 확대"><button class="lb-x" aria-label="닫기">✕</button><div class="lb-in"></div></div>
@@ -830,6 +835,13 @@ figure.diagram svg{cursor:zoom-in}
 <h2><span class="num">4</span>도로 설계 &amp; 교통 공학</h2>
 
 <p class="lede">CS2 교통 문제의 <strong>80%는 위계(hierarchy) 부재</strong>에서 나옵니다. 6차선으로 넓히는 것은 대부분 해결책이 아니라 문제의 이동입니다. 이 장은 이 공략집에서 가장 중요한 장입니다.</p>
+
+<div class="callout tip">
+  <div class="ct">🏗️ 읽기 전에 — 직접 지어 보면 훨씬 빨리 이해됩니다</div>
+  <p>이 장의 내용을 <a class="inline" href="sim.html"><strong>도시공학 시뮬레이터</strong></a>에서 직접 실험할 수 있습니다. 도로를 그리면 통행이 실제로 경로탐색되어 어디가 막히는지 색으로 나옵니다.</p>
+  <p>특히 이 장의 핵심 주장 — <strong>“차선 수보다 교차로가 중요하다”</strong> — 이 수치로 확인됩니다. 6차선 간선(3,600대/시)이라도 <strong>십자 교차로에서는 1,728대/시</strong>밖에 처리하지 못합니다. 신호가 녹색을 나눠 갖기 때문입니다. 거기에 2차선 국지도로까지 직결되면 <strong>1,382대/시</strong>로 떨어집니다.</p>
+  <p><strong>「망한 도시 고치기」 6종</strong>이 준비돼 있습니다 — 2차선 격자 도시, 간선 직결, 공업 바람 상류, 화물 주거지 관통, IC 밀집, 진입로 하나뿐. 불러와서 고쳐 보면 개선 폭이 표로 나옵니다.</p>
+</div>
 
 <h3>4-1. 도로 종류별 스펙</h3>
 <div class="tablewrap">
