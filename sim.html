@@ -163,6 +163,19 @@ canvas#map{display:block;width:100%;height:auto;cursor:crosshair;touch-action:no
 .kpi .kv small{font-size:10.5px;font-weight:700;color:var(--text3);margin-left:1px}
 .kpi.ok .kv{color:var(--ok)} .kpi.warn .kv{color:var(--warn)} .kpi.bad .kv{color:var(--bad)}
 
+details.fin{margin-top:9px;border-top:1px solid var(--line2);padding-top:8px}
+details.fin summary{font-size:11.5px;font-weight:750;color:var(--text2);cursor:pointer;list-style:none}
+details.fin summary::-webkit-details-marker{display:none}
+details.fin summary::before{content:'▸ ';color:var(--text3)}
+details.fin[open] summary::before{content:'▾ '}
+table.fin{width:100%;border-collapse:collapse;font-size:12px;margin-top:7px}
+table.fin td{padding:3px 5px;border-bottom:1px solid var(--line2);font-variant-numeric:tabular-nums}
+table.fin td:last-child{text-align:right;font-weight:700}
+table.fin tr.sec td{font-size:10.5px;font-weight:800;color:var(--text3);letter-spacing:.04em;border-bottom:0;padding-top:8px}
+table.fin tr.tot td{font-weight:800;border-top:1px solid var(--line);border-bottom:0}
+table.fin td.pos{color:var(--ok)} table.fin td.neg{color:var(--bad)}
+table.fin td.sub{padding-left:14px;color:var(--text2);font-weight:500}
+
 .bar{height:6px;border-radius:4px;background:var(--line2);overflow:hidden;margin-top:5px}
 .bar i{display:block;height:100%;border-radius:4px;transition:width .3s}
 
@@ -366,6 +379,7 @@ table.cmp .same{color:var(--text3)}
       <div class="ph">도시 지표</div>
       <div class="pb">
         <div class="kpis" id="kpis"></div>
+        <details class="fin"><summary>💰 월 수지 내역 — 돈이 어디로 나가는지</summary><div id="finbody"></div></details>
       </div>
     </div>
 
@@ -516,6 +530,9 @@ table.cmp .same{color:var(--text3)}
       <li>세율을 13%보다 올리면 수입은 늘지만 <b>수요가 줄고</b> 폐가가 생깁니다</li>
       <li>시작 자금 <b>₡1,000,000</b> — 실제 CS2와 같습니다</li>
     </ul>
+    <p><b>초반 적자는 정상입니다.</b> 인프라를 먼저 깔고 사람이 들어와 메우는 구조라, 인구 <b>150~200</b>쯤에서 흑자로 돌아섭니다. 기본 배치로 돌려 보면 <b>1년 7개월·인구 169</b>에서 전환되고, 그때까지 까먹는 돈은 시작 자금의 약 <b>1%</b>입니다. 이때 할 일은 절약이 아니라 <b>존을 더 지정하는 것</b>입니다.</p>
+    <p>시작 시 깔려 있는 고속도로는 <b>외부 도로</b>라 유지비가 없습니다. 직접 지은 고속도로는 국지도로의 <b>6.7배</b>이니, 필요 없는 고속도로는 파산의 지름길입니다. 지표 패널의 <b>「월 수지 내역」</b>을 열면 세목별로 어디서 돈이 나가는지, <b>도로 유지비가 세수의 몇 %</b>인지 보입니다 — 45%를 넘으면 인구 대비 도로가 너무 많은 것입니다.</p>
+    <p>수요는 <b>주거 ↔ 일자리 균형</b>으로 정해집니다. 시민 1인당 필요한 일자리는 약 <b>0.45개</b>입니다(아이·학생·은퇴자가 있으므로). 일자리가 남으면 사람이 몰려오고, 사람이 남으면 상업·공업 수요가 오릅니다.</p>
 
     <h4>10. 지도의 축척</h4>
     <p>격자 1칸 = <b>48 m</b>이고, 이는 CS2의 <b>존닝 깊이</b>(게임 셀 6칸)와 정확히 같습니다. 따라서 도로 사이 <b>2칸이 곧 96 m 블록</b> — 공략집이 권장하는 그 치수입니다. 지도 전체는 1,536 × 1,056 m, 즉 <b>도시가 아니라 지구(district) 하나</b>입니다. 통근 시간이 2~3분대로 나오는 것은 그래서입니다.</p>
@@ -614,6 +631,10 @@ const won=v=>'₡'+Math.round(v).toLocaleString('ko-KR');
    1. 초기 지형 — 고속도로 + 강
    ═══════════════════════════════════════════════════════════════ */
 const RIVER=new Uint8Array(N);
+/* 시작 시 이미 깔려 있는 고속도로 = 외부에서 들어온 도로.
+   플레이어가 짓지 않았으므로 유지비를 물리지 않습니다(CS2도 같습니다).
+   여기에 유지비를 물리면 빈 도시가 이미 월 ₡1,920 적자로 시작합니다. */
+const FREEROAD=new Uint8Array(N);
 function buildTerrain(){
   RIVER.fill(0);
   // 완만한 강: 좌하 → 우하 (사인파)
@@ -626,8 +647,9 @@ function newCity(){
   S.road.fill(0); S.zone.fill(0); S.bld.fill(null); S.lvl.fill(0); S.dev.fill(0);
   S.funds=1000000; S.week=0; S.mission=0; S.done=[];
   buildTerrain();
-  // 상단 고속도로 (y=1) — 맵 양 끝이 외부 연결
-  for(let x=0;x<W;x++) S.road[idx(x,1)]=R_HW;
+  // 상단 고속도로 (y=1) — 맵 양 끝이 외부 연결. 유지비 면제.
+  FREEROAD.fill(0);
+  for(let x=0;x<W;x++){ S.road[idx(x,1)]=R_HW; FREEROAD[idx(x,1)]=1; }
   rebuild(); recalcAll(); render(); syncUI();
 }
 
@@ -1100,6 +1122,7 @@ function recalcStats(){
   let pop=0,jobC=0,jobI=0,devR=0,devC=0,devI=0,zR=0,zC=0,zI=0,noAcc=0,ic=0;
   let mw=0,wat=0,sew=0,gar=0, upkeep=0;
   let intakes=0, intakePol=0, worstIntakePol=0, worstIntake=-1;
+  const upRoad=[0,0,0,0,0]; let upBld=0;
   let airR=0,noiR=0,lvR=0,cntR=0,airExp=0,airMax=0,noiExp=0;
   let covSum={fire:0,police:0,health:0,edu:0,park:0}, covN=0;
 
@@ -1125,8 +1148,11 @@ function recalcStats(){
       if(s.mw)mw+=s.mw; if(s.wat)wat+=s.wat; if(s.sew)sew+=s.sew; if(s.gar)gar+=s.gar;
       if(b==='ic')ic++;
       if(b==='intake'){ intakes++; intakePol+=F.wpol[i]; if(F.wpol[i]>worstIntakePol){worstIntakePol=F.wpol[i]; worstIntake=i;} }
+      upBld+=s.up;
     }
-    if(S.road[i]) upkeep+=ROAD[S.road[i]].up;
+    if(S.road[i] && !FREEROAD[i]){        // 외부에서 들어온 고속도로는 내 유지비가 아니다
+      const u=ROAD[S.road[i]].up; upkeep+=u; upRoad[S.road[i]]+=u;
+    }
   }
   const jobs=jobC+jobI;
   const needMW  = pop*0.021 + jobs*0.030;
@@ -1154,9 +1180,12 @@ function recalcStats(){
   ST.cov  = {}; for(const k in covSum) ST.cov[k]= covN? covSum[k]/covN : 0;
 
   // 세수 (13% 기준)
-  const inc = pop*3.1*(S.taxR/13) + jobC*5.6*(S.taxC/13) + jobI*4.9*(S.taxI/13)
-            + (S.pol.park? pop*0.22:0);
+  const taxRv=pop*3.1*(S.taxR/13), taxCv=jobC*5.6*(S.taxC/13), taxIv=jobI*4.9*(S.taxI/13);
+  const parkv=S.pol.park? pop*0.22:0;
+  const inc = taxRv+taxCv+taxIv+parkv;
   ST.income=inc; ST.balance=inc-upkeep;
+  ST.fin={ taxR:taxRv, taxC:taxCv, taxI:taxIv, park:parkv,
+           upRoad:upRoad.reduce((a,b)=>a+b,0), upRoadBy:upRoad, upBld:upBld };
 
   // 행복도
   let hp=50;
@@ -1212,9 +1241,13 @@ function recalcStats(){
 function growth(){
   // 수요
   const jobs=ST.jobs, pop=ST.pop;
-  const demR = clamp((jobs*0.62 - pop)/Math.max(60,pop*0.35+60), -1, 1) + 0.30 - (S.taxR-13)*0.035;
-  const demC = clamp((pop*0.16 - ST.jobC)/Math.max(30,ST.jobC*0.5+30), -1, 1) + 0.18 - (S.taxC-13)*0.035;
-  const demI = clamp((pop*0.20 + ST.jobC*0.5 - ST.jobI)/Math.max(30,ST.jobI*0.5+30), -1, 1) + 0.18 - (S.taxI-13)*0.035;
+  /* 이전 공식은 `jobs*0.62 - pop`이라 인구 104명에게 일자리 168개(1인당 1.6개)를 요구했고,
+     그 결과 주거·상업 수요가 동시에 음수로 잠겨 도시가 인구 100 근처에서 영구 정지했다.
+     실제로는 아이·학생·은퇴자가 있어 «1인당 약 0.45개»면 충분하다.
+     또 클램프에 0.8을 곱하고 기본값을 올려, 한쪽이 과잉이어도 도시 전체가 얼지 않게 한다. */
+  const demR = clamp((jobs - pop*0.45)/Math.max(50,pop*0.30+50), -1,1)*0.8 + 0.32 - (S.taxR-13)*0.035;
+  const demC = clamp((pop*0.22 - ST.jobC)/Math.max(40,ST.jobC*0.6+40), -1,1)*0.8 + 0.26 - (S.taxC-13)*0.035;
+  const demI = clamp((pop*0.26 + ST.jobC*0.35 - ST.jobI)/Math.max(40,ST.jobI*0.6+40), -1,1)*0.8 + 0.26 - (S.taxI-13)*0.035;
   ST.demR=clamp(demR,-1,1); ST.demC=clamp(demC,-1,1); ST.demI=clamp(demI,-1,1);
 
   const util = (ST.powerOK?1:0)*(ST.watOK?1:0);
@@ -1348,8 +1381,19 @@ function diagnose(){
   if(ST.balance<0 && ST.pop>0){
     // 적자의 심각도는 금액이 아니라 «버틸 수 있는 개월 수»다
     const runway = S.funds>0 ? S.funds/(-ST.balance) : 0;
-    push(runway<10?'bad':'warn','💸','월 수지 <b>'+won(ST.balance)+'</b> — 적자 (약 '+Math.max(0,Math.floor(runway))+'개월치 잔고)',
-      '유지비가 세수를 넘었습니다. 도로를 과하게 깔았거나(고속도로 유지비는 국지의 6.7배) 서비스가 인구 대비 과합니다.');
+    const f=ST.fin||{upRoad:0,upBld:0};
+    const roadShare = ST.income>0 ? f.upRoad/ST.income*100 : 0;
+    let why;
+    if(ST.pop<250)
+      why='초반에는 정상입니다 — 인프라를 먼저 깔고 사람이 들어오면 메워집니다. 이 도시 규모에서는 <b>인구 200~250</b>쯤에서 흑자로 돌아섭니다. 지금 할 일은 <b>존을 더 지정하고 성장시키는 것</b>이지 절약이 아닙니다.';
+    else if(roadShare>45)
+      why='<b>도로 유지비가 세수의 '+roadShare.toFixed(0)+'%</b>입니다 — 인구 대비 도로가 너무 많습니다. 쓰지 않는 도로를 철거하거나, 같은 면적을 더 조밀하게 채우세요. 고속도로 유지비는 국지의 <b>6.7배</b>입니다.';
+    else if(f.upBld>f.upRoad*1.6)
+      why='<b>시설 유지비</b>가 지출의 대부분입니다. 인구 대비 서비스를 과하게 지었습니다 — 커버리지가 겹치는 시설을 줄이세요.';
+    else
+      why='세수가 유지비를 못 따라갑니다. 존을 더 지정해 인구·일자리를 늘리거나, 세율을 조금 올리세요(13% 초과분만큼 수요가 줄어듭니다).';
+    push(runway<10?'bad':'warn','💸','월 수지 <b>'+won(ST.balance)+'</b> — 적자'+(runway<600?' (약 '+Math.max(0,Math.floor(runway))+'개월치 잔고)':''),
+      why+' 지표 패널의 <b>「월 수지 내역」</b>을 열면 항목별로 보입니다.');
   }
 
   // 버스 — 정류장을 어디에 두었는가
@@ -1482,7 +1526,8 @@ const P={
 function baseMap(){
   S.road.fill(0); S.zone.fill(0); S.bld.fill(null); S.lvl.fill(0); S.dev.fill(0);
   buildTerrain();
-  for(let x=0;x<W;x++) S.road[idx(x,1)]=R_HW;
+  FREEROAD.fill(0);
+  for(let x=0;x<W;x++){ S.road[idx(x,1)]=R_HW; FREEROAD[idx(x,1)]=1; }
   S.funds=600000; S.week=0; S.probe=-1; F.paths=[]; probeInfo='';
   UNDO.length=0; updUndoBtn(); TREND.length=0;
 }
@@ -2000,6 +2045,32 @@ function renderKPI(){
     kpi('오염 노출',((ST.airExp||0)*100).toFixed(0),'%',ST.airExp<=0.07?'ok':ST.airExp<=0.22?'warn':'bad')+
     kpi('취수 수질',ST.intakes?(ST.worstIntakePol||0).toFixed(1):'—','',!ST.intakes?'':ST.worstIntakePol<=3.5?'ok':ST.worstIntakePol<=9?'warn':'bad');
 }
+function renderFin(){
+  const el=document.getElementById('finbody'); if(!el) return;
+  const f=ST.fin; if(!f){ el.innerHTML=''; return; }
+  const n=v=>Math.round(v).toLocaleString('ko-KR');
+  const row=(nm,v,cls,sub)=>`<tr><td class="${sub?'sub':''}">${nm}</td><td class="${cls||''}">${v>=0?'+':'−'}${n(Math.abs(v))}</td></tr>`;
+  let h='<table class="fin">';
+  h+='<tr class="sec"><td colspan="2">수입</td></tr>';
+  h+=row(`주거세 <span style="color:var(--text3)">${S.taxR}%</span>`,f.taxR,'pos',1);
+  h+=row(`상업세 <span style="color:var(--text3)">${S.taxC}%</span>`,f.taxC,'pos',1);
+  h+=row(`공업세 <span style="color:var(--text3)">${S.taxI}%</span>`,f.taxI,'pos',1);
+  if(f.park>0) h+=row('주차 요금',f.park,'pos',1);
+  h+='<tr class="sec"><td colspan="2">지출</td></tr>';
+  for(let c=4;c>=1;c--) if(f.upRoadBy[c]>0) h+=row(ROAD[c].nm,-f.upRoadBy[c],'neg',1);
+  if(f.upBld>0) h+=row('시설 유지비',-f.upBld,'neg',1);
+  h+=`<tr class="tot"><td>월 수지</td><td class="${ST.balance>=0?'pos':'neg'}">${ST.balance>=0?'+':'−'}${n(Math.abs(ST.balance))}</td></tr>`;
+  h+='</table>';
+  // 도로가 세수를 얼마나 먹는가 — 이 게임에서 가장 흔한 파산 원인
+  if(ST.income>0){
+    const share=f.upRoad/ST.income*100;
+    h+=`<p class="note" style="margin-top:7px">도로 유지비가 세수의 <b style="color:${share>45?'var(--bad)':share>28?'var(--warn)':'var(--ok)'}">${share.toFixed(0)}%</b>`
+      + (share>45?' — 인구 대비 도로가 너무 많습니다. 쓰지 않는 도로를 철거하세요.'
+        : share>28?' — 조금 과합니다.' : ' — 건전합니다.')+'</p>';
+  }
+  h+='<p class="note">시작 시 깔려 있는 고속도로는 <b>외부 도로</b>라 유지비가 없습니다. 직접 지은 고속도로는 국지도로의 <b>6.7배</b>입니다.</p>';
+  el.innerHTML=h;
+}
 function renderDiag(){
   const el=document.getElementById('diag'); el.innerHTML='';
   for(const d of DIAG){
@@ -2035,7 +2106,7 @@ function renderMissions(){
   }
 }
 function syncUI(){
-  renderKPI(); renderDiag(); renderMissions(); renderCmp(); drawTrend();
+  renderKPI(); renderFin(); renderDiag(); renderMissions(); renderCmp(); drawTrend();
   document.getElementById('clock').textContent=`${Math.floor(S.week/48)+1}년차 ${Math.floor(S.week%48/4)+1}월`;
 }
 
