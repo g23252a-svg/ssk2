@@ -555,12 +555,14 @@ table.cmp .same{color:var(--text3)}
       <tr><td>1 첫 마을</td><td>IC 하나 + 콜렉터 «척추» 한 줄</td><td class="n">84</td><td class="n">₡14만</td><td class="n">—</td></tr>
       <tr><td>2 블록을 채운다</td><td>등급은 그대로, <b>채우기만</b></td><td class="n">558</td><td class="n">₡28만</td><td class="n">새 도로 52칸</td></tr>
       <tr><td>3 척추를 간선으로</td><td><b>승격</b> + 2번째 IC + 동쪽 지구</td><td class="n">1,596</td><td class="n">₡60만</td><td class="n">승격 43칸</td></tr>
-      <tr><td>4 화물을 가른다</td><td>화물 전용 IC · 버스 · 하수 처리장</td><td class="n">2,118</td><td class="n">₡73만</td><td class="n">새 구역 54칸</td></tr>
-      <tr><td>5 지구 완성</td><td>빈칸 채우고 밀도 최고</td><td class="n">2,850</td><td class="n">₡97만</td><td class="n">새 도로 <b>10칸</b></td></tr>
+      <tr><td>4 화물을 가른다</td><td>화물 전용 IC · 버스 · 하수 처리장</td><td class="n">1,974</td><td class="n">₡73만</td><td class="n">새 구역 50칸</td></tr>
+      <tr><td>5 지구 완성</td><td>빈칸 채우고 <b>밀도 구배</b> 적용</td><td class="n">1,978</td><td class="n">₡97만</td><td class="n">새 도로 <b>10칸</b></td></tr>
     </table>
     <p>숫자가 이야기를 합니다 — 초반엔 <b>도로를 깔고</b>, 중반엔 <b>등급을 올리고</b>, 후반엔 <b>채우기만</b> 합니다. 5단계까지 오는 동안 <b>뜯어낸 도로는 0칸</b>입니다.</p>
     <p><b>3단계가 이 진행의 핵심입니다.</b> 척추 콜렉터를 6차선으로 올리는 순간, 거기 붙어 있던 2차선들이 <b>전부 「간선 직결」 위반으로 변합니다</b>. 그래서 승격은 «선만 굵게»로 끝나지 않고, <b>접속부를 콜렉터로 한 칸씩 완충</b>해야 합니다. 이걸 빠뜨리면 위반이 14곳 생깁니다 — 실제 CS2에서 그대로 벌어지는 일입니다.</p>
-    <p>지도가 1.5 × 1.0 km 지구 하나라서 완성 인구는 <b>≈2,900명</b>이 상한입니다. 실제 도시는 이 지구를 여러 개 이어 붙인 것입니다.</p>
+    <p>5단계는 <b>밀도 구배</b>를 적용합니다 — 간선에서 2칸 이내는 고밀(L3), 5칸 이내는 중밀(L2), 그 바깥은 저밀(L1). 실제 도시가 그렇게 생겼고, 공략집 6장의 «밀도 구배 단면»과 같습니다. 전부 최고 밀도로 밀어붙이면 인구는 ≈2,900까지 오르지만, 그건 도시가 아니라 벽입니다.</p>
+    <p>지도가 1.5 × 1.0 km 지구 하나라서 완성 인구는 <b>≈2,000명</b>(구배 적용) ~ <b>≈2,900명</b>(균일 최고밀도)입니다. 실제 도시는 이 지구를 여러 개 이어 붙인 것입니다.</p>
+    <p><b>밀도는 지도에서 바로 보입니다</b> — 건물 덩어리가 클수록·진할수록 고밀이고, 흰 띠가 층수를 나타냅니다(L2는 1줄, L3는 2줄). <b>🏢 밀도</b> 오버레이를 켜면 파랑 농도로도 볼 수 있습니다.</p>
 
     <h4>5-0-1. 산업지구는 인접시켰다가 나중에 빼는 건가요?</h4>
     <p>자주 나오는 질문이라 시뮬레이터로 재봤습니다. <b>답은 «인접은 맞지만, 빼는 건 아니다»</b>입니다.</p>
@@ -1834,8 +1836,24 @@ const EVO=[
        1단계에 그은 마을 서쪽 세로축을 콜렉터로 올려 줍니다 — 노선은 그대로. */
     P.road(8,4,8,13,R_COL);
     P.zone(6,14,11,15,Z_R,3);
-    P.fill(Z_R,3,(x,y)=>x<25&&y<13); P.fill(Z_C,3,(x,y)=>x<25); P.fill(Z_I,3,(x)=>x>=25);
-    for(let i=0;i<N;i++) if(S.zone[i] && S.lvl[i]>0) S.lvl[i]=3;   // 밀도 최고
+    /* 공업은 «남동쪽 사분면»에만. x≥25를 통째로 칠하면 세로 15칸짜리 공업 벽이
+       도시 옆에 서고, 바람 방향만 바뀌면 전 주거가 오염됩니다. 위쪽은 상업으로 완충. */
+    P.fill(Z_I,3,(x,y)=>x>=25&&y>=12);
+    P.fill(Z_C,3,(x,y)=>x>=24&&y<12);              // 공업과 주거 사이 완충대
+    P.fill(Z_R,3,(x,y)=>x<24&&y<13); P.fill(Z_C,3,(x,y)=>x<24);
+    /* 밀도 구배 — 실제 도시는 균일하지 않습니다.
+       «간선에서 가까울수록 고밀, 멀수록 저밀». 공략집 6장의 밀도 구배 단면 그대로. */
+    rebuild();
+    const arts=F.roadCells.filter(j=>S.road[j]>=R_ART);
+    for(let i=0;i<N;i++){
+      if(!S.zone[i]||!S.lvl[i]) continue;
+      let d=99;
+      for(const j of arts){
+        const dd=Math.abs(cx(j)-cx(i))+Math.abs(cy(j)-cy(i));
+        if(dd<d){ d=dd; if(d<=1) break; }
+      }
+      S.lvl[i] = d<=2 ? 3 : d<=5 ? 2 : 1;
+    }
     P.b(7,3,'clinic'); P.b(20,3,'fire'); P.b(23,9,'school'); P.b(8,12,'school');
     P.b(9,6,'park'); P.b(15,6,'park'); P.b(20,10,'park'); P.b(7,9,'park'); P.b(4,15,'park');
     P.b(27,5,'wind'); P.b(27,8,'wind'); P.b(27,11,'wind'); P.b(31,13,'wind'); } }
@@ -2196,19 +2214,29 @@ function render(){
   for(let i=0;i<N;i++){
     const z=S.zone[i]; if(!z) continue;
     const L=S.lvl[i];
-    ctx.globalAlpha = L===0? 0.20 : 0.34+L*0.16;
+    const X=cx(i)*CELL, Y=cy(i)*CELL;
+    // 부지(연한 바탕)
+    ctx.globalAlpha = L===0? 0.20 : 0.26;
     ctx.fillStyle=TC.zone[z];
-    ctx.fillRect(cx(i)*CELL+1,cy(i)*CELL+1,CELL-2,CELL-2);
+    ctx.fillRect(X+1,Y+1,CELL-2,CELL-2);
     ctx.globalAlpha=1;
     if(L>0){
-      // 건물 블록 — 레벨이 높을수록 큰 덩어리
-      const p=CELL*(L===1?.30:L===2?.22:.15);
+      /* 밀도를 «한눈에» 구분한다 — 크기·진하기·층수 표시를 한꺼번에.
+         L1 작고 연한 단독 / L2 중간 / L3 부지를 꽉 채운 진한 고층 */
+      const f=[0,0.42,0.66,0.88][L], p=CELL*(1-f)/2, s=CELL*f;
+      ctx.globalAlpha=[0,0.62,0.80,1][L];
       ctx.fillStyle=TC.zone[z];
-      ctx.globalAlpha=.85;
-      ctx.fillRect(cx(i)*CELL+p,cy(i)*CELL+p,CELL-2*p,CELL-2*p);
+      ctx.fillRect(X+p,Y+p,s,s);
       ctx.globalAlpha=1;
-      if(L===3){ ctx.strokeStyle='rgba(255,255,255,.55)'; ctx.lineWidth=1;
-        ctx.strokeRect(cx(i)*CELL+p+.5,cy(i)*CELL+p+.5,CELL-2*p-1,CELL-2*p-1); }
+      // 층수 띠 — L2는 1줄, L3는 2줄
+      if(L>=2 && CELL>=16){
+        ctx.fillStyle='rgba(255,255,255,.42)';
+        const bh=Math.max(1,s*0.07);
+        ctx.fillRect(X+p+s*0.16, Y+p+s*0.30, s*0.68, bh);
+        if(L===3) ctx.fillRect(X+p+s*0.16, Y+p+s*0.58, s*0.68, bh);
+      }
+      if(L===3){ ctx.strokeStyle='rgba(255,255,255,.65)'; ctx.lineWidth=1;
+        ctx.strokeRect(X+p+.5,Y+p+.5,s-1,s-1); }
     }else if(accessNode(i)<0){
       // 도로 미접도 빗금
       ctx.save();
@@ -2221,10 +2249,14 @@ function render(){
   }
 
   // 오버레이 히트맵
-  if(S.overlay==='air'||S.overlay==='noise'||S.overlay==='land'||S.overlay==='svc'||S.overlay==='water'){
+  if(S.overlay==='air'||S.overlay==='noise'||S.overlay==='land'||S.overlay==='svc'||S.overlay==='water'||S.overlay==='density'){
     for(let i=0;i<N;i++){
       let v=0,col;
-      if(S.overlay==='water'){
+      if(S.overlay==='density'){
+        const L=S.zone[i]?S.lvl[i]:0; if(!L) continue;
+        v=L/3; col=['','rgba(120,180,240,.45)','rgba(70,120,220,.62)','rgba(30,60,180,.78)'][L];
+      }
+      else if(S.overlay==='water'){
         if(!RIVER[i]) continue;
         v=clamp(F.wpol[i]/40,0,1); col=`rgba(120,190,60,${0.25+v*0.7})`;
       }
@@ -2447,7 +2479,7 @@ function renderTools(){
     }
   }
 }
-const OVERLAYS=[['base','🗺 기본'],['traffic','🚗 교통량'],['freight','🚛 화물'],['air','🏭 대기오염'],['water','💧 수질'],['noise','🔊 소음'],['land','💎 지가'],['svc','🏥 서비스']];
+const OVERLAYS=[['base','🗺 기본'],['traffic','🚗 교통량'],['freight','🚛 화물'],['air','🏭 대기오염'],['water','💧 수질'],['noise','🔊 소음'],['land','💎 지가'],['svc','🏥 서비스'],['density','🏢 밀도']];
 function renderLegend(){
   const el=document.getElementById('legend'); el.innerHTML='';
   for(const[k,nm]of OVERLAYS){
