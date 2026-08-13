@@ -264,6 +264,10 @@ table.fin td.sub{padding-left:14px;color:var(--text2);font-weight:500}
 .pst.good:hover{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
 .pst .pwhy{display:inline-block;margin-left:6px;font-size:10px;font-weight:750;color:var(--ok);
   background:color-mix(in srgb,var(--ok) 16%,transparent);border-radius:5px;padding:1px 5px;vertical-align:1px}
+.pst .pcost{display:block;margin-top:3px;font-size:10.5px;font-weight:650;color:var(--text3);
+  font-variant-numeric:tabular-nums}
+.pst .pcost b{color:var(--text2);font-weight:800}
+.pst .pcost b.hi{color:var(--warn)}
 .pst .pi{font-size:15px;line-height:1.1;flex:none;margin-top:1px}
 .pst .pt{font-size:12.5px;font-weight:750;line-height:1.35}
 .pst .pd{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.45}
@@ -518,6 +522,18 @@ table.cmp .same{color:var(--text3)}
       <tr><td>🚌 대중교통이 도는 도시</td><td>정류장을 콜렉터에 · 양 끝에 — 분담률 17%</td><td class="n">0.43</td><td class="n">62</td></tr>
     </table>
     <p>네 도시 모두 <b>경고 0건 · 정체 0% · 흑자</b>입니다.</p>
+
+    <h4>5-1. 「완성형」은 첫 수가 아닙니다 — 시공 순서</h4>
+    <p>위 네 도시는 <b>인구 1,100~1,700에서의 완성형</b>이고, 통째로 지으면 <b>₡60만</b>이 듭니다. 시작 자금의 <b>60%</b>입니다. 게다가 사람이 아직 없으니 수입은 0인데 유지비만 월 ₡7~8천씩 나갑니다. <b>극초반에 저걸 그대로 지으면 망합니다.</b> 실제 CS2에서는 6차선과 대부분의 서비스가 마일스톤에 잠겨 있어 지을 수도 없습니다.</p>
+    <p>그래서 <b>🌱 극초반 시작형</b>을 같이 넣었습니다. 비교하면 이렇습니다.</p>
+    <table>
+      <tr><th></th><th class="n">건설비</th><th class="n">월 유지비</th><th class="n">인구</th></tr>
+      <tr><td>🌱 극초반 시작형</td><td class="n">₡14만 <span style="color:var(--ok)">(14%)</span></td><td class="n">≈₡2천</td><td class="n">84 → 456</td></tr>
+      <tr><td>🏆 완성형</td><td class="n">₡60만 <span style="color:var(--warn)">(60%)</span></td><td class="n">≈₡8천</td><td class="n">1,700</td></tr>
+    </table>
+    <p>극초반 시작형은 <b>17개월·인구 276에서 흑자로 돌아서고</b>, 그때까지 자금이 100만 → <b>99.1만</b>까지만 떨어집니다. 사실상 까먹는 게 없습니다. 4년을 돌리면 인구 456·월 +₡735가 되고, 그때쯤 <b>「전력 부족」</b>이 뜹니다 — 시작형은 그렇게 <b>계속 이어 짓게 만드는</b> 배치입니다.</p>
+    <p><b>핵심은 골격입니다.</b> 시작형과 완성형은 «콜렉터 하나에 국지가 붙고 집은 국지를 본다»는 구조가 <b>똑같습니다</b>. 처음부터 이 골격만 옳게 잡아 두면, 인구가 늘 때 <b>콜렉터를 간선으로 승격하고 옆으로 한 칸씩 넓히는 것</b>만으로 완성형이 됩니다. 도로를 뜯을 일이 없습니다.</p>
+    <p>반대로 아무렇게나 깔아 두면 나중에 반드시 철거·재시공을 하게 되고, 그게 진짜 돈이 드는 지점입니다. 자세한 단계별 확장은 공략집 <a href="index.html#buildorder" style="color:var(--acc)">3장 빌드오더</a>와 <a href="index.html#growth" style="color:var(--acc)">5장 확장 로드맵</a>에 있습니다.</p>
 
     <h4>5-2. 집 앞은 2차선이어야 합니다</h4>
     <p>위계는 <b>간선 → 콜렉터 → 국지 → 집</b>의 네 단계입니다. 흔히 마지막 한 단계를 건너뛰고 <b>콜렉터 연변을 전부 주거로</b> 채우는데, 그러면 진출입·주차가 그 도로의 통과 기능을 갉아먹습니다(콜렉터 칸당 +1.0초, 간선 +2.2초). 콜렉터는 국지도로를 <b>모으는</b> 길이지 집이 붙는 길이 아닙니다.</p>
@@ -1429,7 +1445,8 @@ function diagnose(){
     push('warn','🔊','주거의 '+(ST.noiExp*100).toFixed(0)+'%가 소음에 노출',
       '소음원은 <b>막히는 도로</b>입니다. 고속도로는 소음 3배. 주거지와 간선 사이에 공원이나 상업을 완충으로 두세요.');
 
-  if(ST.freightR>0.25 && ST.jobI>0)
+  // 마을 규모에서는 화물이 동네 길을 쓰는 게 당연하다. 분리는 도시가 커진 뒤의 과제.
+  if(ST.freightR>0.25 && ST.jobI>0 && ST.pop>600)
     push('warn','🚛','화물의 <b>'+(ST.freightR*100).toFixed(0)+'%</b>가 주거지 도로를 통과합니다',
       '공업에서 고속도로 IC까지 <b>주거지를 거치지 않는 전용 동선</b>을 만드세요. 화물 전용 IC가 정답입니다.');
 
@@ -1674,7 +1691,20 @@ const PRESETS=[
      간선(테두리) → 콜렉터(y=4,11) → 국지(y=6,9,13 · 세로 x=12,20) → 집은 «국지»에 접한다
    주거가 콜렉터에 직접 접하면 진출입·주차가 통과 기능을 갉아먹습니다. 그게 위계를 세우는 이유입니다. */
 const GOODS=[
-{ ico:'🏆', t:'위계 교과서', why:'실패 ①②의 정답',
+{ ico:'🌱', t:'극초반 시작형', why:'인구 0 → 500', phase:'1단계',
+  d:'실제로 <b>처음에 지을 수 있는</b> 규모입니다. IC 하나, 콜렉터 한 줄, 국지 몇 줄. 6차선도 소방서도 아직 없습니다 — <b>완성형의 1/4 값</b>입니다.',
+  look:'아래 「위계 교과서」와 <b>골격이 같습니다</b> — 콜렉터 하나에 국지가 붙고 집은 국지를 봅니다. 이 골격을 처음부터 옳게 잡으면 나중에 도로를 뜯을 일이 없습니다. 인구가 늘면 콜렉터를 간선으로 승격하고 옆으로 한 칸씩 넓히면 그대로 교과서가 됩니다.',
+  build(){ baseMap(); S.wind=180; S.windStr=.5; S.funds=1000000;
+    P.b(12,1,'ic');
+    P.road(12,2,12,10,R_COL);                    // 척추 한 줄 — 아직 콜렉터로 충분
+    P.road(8,4,16,4,R_LOC); P.road(8,7,16,7,R_LOC); P.road(8,10,16,10,R_LOC);
+    P.road(8,4,8,10,R_LOC); P.road(16,4,16,10,R_LOC);
+    P.zone(9,5,15,6,Z_R,1); P.zone(9,8,11,9,Z_C,1); P.zone(13,8,15,9,Z_I,1);
+    P.b(18,4,'wind'); P.b(18,7,'water'); P.b(20,10,'dump');
+    P.river(28,'outlet');                         // 배출구는 처음부터 하류 끝에
+    P.b(6,6,'park'); } },
+
+{ ico:'🏆', t:'위계 교과서', why:'실패 ①②의 정답', phase:'완성형',
   d:'IC → <b>6차선 간선</b> → <b>4차선 콜렉터</b> → <b>2차선 국지</b> → 집. 네 단계를 하나도 건너뛰지 않습니다.',
   look:'주거는 <b>전부 2차선 국지도로</b>에 접합니다 — 콜렉터는 국지를 «모으는» 역할만 하고 집이 직접 붙지 않습니다. 국지도로가 간선에 닿는 곳도 <b>0곳</b>이고, 간선 교차로는 전부 <b>T자</b>라 처리 용량이 0.48이 아니라 0.62입니다.',
   build(){ baseMap(); S.wind=180; S.windStr=.5;
@@ -1690,7 +1720,7 @@ const GOODS=[
     P.b(11,5,'fire'); P.b(21,5,'police'); P.b(15,10,'clinic'); P.b(18,7,'school');
     P.b(14,10,'park'); P.b(19,10,'park'); P.b(16,5,'park'); P.b(26,5,'wind'); } },
 
-{ ico:'🌬️', t:'바람과 물을 읽은 도시', why:'실패 ③⑦의 정답',
+{ ico:'🌬️', t:'바람과 물을 읽은 도시', why:'실패 ③⑦의 정답', phase:'완성형',
   d:'주거는 <b>바람 상류</b>, 공업·발전소는 <b>하류</b>. 취수장은 강 <b>최상류</b>, 배출구는 <b>최하류</b>.',
   look:'「대기오염」 오버레이를 켜면 플룸이 주거를 <b>비껴</b> 흐릅니다. 「수질」을 켜면 취수장 쪽 강이 <b>깨끗</b>합니다. 오염 노출과 취수 수질을 실패 프리셋과 비교해 보세요.',
   build(){ baseMap(); S.wind=180; S.windStr=.75;              // 바람이 남(아래)으로
@@ -1708,7 +1738,7 @@ const GOODS=[
     P.b(11,10,'park'); P.b(21,10,'park'); P.b(15,5,'park'); P.b(26,5,'park');
     P.b(27,8,'wind'); P.b(5,8,'wind'); } },
 
-{ ico:'🚛', t:'화물이 분리된 도시', why:'실패 ④의 정답',
+{ ico:'🚛', t:'화물이 분리된 도시', why:'실패 ④의 정답', phase:'완성형',
   d:'공업 전용 IC를 <b>따로</b> 놓아, 화물이 주거지를 한 번도 지나지 않습니다.',
   look:'주거지 통과 화물이 <b>0%대</b>입니다. 🔍 경로 추적으로 공업 칸을 찍어 보면 수출 경로가 주거를 <b>완전히 비껴</b> 갑니다.',
   build(){ baseMap(); S.wind=180; S.windStr=.6;
@@ -1732,7 +1762,7 @@ const GOODS=[
        풍력 4기(56 MW·₡720·무공해)가 싸고 깨끗합니다 — 작은 도시의 정답. */
     P.b(4,5,'wind'); P.b(4,8,'wind'); P.b(4,11,'wind'); P.b(4,14,'wind'); } },
 
-{ ico:'🚌', t:'대중교통이 도는 도시', why:'차를 줄이는 정공법',
+{ ico:'🚌', t:'대중교통이 도는 도시', why:'차를 줄이는 정공법', phase:'완성형',
   d:'정류장을 <b>4차선 콜렉터</b>에, 그리고 <b>주거와 일자리 양쪽 모두</b>에 놓았습니다.',
   look:'버스 수단분담이 올라간 만큼 도로 교통량이 <b>빠집니다</b>. 정류장을 2차선에 놓으면 칸당 +6초라 오히려 손해라는 점도 같이 보세요.',
   build(){ baseMap(); S.wind=180; S.windStr=.5; S.pol.bike=true;
@@ -1762,13 +1792,33 @@ function loadGood(k){
   document.getElementById('polBike').checked=S.pol.bike;
   toast('🏆 '+g.t+' — 지표와 진단 패널을 실패 프리셋과 비교해 보세요.','good',5200);
 }
+/* 각 프리셋을 실제로 지어 «건설비·유지비·인구»를 재둔다.
+   손으로 적어 두면 배치를 고칠 때마다 어긋나므로, 시작할 때 한 번 측정한다. */
+function measurePreset(buildFn){
+  const keep=snapshot(), kw=S.wind, kws=S.windStr, kb={...S.pol};
+  buildFn(); rebuild(); recalcAll();
+  let road=0,bld=0;
+  for(let i=0;i<N;i++){
+    if(S.road[i] && !FREEROAD[i]) road+=ROAD[S.road[i]].cost;
+    if(S.bld[i]) bld+=SVC[S.bld[i]].cost;
+  }
+  const r={build:road+bld, up:Math.round(ST.upkeep), pop:ST.pop};
+  restore(keep); S.wind=kw; S.windStr=kws; S.pol=kb;
+  rebuild(); recalcAll();
+  return r;
+}
 function renderGoods(){
   const el=document.getElementById('goods'); if(!el) return;
   el.innerHTML='';
+  const won2=v=>v>=10000? '₡'+Math.round(v/10000)+'만' : '₡'+Math.round(v/1000)+'천';
   GOODS.forEach((g,k)=>{
+    if(!g.cost) g.cost=measurePreset(g.build);
+    const c=g.cost, heavy=c.build>400000;
     const b=document.createElement('button'); b.className='pst good';
     b.innerHTML=`<span class="pi">${g.ico}</span><span><span class="pt">${g.t}`
       +`<span class="pwhy">${g.why}</span></span>`
+      +`<span class="pcost">건설비 <b class="${heavy?'hi':''}">${won2(c.build)}</b>`
+      +` · 유지 <b>${won2(c.up)}</b>/월 · 인구 <b>${c.pop.toLocaleString('ko-KR')}</b> ${g.phase}</span>`
       +`<span class="pd">${g.d}<br><b style="color:var(--acc)">볼 것:</b> ${g.look}</span></span>`;
     b.onclick=()=>loadGood(k);
     el.appendChild(b);
